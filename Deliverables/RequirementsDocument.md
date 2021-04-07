@@ -61,8 +61,9 @@ EZShop is a software application to:
 \<GUIs will be described graphically in a separate document>
 
 | Actor | Logical Interface | Physical Interface  |
-| ------------- |:-------------:| -----:|
-|   Actor x..     |  |  |
+| ------------- |-------------| -----|
+|   Owner,Employee| GUI | keyboard, mouse and display (PC)|
+|   Printer 	| GUI | LAN link|
 
 # Stories and personas
 \<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>

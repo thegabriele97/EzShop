@@ -72,10 +72,6 @@ EZShop -up-> Printer
 ```
 
 ## Interfaces
-\<describe here each interface in the context diagram>
-
-\<GUIs will be described graphically in a separate document>
-
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |-------------| -----|
 |   Owner,Employee| GUI | keyboard, mouse and display (PC)|

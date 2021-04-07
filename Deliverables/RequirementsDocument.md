@@ -46,6 +46,7 @@ EZShop is a software application to:
 |   Customer		| Registered in shop's internal DB after the first purchase |
 |	Supplier		| Who supplies the items to sell			|
 |	Developer		| who develop and maintain the software application	|
+|	Printer			| Used to print receipt / purchase notes	|
 
 
 # Context Diagram and interfaces

@@ -40,8 +40,13 @@ EZShop is a software application to:
 
 
 | Stakeholder name  | Description | 
-| ----------------- |:-----------:|
-|   Stakeholder x..     |             | 
+| ----------------- |-----------|
+|   Owner			| buys (and uses, and administrates) the software and he is the owner of the shop, can add or remove credentials of an employee|
+|	Employee		| Uses the software for the payment of his own sale, to modify inventary,   | 
+|   Customer		| Registered in shop's internal DB after the first purchase |
+|	Supplier		| Who supplies the items to sell			|
+|	Developer		| who develop and maintain the software application	|
+
 
 # Context Diagram and interfaces
 

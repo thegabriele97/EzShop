@@ -89,15 +89,11 @@ EZShop -- BarcodeReader
 
 # Stories and personas
 
-Pietro is 45, is the owner of a small forniture shop and also works in it. He dreams to expand his business in the future. For this reason, he buyed the software for managing employees, sales and orders to the best.
+- Pietro is 45, is the owner of a small forniture shop and also works in it. He dreams to expand his business in the future. For this reason, he buyed the software for managing employees, sales and orders to the best.
 
 # Functional and non functional requirements
 
 ## Functional Requirements
-
-\<In the form DO SOMETHING, or VERB NOUN, describe high level capabilities of the system>
-
-\<they match to high level use cases>
 
 | ID        | Description  |
 | ------------- |-------------| 
@@ -141,8 +137,6 @@ Pietro is 45, is the owner of a small forniture shop and also works in it. He dr
 
 
 ## Non Functional Requirements
-
-\<Describe constraints on functional requirements>
 
 | ID        | Type (efficiency, reliability, ..) | Description  | Refers to |
 | --------- | ---------------------------------- | ------------ | --------- |

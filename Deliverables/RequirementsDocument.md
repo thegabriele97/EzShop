@@ -144,12 +144,14 @@ EZShop -- BarcodeReader
 
 \<Describe constraints on functional requirements>
 
-| ID        | Type (efficiency, reliability, ..)           | Description  | Refers to |
-| ------------- |:-------------:| :-----:| -----:|
-|  NFR1     |   |  | |
-|  NFR2     | |  | |
-|  NFR3     | | | |
-| NFRx .. | | | | 
+| ID        | Type (efficiency, reliability, ..) | Description  | Refers to |
+| --------- | ---------------------------------- | ------------ | --------- |
+|  NFR1     | Usability  | Software should be usable even for new emoplyees after at most 1 hour of training |All FR|
+|  NFR2     | Performance | All operations should be comlpeted in 1s at most  | All FR |
+|  NFR3     | Portability| Software should be runnable on the main OS (Windows and macOS) |All FR|
+|  NFR4	    | Reliability| Computations and operations executed by the software should be correct at least in the 99% of cases| All FR, notably FR3, FR5 |
+|  NFR5     | Delivery   | Software should be delivered before 2021_06_12| All FR|
+|  NFR6     | Privacy    | The data of users (employee and owner), customers and suppliers should not be disclosed out of working context| All FR| 
 
 
 # Use case diagram and use cases

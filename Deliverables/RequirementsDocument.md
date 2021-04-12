@@ -45,8 +45,8 @@ EZShop is a software application to:
 |	Employee		| Uses the software for the payment of his own sale, to modify inventary   | 
 |   Customer		| Registered in shop's internal DB after the first purchase |
 |	Supplier		| Who supplies the items to sell			|
-|	Developer		| Who develops and maintains the software application	|
-|	Printer			| Used to print receipt / purchase notes / supplier orders	|
+|	Developer		| who develop and maintain the software application	|
+|	Printer			| Used to print receipt / purchase notes	|
 |	Bar code reader | Used to read the bar code of each product			|
 |	POS				| Used to manage payment with credit card		|
 
@@ -62,28 +62,22 @@ Actor Customer
 Actor Supplier
 
 Actor Printer
-Actor POS 
-Actor BarcodeReader
 
 usecase EZShop
 
-Employee -- EZShop
-Owner -left-|> Employee
+Employee -right- EZShop
+Owner -up-|> Employee
 
-EZShop --> Customer
-EZShop --> Supplier
-EZShop --> Printer
-
-EZShop -- POS
-EZShop -- BarcodeReader
+EZShop -right-> Customer
+EZShop -right-> Supplier
+EZShop -up-> Printer
 ```
 
 ## Interfaces
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |-------------| -----|
-|   Owner,Employee 	| GUI 	| keyboard, mouse and display (PC)|
-|   Printer 		| GUI 	| LAN link |
-|   Barcode Reader 	|  		| USB |
+|   Owner,Employee| GUI | keyboard, mouse and display (PC)|
+|   Printer 	| GUI | LAN link|
 
 
 # Stories and personas
@@ -115,8 +109,8 @@ EZShop -- BarcodeReader
 | FR3.1.2		| Delete item|
 | FR3.1.3		| Modify item quantity |
 | FR3.1.4		| Print sales ticket |
-| FR3.1.4		| Print invoice		|
-| FR3.1.5       | Computing VAT|
+| FR3.1.5		| Print invoice		|
+| FR3.1.6       | Computing VAT|
 | FR3.2			| Delete Cart|
 | FR3.3			| Choose a Customer	|
 | FR4			| Managing customers|

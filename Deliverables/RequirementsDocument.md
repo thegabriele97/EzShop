@@ -115,8 +115,8 @@ EZShop -- BarcodeReader
 | FR3.1.2		| Delete item|
 | FR3.1.3		| Modify item quantity |
 | FR3.1.4		| Print sales ticket |
-| FR3.1.4		| Print invoice		|
-| FR3.1.5       | Computing VAT|
+| FR3.1.5		| Print invoice		|
+| FR3.1.6       | Computing VAT|
 | FR3.2			| Delete Cart|
 | FR3.3			| Choose a Customer	|
 | FR4			| Managing customers|

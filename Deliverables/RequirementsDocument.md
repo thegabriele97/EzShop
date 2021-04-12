@@ -89,7 +89,11 @@ EZShop -- BarcodeReader
 
 # Stories and personas
 
-- Pietro is 45, is the owner of a small forniture shop and also works in it. He dreams to expand his business in the future. For this reason, he buyed the software for managing employees, sales and orders to the best.
+- Pietro is 45, is the owner of a small furniture shop and also works in it. He dreams to expand his business in the future. For this reason, he buyed the software for managing employees, sales and orders to the best.
+
+- Silvio is 18, and he's a student at the high school. Usually he spends the summer holidays with the friends going to the beach. But he has decided to work in order to have a minimum of economical independence. He has founda three months job in a small furniture shop, thanks to his ability with PC and his willingness to carry out different tasks.
+
+- Alessandra is 32, she is a Designer, working in Pietro's shop. She has many years of experience in furniture sector. She also has great interpersonal and communication skills, indeed, when the shop's owner is busy or absent, she is a reference for customers and suppliers. 
 
 # Functional and non functional requirements
 
@@ -138,8 +142,8 @@ EZShop -- BarcodeReader
 
 ## Non Functional Requirements
 
-| ID        | Type (efficiency, reliability, ..) | Description  | Refers to |
-| --------- | ---------------------------------- | ------------ | --------- |
+| ID        | Type  | Description  | Refers to |
+| --------- | ----- | ------------ | --------- |
 |  NFR1     | Usability  | Software should be usable even for new emoplyees after at most 1 hour of training |All FR|
 |  NFR2     | Performance | All operations should be comlpeted in 1s at most  | All FR |
 |  NFR3     | Portability| Software should be runnable on the main OS (Windows and macOS) |All FR|

@@ -46,9 +46,10 @@ EZShop is a software application to:
 |   Customer		| Registered in shop's internal DB after the first purchase |
 |	Supplier		| Who supplies the items to sell			|
 |	Developer		| Who develops and maintains the software application	|
-|	Printer			| Used to print receipt / purchase notes / supplier orders	|
+|	Printer			| Used to print receipt / purchase notes	|
 |	Bar code reader | Used to read the bar code of each product			|
 |	POS				| Used to manage payment with credit card		|
+|	Email Gateway				| Used to send the order to the supplier		|
 
 
 # Context Diagram and interfaces
@@ -58,21 +59,19 @@ EZShop is a software application to:
 ```plantuml
 Actor Owner
 Actor Employee
-Actor Customer
-Actor Supplier
 
 Actor Printer
 Actor POS 
 Actor BarcodeReader
+Actor EmailGateway
 
 usecase EZShop
 
 Employee -- EZShop
 Owner -left-|> Employee
 
-EZShop --> Customer
-EZShop --> Supplier
 EZShop --> Printer
+EZShop --> EmailGateway
 
 EZShop -- POS
 EZShop -- BarcodeReader
@@ -84,15 +83,13 @@ EZShop -- BarcodeReader
 |   Owner,Employee 	| GUI 	| keyboard, mouse and display (PC)|
 |   Printer 		| GUI 	| LAN link |
 |   Barcode Reader 	|  		| USB |
+|   POS 			| MyPOS API https://developers.mypos.eu/en/doc/more_apis/v1_0/16-payment-initiation-service-(pis)	| Ethernet  |
+|   Email Gateway 	| GUI 	| Internet  |
 
 
 # Stories and personas
-\<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
 
-\<Persona is-an-instance-of actor>
-
-\<stories will be formalized later as scenarios in use cases>
-
+Pietro is 45, is the owner of a small forniture shop and also works in it. He dreams to expand his business in the future. For this reason, he buyed the software for managing employees, sales and orders to the best.
 
 # Functional and non functional requirements
 
@@ -108,6 +105,7 @@ EZShop -- BarcodeReader
 | FR1.1			| Add a new employee, or modify an existing employee|
 | FR1.2     	| Delete an employee |
 | FR1.3			| List all employee and Search an employee|
+| FR1.4			| Send an e-mail |
 | FR2			| Managing permissions |
 | FR3			| Managing sales |
 | FR3.1			| Creating shop cart| 
@@ -124,6 +122,7 @@ EZShop -- BarcodeReader
 | FR4.2     	| Delete a customer|
 | FR4.3			| List all Customer and Search a Customer |
 | FR4.4			| List all Customer's sales|
+| FR4.5			| Send an e-mail |
 | FR5			| Managing inventory|
 | FR5.1			| Add a new item, or modify quantity/price of an existing item|
 | FR5.2     	| Delete an item|
@@ -138,6 +137,7 @@ EZShop -- BarcodeReader
 | FR7			| Managing Order|
 | FR7.1			| Add supplier order|
 | FR7.2			| Modify supplier order	|
+| FR7.3			| Send order by email |
 
 
 ## Non Functional Requirements
@@ -158,11 +158,51 @@ EZShop -- BarcodeReader
 
 
 ## Use case diagram
-\<define here UML Use case diagram UCD summarizing all use cases, and their relationships>
+```plantuml
+Actor Owner
+Actor Employee
+
+Actor Printer
+Actor POS 
+Actor BarcodeReader
+Actor EmailGateway
+
+usecase "FR1 Managing Employees" as mngemploye
+usecase "FR3 Managing Sales" as mngsales
+usecase "FR4 Managing Customers" as mngCustomers
+usecase "FR5 Managing inventory" as mnginventory
+usecase "FR6 Managing Supplier" as mngsupplier
+usecase "FR7 Managing Order" as mngorder
+
+usecase "FR3.1.4 Print sales ticket" as printicket
+usecase "FR3.1.5 Print invoice" as printinvoce
+
+Owner -down-|> Employee
+
+Owner -left- mngemploye
+Employee -- mngsales
+
+mngsales --> printicket : <<include>>
+mngsales --> printinvoce : <<include>>
+mngsales -left- POS
+mngsales -right- BarcodeReader
+
+printicket --> Printer
+printinvoce --> Printer
+
+Employee -- mngCustomers
+Employee -- mngsupplier
+
+Employee -- mnginventory
+mnginventory -- BarcodeReader
+
+Employee -left- mngorder
+mngorder -down-> EmailGateway
+```
 
 
 \<next describe here each use case in the UCD>
-### Use case 1, UC1
+### Use case 1, UC1 - Add Employee
 | Actors Involved        |  |
 | ------------- |:-------------:| 
 |  Precondition     | \<Boolean expression, must evaluate to true before the UC can start> |  

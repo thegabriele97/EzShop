@@ -47,6 +47,8 @@ EZShop is a software application to:
 |	Supplier		| Who supplies the items to sell			|
 |	Developer		| Who develops and maintains the software application	|
 |	Printer			| Used to print receipt / purchase notes / supplier orders	|
+|	Bar code reader | Used to read the bar code of each product			|
+|	POS				| Used to manage payment with credit card		|
 
 
 # Context Diagram and interfaces
@@ -83,6 +85,7 @@ EZShop -- BarcodeReader
 |   Printer 		| GUI 	| LAN link |
 |   Barcode Reader 	|  		| USB |
 
+
 # Stories and personas
 \<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>
 
@@ -111,6 +114,9 @@ EZShop -- BarcodeReader
 | FR3.1.1  		| Add item	 | 
 | FR3.1.2		| Delete item|
 | FR3.1.3		| Modify item quantity |
+| FR3.1.4		| Print sales ticket |
+| FR3.1.4		| Print invoice		|
+| FR3.1.5       | Computing VAT|
 | FR3.2			| Delete Cart|
 | FR3.3			| Choose a Customer	|
 | FR4			| Managing customers|
@@ -123,6 +129,7 @@ EZShop -- BarcodeReader
 | FR5.2     	| Delete an item|
 | FR5.3			| List all itmes and quantity/prices|
 | FR5.4			| Search an item|
+| FR5.5			| Computing net profit|
 | FR6			| Managing Supplier	|
 | FR6.1			| Add a new supplier, or modify an existing one|
 | FR6.2     	| Delete a supplier|
@@ -130,7 +137,7 @@ EZShop -- BarcodeReader
 | FR6.4			| Search a supplier|
 | FR7			| Managing Order|
 | FR7.1			| Add supplier order|
-| FR7.2			| Modify suppleir order	|
+| FR7.2			| Modify supplier order	|
 
 
 ## Non Functional Requirements

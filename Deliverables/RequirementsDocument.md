@@ -45,8 +45,8 @@ EZShop is a software application to:
 |	Employee		| Uses the software for the payment of his own sale, to modify inventary   | 
 |   Customer		| Registered in shop's internal DB after the first purchase |
 |	Supplier		| Who supplies the items to sell			|
-|	Developer		| who develop and maintain the software application	|
-|	Printer			| Used to print receipt / purchase notes	|
+|	Developer		| Who develops and maintains the software application	|
+|	Printer			| Used to print receipt / purchase notes / supplier orders	|
 
 
 # Context Diagram and interfaces
@@ -60,22 +60,28 @@ Actor Customer
 Actor Supplier
 
 Actor Printer
+Actor POS 
+Actor BarcodeReader
 
 usecase EZShop
 
-Employee -right- EZShop
-Owner -up-|> Employee
+Employee -- EZShop
+Owner -left-|> Employee
 
-EZShop -right-> Customer
-EZShop -right-> Supplier
-EZShop -up-> Printer
+EZShop --> Customer
+EZShop --> Supplier
+EZShop --> Printer
+
+EZShop -- POS
+EZShop -- BarcodeReader
 ```
 
 ## Interfaces
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |-------------| -----|
-|   Owner,Employee| GUI | keyboard, mouse and display (PC)|
-|   Printer 	| GUI | LAN link|
+|   Owner,Employee 	| GUI 	| keyboard, mouse and display (PC)|
+|   Printer 		| GUI 	| LAN link |
+|   Barcode Reader 	|  		| USB |
 
 # Stories and personas
 \<A Persona is a realistic impersonation of an actor. Define here a few personas and describe in plain text how a persona interacts with the system>

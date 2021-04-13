@@ -108,16 +108,18 @@ EZShop -- BarcodeReader
 | FR1.4			| Send an e-mail |
 | FR2			| Managing permissions |
 | FR3			| Managing sales |
-| FR3.1			| Creating shop cart| 
+| FR3.1			| Creating shop cart | 
 | FR3.1.1  		| Add item	 | 
-| FR3.1.2		| Delete item|
+| FR3.1.2		| Delete item |
 | FR3.1.3		| Modify item quantity |
-| FR3.1.4		| Print sales ticket |
-| FR3.1.5		| Print invoice		|
-| FR3.1.6       | Computing VAT|
-| FR3.2			| Delete Cart|
-| FR3.3			| Choose a Customer	|
-| FR4			| Managing customers|
+| FR3.1.4		| Choose a Customer	|
+| FR3.2			| Committing a shop cart |
+| FR3.2.1       | Computing VAT |
+| FR3.2.2		| Print invoice		|
+| FR3.2.3		| Print sales ticket |
+| FR3.2.4		| Pay the total |
+| FR3.3			| Delete Cart |
+| FR4			| Managing customers |
 | FR4.1			| Add a new customer, or modify an existing customer|
 | FR4.2     	| Delete a customer|
 | FR4.3			| List all Customer and Search a Customer |
@@ -138,6 +140,7 @@ EZShop -- BarcodeReader
 | FR7.1			| Add supplier order|
 | FR7.2			| Modify supplier order	|
 | FR7.3			| Send order by email |
+| FR8			| Manage accounting |
 
 
 ## Non Functional Requirements
@@ -171,31 +174,36 @@ usecase "FR4 Managing Customers" as mngCustomers
 usecase "FR5 Managing inventory" as mnginventory
 usecase "FR6 Managing Supplier" as mngsupplier
 usecase "FR7 Managing Order" as mngorder
+usecase "FR8 Manage Accounting" as mngaccounting
 
-usecase "FR3.1.4 Print sales ticket" as printicket
-usecase "FR3.1.5 Print invoice" as printinvoce
+usecase "FR3.2.2 Print invoice" as printinvoce
+usecase "FR3.2.3 Print sales ticket" as printicket
+usecase "FR3.2.4 Pay the total" as paytotal
 
 Owner -down-|> Employee
 
-Owner -left- mngemploye
+Owner -right- mngemploye
+Owner -left- mngaccounting
 Employee -- mngsales
 
 mngsales --> printicket : <<include>>
 mngsales --> printinvoce : <<include>>
-mngsales -left- POS
+mngsales --> paytotal : <<include>>
 mngsales -right- BarcodeReader
+
+paytotal -- POS
 
 printicket --> Printer
 printinvoce --> Printer
 
-Employee -- mngCustomers
+Employee -right- mngCustomers
 Employee -- mngsupplier
 
 Employee -- mnginventory
 mnginventory -- BarcodeReader
 
 Employee -left- mngorder
-mngorder -down-> EmailGateway
+mngorder -left-> EmailGateway
 ```
 
 

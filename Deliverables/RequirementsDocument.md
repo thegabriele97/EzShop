@@ -284,7 +284,7 @@ usecase "FR4.3 Delete an Employee" as rememployee
 
 ##### Scenario 2.1 (NOMINAL scenario)
 
-| Scenario 1.1 | Updating Employee data with not duplicated data |
+| Scenario 3.1 | Updating Employee data with not duplicated data |
 | ------------- |:-------------:| 
 |  Precondition     | Owner wants to modify an Employee |
 |  Post condition     | Employee E updated |
@@ -297,7 +297,7 @@ usecase "FR4.3 Delete an Employee" as rememployee
 
 ##### Scenario 2.2
 
-| Scenario 1.2 | Updating Employee data with duplicated data |
+| Scenario 3.2 | Updating Employee data with duplicated data |
 | ------------- |:-------------:| 
 |  Precondition     | Owner wants to modify an Employee |
 |  Post condition     | Employee E not updated |
@@ -318,7 +318,7 @@ usecase "FR4.3 Delete an Employee" as rememployee
 
 ##### Scenario 3.1 (NOMINAL scenario)
 
-| Scenario 1.1 | Deleteing an Employee |
+| Scenario 3.1 | Deleteing an Employee |
 | ------------- |:-------------:| 
 |  Precondition     | Owner wants to delete an Employee |
 |  Post condition     | Employee E deleted |
@@ -326,6 +326,101 @@ usecase "FR4.3 Delete an Employee" as rememployee
 |  1     | Owner selects "Delete this Employee" |
 |  2	 | The system deletes the employee |
 
+
+### Use case 8, UC8 - Managing Sales (Creating a shopping cart)
+| Actors Involved        | Employee / Product  |
+| ------------- |:-------------:| 
+|  Precondition     | There are no pending shopping carts |  
+|  Post condition     | A shopping cart is created |
+|  Nominal Scenario     | A shopping cart is created and its details are defined |
+|  Variants     |  |
+
+##### Scenario 8.1 (NOMINAL scenario)
+
+| Scenario 8.1 | Creating a shopping cart |
+| ------------- |:-------------:| 
+|  Precondition     | Employee selects to create a shopping cart |
+|  Post condition     | A shopping cart is created and its details are defined |
+|  Step#        | Description  |
+|  1     | Owner selects "Create a new shopping cart" |
+|  2	 | The employee picks items from invetory / uses barcode |
+|  3	 | ... |
+|  4	 | The employee change the quantity, deletes item from cart |
+|  5	 | Can link the cart to a customer |
+
+##### Scenario 8.2
+
+| Scenario 8.2 | Creating a shopping cart and inserts a quantity of an item not available in inventory (either using the barcode scanner) |
+| ------------- |:-------------:| 
+|  Precondition     | Employee selects to create a shopping cart and starts inserting items |
+|  Post condition     | The quantity that exceeds is not registered in the cart |
+|  Step#        | Description  |
+|  1     | Owner selects "Create a new shopping cart" |
+|  2	 | The employee picks items from invetory / uses barcode |
+|  3	 | ... |
+|  4	 | The employee change the quantity (or uses the barcode scanner to increase the quantity of an already inserted item) |
+|  5	 | The system notice that the required quantity is not satisfable |
+|  6	 | The system notice the employee that the quantity is not satisfable |
+
+### Use case 9, UC9 - Managing Sales (Committing shopping cart)
+| Actors Involved        | Employee / Printer / POS / Product |
+| ------------- |:-------------:| 
+|  Precondition     | An existing shopping cart is going to be committed |  
+|  Post condition     | - A shopping cart is payed and committed - The inventory is updated |
+|  Nominal Scenario     | A shopping cart is committed and the customer pays correctly |
+|  Variants     | The customer decides to not pay anymore and leave the shop - There is not available paper / ink in the printer / The POS can't commit the transaction |
+
+##### Scenario 9.1 (NOMINAL scenario)
+
+| Scenario 9.1 | Committing a shopping cart |
+| ------------- |:-------------:| 
+|  Precondition     | An existing shopping cart is going to be committed, the user has enough money to pay (either in cash or POS), the printer is ok and the POS System is OK |
+|  Post condition     | A shopping cart is committed and payed / the receipt is printed |
+|  Step#        | Description  |
+|  1     | Employee selects to checkout the cart |
+|  2	 | Employee selects the payment method (cash or POS) |
+|  3	 | The payment is executed |
+|  4	 | The receipt is printed |
+|  5 	 | (Optional) The invoice is printed |
+
+##### Scenario 9.2
+
+| Scenario 9.2 | Committing a shopping cart but no enough money |
+| ------------- |:-------------:| 
+|  Precondition     | An existing shopping cart is going to be committed, but the user hasn't enough money to pay (either in cash or POS) |
+|  Post condition     | A shopping cart is in frozen state |
+|  Step#        | Description  |
+|  1     | Employee selects to checkout the cart |
+|  2	 | Employee selects the payment method (cash or POS) |
+|  3	 | The payment is not executed |
+|  4	 | The operation stops and the cart is frozen (can be deleted) |
+
+##### Scenario 9.3
+
+| Scenario 9.3 | Committing a shopping cart but there are problems with the printer |
+| ------------- |:-------------:| 
+|  Precondition     | An existing shopping cart is going to be committed, the user has enough money to pay (either in cash or POS), the printer has problems |
+|  Post condition     | A shopping cart is committed and payed / the receipt is printed |
+|  Step#        | Description  |
+|  1     | Employee selects to checkout the cart |
+|  2	 | Employee selects the payment method (cash or POS) |
+|  3	 | The payment is executed |
+|  4	 | The system notices that the receipt can't be printed because of problems with the printer |
+|  5	 | The system waits and the Employee retries after fixing the printer |
+|  6 	 | (Optional) The invoice is printed [if problems, again from step #4] |
+
+##### Scenario 9.4
+
+| Scenario 9.3 | Committing a shopping cart but there are problems with the POS |
+| ------------- |:-------------:| 
+|  Precondition     | An existing shopping cart is going to be committed, the user has enough money to pay (either in cash or POS), the printer is ok, the POS returns an error |
+|  Post condition     | A shopping cart is frozen |
+|  Step#        | Description  |
+|  1     | Employee selects to checkout the cart |
+|  2	 | Employee selects the payment method (POS) |
+|  3	 | The payment is blocked (problems with the POS, can be refused cart or internet problems) |
+|  4	 | The system notify the Employee |
+|  5	 | The employee decides to retries, select another payment method |
 
 # Glossary
 

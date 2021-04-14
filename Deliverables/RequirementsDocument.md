@@ -108,7 +108,8 @@ EZShop is a software application to:
 |	Printer			| Used to print receipt / purchase notes	|
 |	Bar code reader | Used to read the bar code of each product			|
 |	POS				| Used to manage payment with credit card		|
-|	Email Gateway				| Used to send the order to the supplier		|
+|	Email Gateway	| Used to send the order to the supplier		|
+|	Product			| The selled product / managed inside the inventory		|
 
 
 # Context Diagram and interfaces

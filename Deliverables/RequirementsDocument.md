@@ -298,7 +298,32 @@ confirmcart --> paytotal : <<include>>
 usecase "FR4.1 Add an Employee" as addemployee
 usecase "FR4.2 Modify an Employee" as modifyemployee
 usecase "FR4.3 Delete an Employee" as rememployee
+```
 
+```plantuml
+usecase "FR4 Managing Customers" as mngcustomer
+usecase "FR4.1 Add a Customer" as addcustomer
+usecase "FR4.2 Modify a Customer" as modcustomer
+usecase "FR4.6 Delete a Customer" as remcustomer
+usecase "FR4.3 List all Customer and Search a Customer" as listcustomer
+
+mngcustomer --> addcustomer : <<include>>
+mngcustomer --> modcustomer : <<include>>
+mngcustomer --> remcustomer : <<include>>
+mngcustomer --> listcustomer : <<include>>
+```
+
+```plantuml
+usecase "FR5 Managing Inventory" as mnginventory
+usecase "FR5.1 Add an item" as additem
+usecase "FR5.6 Modify an item" as moditem
+usecase "FR5.2 Delete an item" as remitem
+usecase "FR5.4 Search an item" as listitem
+
+mnginventory --> additem : <<include>>
+mnginventory --> moditem : <<include>>
+mnginventory --> remitem : <<include>>
+mnginventory --> listitem : <<include>>
 ```
 
 ### Use case 1, UC1 - Add an Employee

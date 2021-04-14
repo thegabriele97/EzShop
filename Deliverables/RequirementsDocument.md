@@ -237,6 +237,8 @@ Actor POS
 Actor BarcodeReader
 Actor EmailGateway
 
+Actor Product
+
 usecase "FR1 Managing Employees" as mngemploye
 usecase "FR3 Managing Sales" as mngsales
 usecase "FR4 Managing Customers" as mngCustomers
@@ -258,7 +260,7 @@ Employee -- mngsales
 mngsales --> printicket : <<include>>
 mngsales --> printinvoce : <<include>>
 mngsales --> paytotal : <<include>>
-mngsales -right- BarcodeReader
+mngsales -left- BarcodeReader
 
 paytotal -- POS
 
@@ -266,13 +268,17 @@ printicket --> Printer
 printinvoce --> Printer
 
 Employee -right- mngCustomers
-Employee -- mngsupplier
+Employee -right- mngsupplier
 
 Employee -- mnginventory
-mnginventory -- BarcodeReader
+mnginventory -right- BarcodeReader
 
 Employee -left- mngorder
 mngorder -left-> EmailGateway
+
+mngsales --> Product
+mngorder --> Product
+mnginventory --> Product
 ```
 
 ### Use case diagram details

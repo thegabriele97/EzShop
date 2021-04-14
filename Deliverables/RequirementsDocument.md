@@ -45,6 +45,33 @@ Version:
 				- [Scenario 3.1 (NOMINAL scenario)](#scenario-31-nominal-scenario-1)
 		- [Use case 7, UC7 - Search a Customer](#use-case-7-uc7---search-a-customer)
 				- [Scenario 7.1 (NOMINAL scenario)](#scenario-71-nominal-scenario)
+		- [Use case 8, UC8 - Managing Sales (Creating a shopping cart)](#use-case-8-uc8---managing-sales-creating-a-shopping-cart)
+				- [Scenario 8.1 (NOMINAL scenario)](#scenario-81-nominal-scenario)
+				- [Scenario 8.2](#scenario-82)
+		- [Use case 9, UC9 - Managing Sales (Committing shopping cart)](#use-case-9-uc9---managing-sales-committing-shopping-cart)
+				- [Scenario 9.1 (NOMINAL scenario)](#scenario-91-nominal-scenario)
+				- [Scenario 9.2](#scenario-92)
+				- [Scenario 9.3](#scenario-93)
+				- [Scenario 9.4](#scenario-94)
+		- [Use case 14, UC14 - Add a Supplier](#use-case-14-uc14---add-a-supplier)
+				- [Scenario 14.1 (NOMINAL scenario)](#scenario-141-nominal-scenario)
+				- [Scenario 14.2](#scenario-142)
+		- [Use case 15, UC15 - Modify a Supplier](#use-case-15-uc15---modify-a-supplier)
+				- [Scenario 15.1 (NOMINAL scenario)](#scenario-151-nominal-scenario)
+				- [Scenario 15.2](#scenario-152)
+		- [Use case 16, UC16 - Delete a Supplier](#use-case-16-uc16---delete-a-supplier)
+				- [Scenario 16.1 (NOMINAL scenario)](#scenario-161-nominal-scenario)
+		- [Use case 17, UC17 - Search a Supplier](#use-case-17-uc17---search-a-supplier)
+				- [Scenario 17.1 (NOMINAL scenario)](#scenario-171-nominal-scenario)
+		- [Use case 18, UC18 - Create an Order](#use-case-18-uc18---create-an-order)
+				- [Scenario 18.1 (NOMINAL scenario)](#scenario-181-nominal-scenario)
+		- [Use case 19, UC19 - Modify an Order](#use-case-19-uc19---modify-an-order)
+				- [Scenario 19.1 (NOMINAL scenario)](#scenario-191-nominal-scenario)
+		- [Use case 20, UC20 - Destroy an Order](#use-case-20-uc20---destroy-an-order)
+				- [Scenario 20.1 (NOMINAL scenario)](#scenario-201-nominal-scenario)
+		- [Use case 21, UC21 - Commit an Order](#use-case-21-uc21---commit-an-order)
+				- [Scenario 21.1 (NOMINAL scenario)](#scenario-211-nominal-scenario)
+				- [Scenario 21.2](#scenario-212)
 - [Glossary](#glossary)
 - [System Design](#system-design)
 - [Deployment Diagram](#deployment-diagram)
@@ -549,6 +576,209 @@ usecase "FR4.3 Delete an Employee" as rememployee
 |  3	 | The payment is blocked (problems with the POS, can be refused cart or internet problems) |
 |  4	 | The system notify the Employee |
 |  5	 | The employee decides to retries, select another payment method |
+
+### Use case 14, UC14 - Add a Supplier
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Supplier S doesn't exists |  
+|  Post condition     | Supplier S exists and registered in the system |
+|  Nominal Scenario     | The employee creates a new Supplier with all the required details |
+|  Variants     | The employee may try to insert a duplicate Supplier (identified by a duplicated email) and will result in an error |
+
+##### Scenario 14.1 (NOMINAL scenario)
+
+| Scenario 14.1 | Supplier S doesn't exists (i.e. email not registered into the system) |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to register a new Supplier |
+|  Post condition     | Supplier S registered |
+| Step#        | Description  |
+|  1     | Employee selects "Register new supplier" |  
+|  2     | Employee inserts all the required informations about the supplier |
+|  3     | Employee submit the form |
+|  4	 | The system validates them and see that it's not a duplicated supplier |
+|  5	 | The system registers the supplier |
+
+##### Scenario 14.2
+
+| Scenario 14.2 | Supplier S exists (i.e. email registered into the system) |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to register a new supplier |
+|  Post condition     | System unchanged |
+| Step#        | Description  |
+|  1     | Employee selects "Register new supplier" |  
+|  2     | Employee inserts all the required informations about the supplier |
+|  3     | Employee submit the form |
+|  4	 | The system validates them and see that there is something wrong |
+|  5	 | The system notice the employee and doesn't commit the submission |
+
+
+### Use case 15, UC15 - Modify a Supplier
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Supplier S exists |  
+|  Post condition     | Supplier S exists and updated |
+|  Nominal Scenario     | The employee modify one or more fields of the Supplier |
+|  Variants     | The employee may try to insert a duplicate data (i.e. email already registered into the system) |
+
+##### Scenario 15.1 (NOMINAL scenario)
+
+| Scenario 15.1 | Updating Supplier data with not duplicated data |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to modify a Supplier |
+|  Post condition     | Supplier S updated |
+| Step#        | Description  |
+|  1     | Employee selects "Modify this Supplier" |  
+|  2     | Employee update the informations about the supplier |
+|  3     | Employee submit the form |
+|  4	 | The system validates them and see that everything is ok |
+|  5	 | The system updates the Supplier |
+
+##### Scenario 15.2
+
+| Scenario 15.2 | Updating Supplier data with duplicated data |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to modify a Supplier |
+|  Post condition     | Supplier S not updated |
+| Step#        | Description  |
+|  1     | Employee selects "Modify this Supplier" |  
+|  2     | Employee updated the informations about the Supplier |
+|  3     | Employee submit the form |
+|  4	 | The system validates them and see that something is wrong (i.e. inserted a duplicated email) |
+|  5	 | The system notice the employee and doesn't commit the submission |
+
+### Use case 16, UC16 - Delete a Supplier
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Supplier S exists |  
+|  Post condition     | Supplier S removed |
+|  Nominal Scenario     | The employee wants to delete a Supplier from the system |
+|  Variants     |  |
+
+##### Scenario 16.1 (NOMINAL scenario)
+
+| Scenario 16.1 | Deleting a Supplier |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to delete a Supplier |
+|  Post condition     | Supplier S deleted |
+| Step#        | Description  |
+|  1     | Employee selects "Delete this Supplier" |
+|  2	 | The system deletes the Supplier |
+
+### Use case 17, UC17 - Search a Supplier
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     |  |  
+|  Post condition     | The list of suppliers corresponding to the search is visualized |
+|  Nominal Scenario     | The employee wants to search a specific Supplier on the system |
+|  Variants     |  |
+
+##### Scenario 17.1 (NOMINAL scenario)
+
+| Scenario 17.1 | Searching a Supplier |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to search a Supplier |
+|  Post condition     | Supplier S visualized |
+| Step#        | Description  |
+|  1     | The employee selects "Search Supplier" |
+|  2	 | The employee puts the Supplier name |
+|  3     | The system show the Supplier or Suppliers corresponding to the search
+
+### Use case 18, UC18 - Create an Order
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Order O doesn't exists |  
+|  Post condition     | Order O exists |
+|  Nominal Scenario     | The employee creates a new Order with all the required details |
+|  Variants     |  |
+
+##### Scenario 18.1 (NOMINAL scenario)
+
+| Scenario 18.1 | Order S doesn't exists |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to create a new Order |
+|  Post condition     | Order O created |
+| Step#        | Description  |
+|  1     | Employee selects "Create new order" |  
+|  2     | Employee inserts all the required informations about the order (e.g. supplier, item quantity) |
+|  3     | Employee submit the form |
+|  4	 | The system creates the order |
+
+### Use case 19, UC19 - Modify an Order
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Order O exists |  
+|  Post condition     | Order O exists and  is updated |
+|  Nominal Scenario     | The employee modify one or more fields of the Order |
+|  Variants     | |
+
+##### Scenario 19.1 (NOMINAL scenario)
+
+| Scenario 19.1 | Updating Order data |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to modify an Order |
+|  Post condition     | Order O updated |
+| Step#        | Description  |
+|  1     | Employee selects "Modify this Order" |  
+|  2     | Employee update the informations about the order |
+|  3     | Employee submit the form |
+|  4	 | The system updates the Order |
+
+
+### Use case 20, UC20 - Destroy an Order
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Order O exists |  
+|  Post condition     | Order O destroyed |
+|  Nominal Scenario     | The employee wants to destroy an uncommitted Order |
+|  Variants     |  |
+
+##### Scenario 20.1 (NOMINAL scenario)
+
+| Scenario 20.1 | Destroying an Order |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to destroy an Order |
+|  Post condition     | Order O destroyed |
+| Step#        | Description  |
+|  1     | Employee selects "Cancel this Order" |
+|  2	 | The system destroy the Order |
+
+### Use case 21, UC21 - Commit an Order
+| Actors Involved        | Owner / Employee / EmailGateway |
+| ------------- |:-------------:| 
+|  Precondition     | Order O exists |  
+|  Post condition     | Order O is committed |
+|  Nominal Scenario     | The employee wants to commit an Order |
+|  Variants     | Some parts of the Order are not committed successfully |
+
+##### Scenario 21.1 (NOMINAL scenario)
+
+| Scenario 21.1 | Commit an Order |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to commit an Order |
+|  Post condition     | Order O is committed |
+| Step#        | Description  |
+|  1     | Employee selects "Commit this Order" |
+|  2	 | The system send the Order to the MailGateway |
+|  3	 | The MailGateway send the emails with the order to the corresponding suppliers |
+|  4	 | The MailGateway check the commit of the emails and send the result to the system |
+|  5     | The system checks the operation and sees that was committed successfully |
+|  6     | The system notice the employee about the result and register the order into the system |
+|  7     | The system destroys the order |
+
+##### Scenario 21.2
+
+| Scenario 21.2 | Committing an order not successfully |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to commit an Order |
+|  Post condition     | Order O is not fully committed and the undone commits are not removed from the Order |
+| Step#        | Description  |
+|  1     | Employee selects "Commit this Order" |
+|  2	 | The system send the Order to the MailGateway |
+|  3	 | The MailGateway send the emails with the order to the corresponding suppliers |
+|  4	 | The MailGateway check the commit of the emails and send the result to the system |
+|  5     | The system checks the operation and sees that some parts were not committed successfully |
+|  6     | The system notice the employee about the result and register only the committed part of the order into the system |
+|  7     | The system modify the order removing the committed parts |
 
 # Glossary
 

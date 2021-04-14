@@ -208,39 +208,35 @@ mngorder -left-> EmailGateway
 ```
 
 ```plantuml
-rectangle "FR1 Managing Employees - Details " {
-    usecase "FR1 Managing Employees" as memployee
-    usecase "FR1.1 Add an Employee" as addemployee
-    usecase "FR1.2 Modify an Employee" as modifyemployee
-    usecase "FR1.3 Delete an Employee" as rememployee
+usecase "FR1 Managing Employees" as memployee
+usecase "FR1.1 Add an Employee" as addemployee
+usecase "FR1.2 Modify an Employee" as modifyemployee
+usecase "FR1.3 Delete an Employee" as rememployee
 
-    memployee --> addemployee : <<include>>
-    memployee --> modifyemployee : <<include>>
-    memployee --> rememployee : <<include>>
-}
+memployee --> addemployee : <<include>>
+memployee --> modifyemployee : <<include>>
+memployee --> rememployee : <<include>>
 
-rectangle "FR3 Managing Sales - Details " {
-    usecase "FR3 Managing Sales" as mngsales
-    usecase "FR3.1 Creating a shop cart" as addshopcart
-    usecase "FR3.2 Committing a shop cart" as confirmcart
-    usecase "FR3.2.2 Print Invoice" as printinvoice
-    usecase "FR3.2.3 Print sales ticket" as printicket
-    usecase "FR3.2.4 Pay the total" as paytotal
 
-    mngsales --> addshopcart : <<include>>
-    mngsales --> confirmcart : <<include>>
-    
-    confirmcart --> printinvoice : <<include>>
-    confirmcart --> printicket : <<include>>
-    confirmcart --> paytotal : <<include>>
+usecase "FR3 Managing Sales" as mngsales
+usecase "FR3.1 Creating a shop cart" as addshopcart
+usecase "FR3.2 Committing a shop cart" as confirmcart
+usecase "FR3.2.2 Print Invoice" as printinvoice
+usecase "FR3.2.3 Print sales ticket" as printicket
+usecase "FR3.2.4 Pay the total" as paytotal
 
-}
+mngsales --> addshopcart : <<include>>
+mngsales --> confirmcart : <<include>>
 
-rectangle "FR4 Managing Customers - Details " {
-    usecase "FR4.1 Add an Employee" as addemployee
-    usecase "FR4.2 Modify an Employee" as modifyemployee
-    usecase "FR4.3 Delete an Employee" as rememployee
-}
+confirmcart --> printinvoice : <<include>>
+confirmcart --> printicket : <<include>>
+confirmcart --> paytotal : <<include>>
+
+
+usecase "FR4.1 Add an Employee" as addemployee
+usecase "FR4.2 Modify an Employee" as modifyemployee
+usecase "FR4.3 Delete an Employee" as rememployee
+
 ```
 
 \<next describe here each use case in the UCD>

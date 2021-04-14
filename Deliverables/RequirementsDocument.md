@@ -294,11 +294,6 @@ mngsales --> confirmcart : <<include>>
 confirmcart --> printinvoice : <<include>>
 confirmcart --> printicket : <<include>>
 confirmcart --> paytotal : <<include>>
-
-
-usecase "FR4.1 Add an Employee" as addemployee
-usecase "FR4.2 Modify an Employee" as modifyemployee
-usecase "FR4.3 Delete an Employee" as rememployee
 ```
 
 ```plantuml
@@ -312,6 +307,17 @@ mngcustomer --> addcustomer : <<include>>
 mngcustomer --> modcustomer : <<include>>
 mngcustomer --> remcustomer : <<include>>
 mngcustomer --> listcustomer : <<include>>
+
+usecase "FR6 Managing Supplier" as mngsupplier
+usecase "FR6.1 Add a new supplier" as addsupplier
+usecase "FR6.5 Modify an existing one" as modsupplier
+usecase "FR6.2 Delete a supplier" as remsupplier
+usecase "FR6.4 Search a supplier" as listsupplier
+
+mngsupplier --> addsupplier : <<include>>
+mngsupplier --> modsupplier : <<include>>
+mngsupplier --> remsupplier : <<include>>
+mngsupplier --> listsupplier : <<include>>
 ```
 
 ```plantuml

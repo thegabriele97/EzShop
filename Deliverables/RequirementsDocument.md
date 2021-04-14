@@ -144,27 +144,30 @@ EZShop -- BarcodeReader
 | FR3.2.4		| Pay the total |
 | FR3.3			| Delete Cart |
 | FR4			| Managing customers |
-| FR4.1			| Add a new customer, or modify an existing customer|
+| FR4.1			| Add a new customer |
 | FR4.2     	| Delete a customer|
 | FR4.3			| List all Customer and Search a Customer |
 | FR4.4			| List all Customer's sales|
 | FR4.5			| Send an e-mail |
+| FR4.6 		| Modify an existing customer |
 | FR5			| Managing inventory|
-| FR5.1			| Add a new item, or modify quantity/price of an existing item|
+| FR5.1			| Add a new item |
 | FR5.2     	| Delete an item|
 | FR5.3			| List all itmes and quantity/prices|
 | FR5.4			| Search an item|
-| FR5.5			| Computing net profit|
+| FR5.6 		| Modify quantity/price of an existing item |
 | FR6			| Managing Supplier	|
-| FR6.1			| Add a new supplier, or modify an existing one|
+| FR6.1			| Add a new supplier |
 | FR6.2     	| Delete a supplier|
 | FR6.3			| List all suppliers|
 | FR6.4			| Search a supplier|
+| FR6.5			| Modify an existing one |
 | FR7			| Managing Order|
 | FR7.1			| Add supplier order|
 | FR7.2			| Modify supplier order	|
 | FR7.3			| Send order by email |
 | FR8			| Manage accounting |
+| FR8.1			| Computing net profit |
 
 
 ## Non Functional Requirements
@@ -262,7 +265,6 @@ usecase "FR4.3 Delete an Employee" as rememployee
 
 ```
 
-\<next describe here each use case in the UCD>
 ### Use case 1, UC1 - Add an Employee
 | Actors Involved        | Owner / Employee  |
 | ------------- |:-------------:| 
@@ -307,7 +309,7 @@ usecase "FR4.3 Delete an Employee" as rememployee
 
 ##### Scenario 2.1 (NOMINAL scenario)
 
-| Scenario 3.1 | Updating Employee data with not duplicated data |
+| Scenario 2.1 | Updating Employee data with not duplicated data |
 | ------------- |:-------------:| 
 |  Precondition     | Owner wants to modify an Employee |
 |  Post condition     | Employee E updated |
@@ -320,7 +322,7 @@ usecase "FR4.3 Delete an Employee" as rememployee
 
 ##### Scenario 2.2
 
-| Scenario 3.2 | Updating Employee data with duplicated data |
+| Scenario 2.2 | Updating Employee data with duplicated data |
 | ------------- |:-------------:| 
 |  Precondition     | Owner wants to modify an Employee |
 |  Post condition     | Employee E not updated |
@@ -331,7 +333,7 @@ usecase "FR4.3 Delete an Employee" as rememployee
 |  4	 | The system validates them and see that something is wrong (i.e. inserted a duplicated email) |
 |  5	 | The system notice the owner and doesn't commit the submission |
 
-### Use case 3, UC2 - Delete an Employee
+### Use case 3, UC3 - Delete an Employee
 | Actors Involved        | Owner / Employee  |
 | ------------- |:-------------:| 
 |  Precondition     | Employee E exists |  
@@ -426,9 +428,9 @@ usecase "FR4.3 Delete an Employee" as rememployee
 |  Nominal Scenario     | The employee wants to delete a customer from the system |
 |  Variants     |  |
 
-##### Scenario 3.1 (NOMINAL scenario)
+##### Scenario 6.1 (NOMINAL scenario)
 
-| Scenario 1.1 | Deleting a Customer |
+| Scenario 6.1 | Deleting a Customer |
 | ------------- |:-------------:| 
 |  Precondition     | Employee wants to delete a Customer |
 |  Post condition     | Customer C deleted |
@@ -446,7 +448,7 @@ usecase "FR4.3 Delete an Employee" as rememployee
 
 ##### Scenario 7.1 (NOMINAL scenario)
 
-| Scenario 1.1 | Searching a Customer |
+| Scenario 7.1 | Searching a Customer |
 | ------------- |:-------------:| 
 |  Precondition     | Employee wants to search a Customer |
 |  Post condition     | Customer C visualized |
@@ -456,7 +458,7 @@ usecase "FR4.3 Delete an Employee" as rememployee
 |  3     | The system show the customer or customers corresponding to the search
 
 ### Use case 8, UC8 - Managing Sales (Creating a shopping cart)
-| Actors Involved        | Employee / Product  |
+| Actors Involved        | Employee / Product / Barcode Reader  |
 | ------------- |:-------------:| 
 |  Precondition     | There are no pending shopping carts |  
 |  Post condition     | A shopping cart is created |
@@ -539,7 +541,7 @@ usecase "FR4.3 Delete an Employee" as rememployee
 
 ##### Scenario 9.4
 
-| Scenario 9.3 | Committing a shopping cart but there are problems with the POS |
+| Scenario 9.4 | Committing a shopping cart but there are problems with the POS |
 | ------------- |:-------------:| 
 |  Precondition     | An existing shopping cart is going to be committed, the user has enough money to pay (either in cash or POS), the printer is ok, the POS returns an error |
 |  Post condition     | A shopping cart is frozen |
@@ -549,6 +551,99 @@ usecase "FR4.3 Delete an Employee" as rememployee
 |  3	 | The payment is blocked (problems with the POS, can be refused cart or internet problems) |
 |  4	 | The system notify the Employee |
 |  5	 | The employee decides to retries, select another payment method |
+
+### Use case 10, UC10 - Managing Inventory (Register new item)
+| Actors Involved        | Employee / Product / Barcode Reader |
+| ------------- |:-------------:| 
+|  Precondition     | Item I doesn't exists |  
+|  Post condition     | Item I registered in the system |
+|  Nominal Scenario     | Employee Item I register a new item with all the required details (like price) |
+|  Variants     | The employee may try to insert a duplicate Item (identified by a duplicated barcode) and will result in an error |
+
+##### Scenario 10.1 (NOMINAL scenario)
+
+| Scenario 10.1 | Item C doesn't exists (i.e. barcode not registered into the system) |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to register a new Item |
+|  Post condition     | Item I registered |
+| Step#        | Description  |
+|  1     | Employee selects "Register new Item" |  
+|  2 	 | Employee reads the code with the barcode reader (or insert it manually) |
+|  3     | Employee inserts all the required informations about the Item |
+|  4     | Employee submit the form |
+|  5	 | The system validates them and see that it's not a duplicated item |
+|  6	 | The system registers the item |
+
+##### Scenario 10.2
+
+| Scenario 10.2 | Item I exists (i.e. barcode registered into the system) |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to register a new Item |
+|  Post condition     | System unchanged |
+| Step#        | Description  |
+|  1     | Employee selects "Register new Item" |  
+|  2 	 | Employee reads the code with the barcode reader (or insert it manually) |
+|  3	 | The system notices that the code is already registered |
+|  4	 | The system notice the employee and doesn't change the inventory DB |
+
+
+### Use case 11, UC11 - Managing Inventory (Modify quantity/price of an existing item)
+| Actors Involved        | Employee / Product |
+| ------------- |:-------------:| 
+|  Precondition     | Item C exists |  
+|  Post condition     | Item C exists and updated |
+|  Nominal Scenario     | The employee modify one or more fields of the Item |
+|  Variants     | |
+
+##### Scenario 11.1 (NOMINAL scenario)
+
+| Scenario 11.1 | Updating Item informations |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to modify an Item |
+|  Post condition     | Item I updated |
+| Step#        | Description  |
+|  1     | Employee selects "Modify this Item" |  
+|  2     | Employee update the informations about the Item |
+|  3     | Employee submit the form |
+|  4	 | The system validates them and see that everything is ok |
+|  5	 | The system updates the Item |
+
+### Use case 12, UC12 - Managing Inventory (Delete an item)
+| Actors Involved        | Employee / Product |
+| ------------- |:-------------:| 
+|  Precondition     | Item I exists |  
+|  Post condition     | Item I removed |
+|  Nominal Scenario     | The employee wants to delete an Item from the system |
+|  Variants     |  |
+
+##### Scenario 12.1 (NOMINAL scenario)
+
+| Scenario 12.1 | Deleting an Item |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to delete an Item |
+|  Post condition     | Item I deleted |
+| Step#        | Description  |
+|  1     | Employee selects "Delete this Item" |
+|  2	 | The system deletes the Item |
+
+### Use case 13, UC13 - Managing Inventory (Search an item)
+| Actors Involved        | Employee / Product  |
+| ------------- |:-------------:| 
+|  Precondition     |  |  
+|  Post condition     | The list of Items corresponding to the search is visualized |
+|  Nominal Scenario     | The employee wants to search a specific Item on the system |
+|  Variants     |  |
+
+##### Scenario 13.1 (NOMINAL scenario)
+
+| Scenario 13.1 | Searching an Item |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to search an Item |
+|  Post condition     | Item(s) I visualized |
+| Step#        | Description  |
+|  1     | The employee selects "Search Items" |
+|  2	 | The employee puts the Item infos (i.e. barcode or name) |
+|  3     | The system show the Item(s) if any relative to the search |
 
 # Glossary
 

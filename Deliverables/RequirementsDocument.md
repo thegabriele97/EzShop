@@ -102,10 +102,11 @@ EZShop -- BarcodeReader
 | ID        | Description  |
 | ------------- |-------------| 
 | FR1     		| Managing employees  |
-| FR1.1			| Add a new employee, or modify an existing employee|
-| FR1.2     	| Delete an employee |
-| FR1.3			| List all employee and Search an employee|
-| FR1.4			| Send an e-mail |
+| FR1.1			| Add a new employee |
+| FR1.2			| Modify an existing employee |
+| FR1.3     	| Delete an employee |
+| FR1.4			| List all employee and Search an employee|
+| FR1.5			| Send an e-mail |
 | FR2			| Managing permissions |
 | FR3			| Managing sales |
 | FR3.1			| Creating shop cart | 
@@ -206,45 +207,128 @@ Employee -left- mngorder
 mngorder -left-> EmailGateway
 ```
 
+```plantuml
+rectangle "FR1 Managing Employees - Details " {
+    usecase "FR1 Managing Employees" as memployee
+    usecase "FR1.1 Add an Employee" as addemployee
+    usecase "FR1.2 Modify an Employee" as modifyemployee
+    usecase "FR1.3 Delete an Employee" as rememployee
+
+    memployee --> addemployee : <<include>>
+    memployee --> modifyemployee : <<include>>
+    memployee --> rememployee : <<include>>
+}
+
+rectangle "FR3 Managing Sales - Details " {
+    usecase "FR3 Managing Sales" as mngsales
+    usecase "FR3.1 Creating a shop cart" as addshopcart
+    usecase "FR3.2 Committing a shop cart" as confirmcart
+    usecase "FR3.2.2 Print Invoice" as printinvoice
+    usecase "FR3.2.3 Print sales ticket" as printicket
+    usecase "FR3.2.4 Pay the total" as paytotal
+
+    mngsales --> addshopcart : <<include>>
+    mngsales --> confirmcart : <<include>>
+    
+    confirmcart --> printinvoice : <<include>>
+    confirmcart --> printicket : <<include>>
+    confirmcart --> paytotal : <<include>>
+
+}
+
+rectangle "FR4 Managing Customers - Details " {
+    usecase "FR4.1 Add an Employee" as addemployee
+    usecase "FR4.2 Modify an Employee" as modifyemployee
+    usecase "FR4.3 Delete an Employee" as rememployee
+}
+```
 
 \<next describe here each use case in the UCD>
-### Use case 1, UC1 - Add Employee
-| Actors Involved        |  |
+### Use case 1, UC1 - Add an Employee
+| Actors Involved        | Owner / Employee  |
 | ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the UC can start> |  
-|  Post condition     | \<Boolean expression, must evaluate to true after UC is finished> |
-|  Nominal Scenario     | \<Textual description of actions executed by the UC> |
-|  Variants     | \<other executions, ex in case of errors> |
+|  Precondition     | Employee E doesn't exists |  
+|  Post condition     | Employee E exists and registered in the system |
+|  Nominal Scenario     | The owner creates a new Employee with all the required details |
+|  Variants     | The owner may try to insert a duplicate Employee (identified by a duplicated email nor duplicted Fiscal Code) and will result in an error |
 
-##### Scenario 1.1 
+##### Scenario 1.1 (NOMINAL scenario)
 
-\<describe here scenarios instances of UC1>
-
-\<a scenario is a sequence of steps that corresponds to a particular execution of one use case>
-
-\<a scenario is a more formal description of a story>
-
-\<only relevant scenarios should be described>
-
-| Scenario 1.1 | |
+| Scenario 1.1 | Employee E doesn't exists (i.e. email and F.C. not registered into the system) |
 | ------------- |:-------------:| 
-|  Precondition     | \<Boolean expression, must evaluate to true before the scenario can start> |
-|  Post condition     | \<Boolean expression, must evaluate to true after scenario is finished> |
+|  Precondition     | Owner wants to register a new Employee |
+|  Post condition     | Employee E registered |
 | Step#        | Description  |
-|  1     |  |  
-|  2     |  |
-|  ...     |  |
+|  1     | Owner selects "Register new Employee" |  
+|  2     | Owner inserts all the required informations about the Employee |
+|  3     | Owner submit the form |
+|  4	 | The system validates them and see that it's not a duplicated employee |
+|  5	 | The system registers the employee |
 
 ##### Scenario 1.2
 
-##### Scenario 1.x
+| Scenario 1.2 | Employee E exists (i.e. email or F.C. registered into the system) |
+| ------------- |:-------------:| 
+|  Precondition     | Owner wants to register a new Employee |
+|  Post condition     | System unchanged |
+| Step#        | Description  |
+|  1     | Owner selects "Register new Employee" |  
+|  2     | Owner inserts all the required informations about the Employee |
+|  3     | Owner submit the form |
+|  4	 | The system validates them and see that there is something wrong |
+|  5	 | The system notice the owner and doesn't commit the submission |
 
-### Use case 2, UC2
-..
+### Use case 2, UC2 - Modify an Employee
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Employee E exists |  
+|  Post condition     | Employee E exists and updated |
+|  Nominal Scenario     | The owner modify one or more fields of the Employee |
+|  Variants     | The owner may try to insert a duplicate data (i.e. email already registered into the system) |
 
-### Use case x, UCx
-..
+##### Scenario 2.1 (NOMINAL scenario)
 
+| Scenario 1.1 | Updating Employee data with not duplicated data |
+| ------------- |:-------------:| 
+|  Precondition     | Owner wants to modify an Employee |
+|  Post condition     | Employee E updated |
+| Step#        | Description  |
+|  1     | Owner selects "Modify this Employee" |  
+|  2     | Owner updated the informations about the Employee |
+|  3     | Owner submit the form |
+|  4	 | The system validates them and see that everything is ok |
+|  5	 | The system updates the employee |
+
+##### Scenario 2.2
+
+| Scenario 1.2 | Updating Employee data with duplicated data |
+| ------------- |:-------------:| 
+|  Precondition     | Owner wants to modify an Employee |
+|  Post condition     | Employee E not updated |
+| Step#        | Description  |
+|  1     | Owner selects "Modify this Employee" |  
+|  2     | Owner updated the informations about the Employee |
+|  3     | Owner submit the form |
+|  4	 | The system validates them and see that something is wrong (i.e. inserted a duplicated email) |
+|  5	 | The system notice the owner and doesn't commit the submission |
+
+### Use case 3, UC2 - Delete an Employee
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Employee E exists |  
+|  Post condition     | Employee E removed |
+|  Nominal Scenario     | The owner wants to delete an eployee from the system |
+|  Variants     |  |
+
+##### Scenario 3.1 (NOMINAL scenario)
+
+| Scenario 1.1 | Deleteing an Employee |
+| ------------- |:-------------:| 
+|  Precondition     | Owner wants to delete an Employee |
+|  Post condition     | Employee E deleted |
+| Step#        | Description  |
+|  1     | Owner selects "Delete this Employee" |
+|  2	 | The system deletes the employee |
 
 
 # Glossary

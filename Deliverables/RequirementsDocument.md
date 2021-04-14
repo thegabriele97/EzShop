@@ -335,9 +335,18 @@ usecase "FR4.3 Delete an Employee" as rememployee
 
 # System Design
 \<describe here system design>
-
+```plantuml
+class DesktopPC
+DesktopPC o-- CashRegister
+```
 \<must be consistent with Context diagram>
 
 # Deployment Diagram 
+The software runs on one or more PC
 
+```plantuml
+node PC
+artifact EZShopSoftware
+EZShopSoftware -- "1..*" PC
+```
 \<describe here deployment diagram >

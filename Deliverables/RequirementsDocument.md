@@ -950,7 +950,7 @@ package "Managing Orders" {
 
 # Glossary
 
-```
+```plantuml
 class EZShop
 EZShop -- Accounting
 EZShop -- "*" User

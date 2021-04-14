@@ -270,54 +270,62 @@ Employee -left- mngorder
 mngorder -left-> EmailGateway
 ```
 
+### Use case diagram details
 ```plantuml
-usecase "FR1 Managing Employees" as memployee
-usecase "FR1.1 Add an Employee" as addemployee
-usecase "FR1.2 Modify an Employee" as modifyemployee
-usecase "FR1.3 Delete an Employee" as rememployee
+package "Managing Employees" {
+    usecase "FR1 Managing Employees" as memployee
+    usecase "FR1.1 Add an Employee" as addemployee
+    usecase "FR1.2 Modify an Employee" as modifyemployee
+    usecase "FR1.3 Delete an Employee" as rememployee
 
-memployee --> addemployee : <<include>>
-memployee --> modifyemployee : <<include>>
-memployee --> rememployee : <<include>>
+    memployee --> addemployee : <<include>>
+    memployee --> modifyemployee : <<include>>
+    memployee --> rememployee : <<include>>
+}
 
+package "Managing Sales" {
+    usecase "FR3 Managing Sales" as mngsales
+    usecase "FR3.1 Creating a shop cart" as addshopcart
+    usecase "FR3.2 Committing a shop cart" as confirmcart
+    usecase "FR3.2.2 Print Invoice" as printinvoice
+    usecase "FR3.2.3 Print sales ticket" as printicket
+    usecase "FR3.2.4 Pay the total" as paytotal
 
-usecase "FR3 Managing Sales" as mngsales
-usecase "FR3.1 Creating a shop cart" as addshopcart
-usecase "FR3.2 Committing a shop cart" as confirmcart
-usecase "FR3.2.2 Print Invoice" as printinvoice
-usecase "FR3.2.3 Print sales ticket" as printicket
-usecase "FR3.2.4 Pay the total" as paytotal
+    mngsales --> addshopcart : <<include>>
+    mngsales --> confirmcart : <<include>>
 
-mngsales --> addshopcart : <<include>>
-mngsales --> confirmcart : <<include>>
-
-confirmcart --> printinvoice : <<include>>
-confirmcart --> printicket : <<include>>
-confirmcart --> paytotal : <<include>>
+    confirmcart --> printinvoice : <<include>>
+    confirmcart --> printicket : <<include>>
+    confirmcart --> paytotal : <<include>>
+}
 ```
 
 ```plantuml
-usecase "FR4 Managing Customers" as mngcustomer
-usecase "FR4.1 Add a Customer" as addcustomer
-usecase "FR4.2 Modify a Customer" as modcustomer
-usecase "FR4.6 Delete a Customer" as remcustomer
-usecase "FR4.3 List all Customer and Search a Customer" as listcustomer
+package "Manage Customers" {
+    usecase "FR4 Managing Customers" as mngcustomer
+    usecase "FR4.1 Add a Customer" as addcustomer
+    usecase "FR4.2 Modify a Customer" as modcustomer
+    usecase "FR4.6 Delete a Customer" as remcustomer
+    usecase "FR4.3 List all \nCustomer and Search a Customer" as listcustomer
 
-mngcustomer --> addcustomer : <<include>>
-mngcustomer --> modcustomer : <<include>>
-mngcustomer --> remcustomer : <<include>>
-mngcustomer --> listcustomer : <<include>>
+    mngcustomer --> addcustomer : <<include>>
+    mngcustomer --> modcustomer : <<include>>
+    mngcustomer --> remcustomer : <<include>>
+    mngcustomer --> listcustomer : <<include>>
+}
 
-usecase "FR6 Managing Supplier" as mngsupplier
-usecase "FR6.1 Add a new supplier" as addsupplier
-usecase "FR6.5 Modify an existing one" as modsupplier
-usecase "FR6.2 Delete a supplier" as remsupplier
-usecase "FR6.4 Search a supplier" as listsupplier
+package "Manage Suppliers" {
+    usecase "FR6 Managing Supplier" as mngsupplier
+    usecase "FR6.1 Add a new supplier" as addsupplier
+    usecase "FR6.5 Modify an existing one" as modsupplier
+    usecase "FR6.2 Delete a supplier" as remsupplier
+    usecase "FR6.4 Search a supplier" as listsupplier
 
-mngsupplier --> addsupplier : <<include>>
-mngsupplier --> modsupplier : <<include>>
-mngsupplier --> remsupplier : <<include>>
-mngsupplier --> listsupplier : <<include>>
+    mngsupplier --> addsupplier : <<include>>
+    mngsupplier --> modsupplier : <<include>>
+    mngsupplier --> remsupplier : <<include>>
+    mngsupplier --> listsupplier : <<include>>
+}
 ```
 
 ```plantuml

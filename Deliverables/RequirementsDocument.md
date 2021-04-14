@@ -125,6 +125,8 @@ Actor POS
 Actor BarcodeReader
 Actor EmailGateway
 
+Actor Product
+
 usecase EZShop
 
 Employee -- EZShop
@@ -135,12 +137,15 @@ EZShop --> EmailGateway
 
 EZShop -- POS
 EZShop -- BarcodeReader
+
+EZShop --> Product
+
 ```
 
 ## Interfaces
 | Actor | Logical Interface | Physical Interface  |
 | ------------- |-------------| -----|
-|   Owner,Employee 	| GUI 	| keyboard, mouse and display (PC)|
+|   Owner, Employee 	| GUI 	| keyboard, mouse and display (PC)|
 |   Printer 		| GUI 	| LAN link |
 |   Barcode Reader 	|  		| USB |
 |   POS 			| MyPOS API https://developers.mypos.eu/en/doc/more_apis/v1_0/16-payment-initiation-service-(pis)	| Ethernet  |

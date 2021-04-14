@@ -552,6 +552,95 @@ usecase "FR4.3 Delete an Employee" as rememployee
 
 # Glossary
 
+```
+class EZShop
+EZShop -- Accounting
+EZShop -- "*" User
+EZShop -- Inventory
+EZShop -- "*" Customer
+EZShop -- "*" Sale
+Sale -- Cart
+Customer -- Cart
+Inventory -- "*" Product
+Cart -- "*" Product
+Inventory -- "*" Order
+User <|-- Owner
+User <|-- Employee
+Order -- Supplier
+
+class User{
+name
+surname
+email
+id
+pwd
+}
+
+class Owner
+class Employee{
+phone n.
+}
+class Customer{
+ID
+Name
+Surname
+VATcode/TaxCode
+Phone
+Email
+Address
+}
+class Supplier{
+ID
+CompanyName
+VATCode
+phone
+email
+}
+class Inventory{
+List_Of_All_Products_and_Quantity
+TotalValue
+TotalVAT
+}
+note top of Accounting: keeping track of every\nfinancial transactions (in & out)
+class Accounting{
+List_Of_Costs
+List_Of_Incomes
+Partial_Balance
+}
+class Sale{
+ID_Sale
+ID_Cart
+Date
+}
+class SaleTicket
+class Invoice
+Sale -- SaleTicket
+Sale -- "0..1" Invoice
+class Cart{
+ID
+ID_Customer
+List_of_Products
+Total_price
+Total_VAT
+}
+
+class Order{
+ID
+Date
+ID_Supplier
+List_Of_Products_needed
+Total cost
+
+}
+class Product{
+Code
+Description
+Price
+Quantity
+VAT_rate
+}
+```
+
 \<use UML class diagram to define important terms, or concepts in the domain of the system, and their relationships> 
 
 \<concepts are used consistently all over the document, ex in use cases, requirements etc>

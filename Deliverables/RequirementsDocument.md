@@ -14,17 +14,40 @@ Version:
 	+ [Context Diagram](#context-diagram)
 	+ [Interfaces](#interfaces) 
 	
+- [Requirements Document](#requirements-document)
+- [Contents](#contents)
+- [Essential description](#essential-description)
+- [Stakeholders](#stakeholders)
+- [Context Diagram and interfaces](#context-diagram-and-interfaces)
+	- [Context Diagram](#context-diagram)
+	- [Interfaces](#interfaces)
 - [Stories and personas](#stories-and-personas)
 - [Functional and non functional requirements](#functional-and-non-functional-requirements)
-	+ [Functional Requirements](#functional-requirements)
-	+ [Non functional requirements](#non-functional-requirements)
+	- [Functional Requirements](#functional-requirements)
+	- [Non Functional Requirements](#non-functional-requirements)
 - [Use case diagram and use cases](#use-case-diagram-and-use-cases)
-	+ [Use case diagram](#use-case-diagram)
-	+ [Use cases](#use-cases)
-    	+ [Relevant scenarios](#relevant-scenarios)
+	- [Use case diagram](#use-case-diagram)
+		- [Use case 1, UC1 - Add an Employee](#use-case-1-uc1---add-an-employee)
+				- [Scenario 1.1 (NOMINAL scenario)](#scenario-11-nominal-scenario)
+				- [Scenario 1.2](#scenario-12)
+		- [Use case 2, UC2 - Modify an Employee](#use-case-2-uc2---modify-an-employee)
+				- [Scenario 2.1 (NOMINAL scenario)](#scenario-21-nominal-scenario)
+				- [Scenario 2.2](#scenario-22)
+		- [Use case 3, UC2 - Delete an Employee](#use-case-3-uc2---delete-an-employee)
+				- [Scenario 3.1 (NOMINAL scenario)](#scenario-31-nominal-scenario)
+		- [Use case 4, UC4 - Add a Customer](#use-case-4-uc4---add-a-customer)
+				- [Scenario 4.1 (NOMINAL scenario)](#scenario-41-nominal-scenario)
+				- [Scenario 4.2](#scenario-42)
+		- [Use case 5, UC5 - Modify a Customer](#use-case-5-uc5---modify-a-customer)
+				- [Scenario 5.1 (NOMINAL scenario)](#scenario-51-nominal-scenario)
+				- [Scenario 5.2](#scenario-52)
+		- [Use case 6, UC6 - Delete a Customer](#use-case-6-uc6---delete-a-customer)
+				- [Scenario 3.1 (NOMINAL scenario)](#scenario-31-nominal-scenario-1)
+		- [Use case 7, UC7 - Search a Customer](#use-case-7-uc7---search-a-customer)
+				- [Scenario 7.1 (NOMINAL scenario)](#scenario-71-nominal-scenario)
 - [Glossary](#glossary)
-- [System design](#system-design)
-- [Deployment diagram](#deployment-diagram)
+- [System Design](#system-design)
+- [Deployment Diagram](#deployment-diagram)
 
 # Essential description
 
@@ -313,7 +336,7 @@ usecase "FR4.3 Delete an Employee" as rememployee
 | ------------- |:-------------:| 
 |  Precondition     | Employee E exists |  
 |  Post condition     | Employee E removed |
-|  Nominal Scenario     | The owner wants to delete an eployee from the system |
+|  Nominal Scenario     | The owner wants to delete an employee from the system |
 |  Variants     |  |
 
 ##### Scenario 3.1 (NOMINAL scenario)
@@ -326,6 +349,111 @@ usecase "FR4.3 Delete an Employee" as rememployee
 |  1     | Owner selects "Delete this Employee" |
 |  2	 | The system deletes the employee |
 
+### Use case 4, UC4 - Add a Customer
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Customer C doesn't exists |  
+|  Post condition     | Customer C exists and registered in the system |
+|  Nominal Scenario     | The employee creates a new Customer with all the required details |
+|  Variants     | The employee may try to insert a duplicate Customer (identified by a duplicated email nor duplicted Fiscal Code) and will result in an error |
+
+##### Scenario 4.1 (NOMINAL scenario)
+
+| Scenario 4.1 | Customer C doesn't exists (i.e. email and F.C. not registered into the system) |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to register a new Customer |
+|  Post condition     | Customer C registered |
+| Step#        | Description  |
+|  1     | Employee selects "Register new customer" |  
+|  2     | Employee inserts all the required informations about the customer |
+|  3     | Employee submit the form |
+|  4	 | The system validates them and see that it's not a duplicated customer |
+|  5	 | The system registers the customer |
+
+##### Scenario 4.2
+
+| Scenario 4.2 | Customer C exists (i.e. email or F.C. registered into the system) |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to register a new customer |
+|  Post condition     | System unchanged |
+| Step#        | Description  |
+|  1     | Employee selects "Register new customer" |  
+|  2     | Employee inserts all the required informations about the customer |
+|  3     | Employee submit the form |
+|  4	 | The system validates them and see that there is something wrong |
+|  5	 | The system notice the employee and doesn't commit the submission |
+
+
+### Use case 5, UC5 - Modify a Customer
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Customer C exists |  
+|  Post condition     | Customer C exists and updated |
+|  Nominal Scenario     | The employee modify one or more fields of the Customer |
+|  Variants     | The employee may try to insert a duplicate data (i.e. email already registered into the system) |
+
+##### Scenario 5.1 (NOMINAL scenario)
+
+| Scenario 5.1 | Updating Customer data with not duplicated data |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to modify a Employee |
+|  Post condition     | Customer C updated |
+| Step#        | Description  |
+|  1     | Employee selects "Modify this Customer" |  
+|  2     | Employee update the informations about the customer |
+|  3     | Employee submit the form |
+|  4	 | The system validates them and see that everything is ok |
+|  5	 | The system updates the customer |
+
+##### Scenario 5.2
+
+| Scenario 5.2 | Updating customer data with duplicated data |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to modify a customer |
+|  Post condition     | Customer E not updated |
+| Step#        | Description  |
+|  1     | Employee selects "Modify this customer" |  
+|  2     | Employee updated the informations about the customer |
+|  3     | Employee submit the form |
+|  4	 | The system validates them and see that something is wrong (i.e. inserted a duplicated email) |
+|  5	 | The system notice the employee and doesn't commit the submission |
+
+### Use case 6, UC6 - Delete a Customer
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     | Customer C exists |  
+|  Post condition     | Customer C removed |
+|  Nominal Scenario     | The employee wants to delete a customer from the system |
+|  Variants     |  |
+
+##### Scenario 3.1 (NOMINAL scenario)
+
+| Scenario 1.1 | Deleting a Customer |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to delete a Customer |
+|  Post condition     | Customer C deleted |
+| Step#        | Description  |
+|  1     | Employee selects "Delete this Customer" |
+|  2	 | The system deletes the customer |
+
+### Use case 7, UC7 - Search a Customer
+| Actors Involved        | Owner / Employee  |
+| ------------- |:-------------:| 
+|  Precondition     |  |  
+|  Post condition     | The list of customer corresponding to the search is visualized |
+|  Nominal Scenario     | The employee wants to search a specific customer on the system |
+|  Variants     |  |
+
+##### Scenario 7.1 (NOMINAL scenario)
+
+| Scenario 1.1 | Searching a Customer |
+| ------------- |:-------------:| 
+|  Precondition     | Employee wants to search a Customer |
+|  Post condition     | Customer C visualized |
+| Step#        | Description  |
+|  1     | The employee selects "Search Customer" |
+|  2	 | The employee puts the customer name and surname |
+|  3     | The system show the customer or customers corresponding to the search
 
 ### Use case 8, UC8 - Managing Sales (Creating a shopping cart)
 | Actors Involved        | Employee / Product  |

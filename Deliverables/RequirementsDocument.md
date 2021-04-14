@@ -304,9 +304,9 @@ package "Managing Sales" {
 package "Manage Customers" {
     usecase "FR4 Managing Customers" as mngcustomer
     usecase "FR4.1 Add a Customer" as addcustomer
-    usecase "FR4.2 Modify a Customer" as modcustomer
-    usecase "FR4.6 Delete a Customer" as remcustomer
-    usecase "FR4.3 List all \nCustomer and Search a Customer" as listcustomer
+    usecase "FR4.2 Modify\na Customer" as modcustomer
+    usecase "FR4.6 Delete\na Customer" as remcustomer
+    usecase "FR4.3 List all \nCustomer and Search \n a Customer" as listcustomer
 
     mngcustomer --> addcustomer : <<include>>
     mngcustomer --> modcustomer : <<include>>
@@ -316,10 +316,10 @@ package "Manage Customers" {
 
 package "Manage Suppliers" {
     usecase "FR6 Managing Supplier" as mngsupplier
-    usecase "FR6.1 Add a new supplier" as addsupplier
-    usecase "FR6.5 Modify an existing one" as modsupplier
-    usecase "FR6.2 Delete a supplier" as remsupplier
-    usecase "FR6.4 Search a supplier" as listsupplier
+    usecase "FR6.1 Add a\nnew supplier" as addsupplier
+    usecase "FR6.5 Modify\nan existing one" as modsupplier
+    usecase "FR6.2 Delete\na supplier" as remsupplier
+    usecase "FR6.4 Search\na supplier" as listsupplier
 
     mngsupplier --> addsupplier : <<include>>
     mngsupplier --> modsupplier : <<include>>
@@ -329,16 +329,29 @@ package "Manage Suppliers" {
 ```
 
 ```plantuml
-usecase "FR5 Managing Inventory" as mnginventory
-usecase "FR5.1 Add an item" as additem
-usecase "FR5.6 Modify an item" as moditem
-usecase "FR5.2 Delete an item" as remitem
-usecase "FR5.4 Search an item" as listitem
+package "Managing Inventory" {
+	usecase "FR5 Managing Inventory" as mnginventory
+	usecase "FR5.1 Add an item" as additem
+	usecase "FR5.6 Modify an item" as moditem
+	usecase "FR5.2 Delete an item" as remitem
+	usecase "FR5.4 Search an item" as listitem
 
-mnginventory --> additem : <<include>>
-mnginventory --> moditem : <<include>>
-mnginventory --> remitem : <<include>>
-mnginventory --> listitem : <<include>>
+	mnginventory --> additem : <<include>>
+	mnginventory --> moditem : <<include>>
+	mnginventory --> remitem : <<include>>
+	mnginventory --> listitem : <<include>>
+}
+
+package "Managing Orders" {
+    usecase "FR5 Managing Orders" as mngorders
+    usecase "FR5.1 Add supplier order" as addorder
+    usecase "FR5.3 Send order by email" as emailorder
+    usecase "FR5.2 Modify supplier order" as modorder
+
+    mngorders --> addorder : <<include>>
+    mngorders --> modorder : <<include>>
+    mngorders --> emailorder : <<include>>
+}
 ```
 
 ### Use case 1, UC1 - Add an Employee

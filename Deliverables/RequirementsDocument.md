@@ -951,92 +951,103 @@ package "Managing Orders" {
 # Glossary
 
 ```plantuml
-class EZShop
-EZShop -- Accounting
-EZShop -- "*" User
-EZShop -- Inventory
-EZShop -- "*" Customer
-EZShop -- "*" Sale
-Sale -- Cart
-Customer -- Cart
-Inventory -- "*" Product
-Cart -- "*" Product
-Inventory -- "*" Order
-User <|-- Owner
-User <|-- Employee
-Order -- Supplier
-
-class User{
-name
-surname
-email
-id
-pwd
+class EZShop {
+    - ShopName
 }
 
-class Owner
-class Employee{
-phone n.
+class User {
+    - UserId
+    - FirstName
+    - LastName
+    - Email
+    - PhoneNumber
+    - SSN
 }
-class Customer{
-ID
-Name
-Surname
-VATcode/TaxCode
-Phone
-Email
-Address
+
+class Owner {
+
 }
+
+class Employee {
+
+}
+
+class Customer {
+    - Address
+}
+
 class Supplier{
-ID
-CompanyName
-VATCode
-phone
-email
-}
-class Inventory{
-List_Of_All_Products_and_Quantity
-TotalValue
-TotalVAT
-}
-note top of Accounting: keeping track of every\nfinancial transactions (in & out)
-class Accounting{
-List_Of_Costs
-List_Of_Incomes
-Partial_Balance
-}
-class Sale{
-ID_Sale
-ID_Cart
-Date
-}
-class SaleTicket
-class Invoice
-Sale -- SaleTicket
-Sale -- "0..1" Invoice
-class Cart{
-ID
-ID_Customer
-List_of_Products
-Total_price
-Total_VAT
+    - SupplierID
+    - CompanyName
+    - PhoneNumber
+    - Email
 }
 
-class Order{
-ID
-Date
-ID_Supplier
-List_Of_Products_needed
-Total cost
+class Inventory as "Shop Inventory" {
+    
+}
 
+class Sale {
+    - SaleID
+    - SaleDate
 }
-class Product{
-Code
-Description
-Price
-Quantity
-VAT_rate
+
+class Cart {
+    - Payed {true, false}
 }
+
+class Order as "Supplier Order" {
+    - OrderID
+    - OrderDate
+    - TotalOrderPrice
+}
+
+class ProductDescriptor {
+    - ProductCode
+    - ProductName
+}
+
+class Product {
+    - ProductID
+    - Quantity
+    - Price
+    - VAT_rate
+}
+
+class InternalUser as "Worker" {
+    - WorkingFromDate
+}
+
+note left of Cart
+    The cart exists before the Sale. 
+    When the cart is committed 
+    (i.e. the customer pays), it becomes 
+    part of the Sale and frozen
+end note
+
+EZShop "*" -- "1..*" User
+EZShop -left- Inventory : "manages >"
+EZShop "*" -right- "*" Supplier: "has a list of >"
+
+User <|-- InternalUser
+User <|-- Customer
+InternalUser <|-right- Owner
+InternalUser <|-right- Employee
+
+ProductDescriptor "1" -- "1..*" Product: "< is described by"
+
+Inventory -left- "*" Product: "contains >"
+
+'Supplier "1" -right- "*" Order
+EZShop "1" -up- "*" Order: "issues >"
+Order "*" -left- "*" ProductDescriptor : "is made of >"
+Order -- Supplier: "The order is destinated to >"
+
+InternalUser "1" -left- "*" Sale : "issues >"
+Sale "*" -up- "0..*" Customer : "associated to >"
+
+Sale o-left- Cart 
+Cart "*" -up- "*" Product : " is made of >"
 ```
 
 \<use UML class diagram to define important terms, or concepts in the domain of the system, and their relationships> 

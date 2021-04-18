@@ -73,7 +73,7 @@ On the right side, we always have our **Summary** with two buttons:
 
 | Add successfully      |  Add with error |
 :-------------------------:|:-------------------------:
-| ![](assets/images/10.1_Add_ok.png) | ![](assets/images/10.2_Add_err.png) |
+| ![](assets/images/10.2_Add_ok.png) | ![](assets/images/10.1_Add_err.png) |
 
 ![](assets/images/10.4_inv_view_after_add.png)
 

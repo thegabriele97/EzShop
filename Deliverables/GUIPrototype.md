@@ -8,8 +8,10 @@ Version:
 
 \<Report here the GUI that you propose. You are free to organize it as you prefer. A suggested presentation matches the Use cases and scenarios defined in the Requirement document. The GUI can be shown as a sequence of graphical files (jpg, png)  >
 
-## Logged User (Employee)
-![Logged User (Employee)](assets/images/A-Userpage.png)
+## Logged User
+| Employee View             |  Owner View |
+:-------------------------:|:-------------------------:
+| ![Logged User (Employee)](assets/images/AdminPage.png) | ![Logged User (Employee)](assets/images/UserPage.png) |
 
 ## Use case 8, UC8 - Managing Sales 
 
@@ -60,7 +62,11 @@ On the right side, we always have our **Summary** with two buttons:
 | ![Logged User (Employee)](assets/images/J-9.3.png) | ![Logged User (Employee)](assets/images/M-Checkout(9.4).png) |
 
 
+
+
+
 ## Use case 10, UC10 - Managing Inventory (Register new item)
+![](assets/images/10_Inventory_view)
 
 ## Scenario 10.1 and 10.2
 ![](assets/images/10.1_Add.png)

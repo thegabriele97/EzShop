@@ -66,35 +66,33 @@ On the right side, we always have our **Summary** with two buttons:
 
 
 ## Use case 10, UC10 - Managing Inventory (Register new item)
-![](assets/images/10_Inventory_view.png)
+![](assets/images/A.png)
 
 ## Scenario 10.1 and 10.2
-![](assets/images/10.1_Add.png)
+![](assets/images/B.png)
 
 | Add successfully      |  Add with error |
 :-------------------------:|:-------------------------:
-| ![](assets/images/10.2_Add_ok.png) | ![](assets/images/10.1_Add_err.png) |
+| ![](assets/images/D.png) | ![](assets/images/C.png) |
 
-![](assets/images/10.4_inv_view_after_add.png)
-
-When.......
+![](assets/images/E.png)
 
 
 ## Use case 11, UC11 - Managing Inventory (Modify quantity/price of an existing item)
 ## Scenario 11.1
 | Modify view     |  View after modify |
 :-------------------------:|:-------------------------:
-| ![](assets/images/11_Modify.png)| ![](assets/images/11.1_After_modify.png) |
+| ![](assets/images/F.png)| ![](assets/images/G.png) |
 
 ## Use case 12, UC12 - Managing Inventory (Delete an item)
 ## Scenario 12.1
 | Delete view     |  View after Delete |
 :-------------------------:|:-------------------------:
-| ![](assets/images/12_Delete.png)| ![](assets/images/12.1_After_delete.png)|
+| ![](assets/images/H.png)| ![](assets/images/I.png)|
 
 
 ## Use case 13, UC13 - Managing Inventory (Search an item)
 ## Scenario 13.1
 | Search view     |  View after Search |
 :-------------------------:|:-------------------------:
-| ![](assets/images/13_Search.png)| ![](assets/images/13.1_After_Search.png)|
+| ![](assets/images/L.png)| ![](assets/images/M.png)|

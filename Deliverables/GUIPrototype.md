@@ -7,11 +7,13 @@ Date:
 Version:
 
 \<Report here the GUI that you propose. You are free to organize it as you prefer. A suggested presentation matches the Use cases and scenarios defined in the Requirement document. The GUI can be shown as a sequence of graphical files (jpg, png)  >
+## Login Page
+![](assets/images/LoginPage.png)
 
 ## Logged User
 | Employee View             |  Owner View |
 :-------------------------:|:-------------------------:
-| ![Logged User (Employee)](assets/images/AdminPage.png) | ![Logged User (Employee)](assets/images/UserPage.png) |
+| ![Logged User (Employee)](assets/images/UserPage.png) | ![Logged User (Employee)](assets/images/AdminPage.png) |
 
 ## Use case 8, UC8 - Managing Sales 
 
@@ -98,3 +100,31 @@ When.......
 | Search view     |  View after Search |
 :-------------------------:|:-------------------------:
 | ![](assets/images/13_Search.png)| ![](assets/images/13.1_After_Search.png)|
+
+## Use case 18, UC18 - Create an Order
+## Scenario 18.1
+| Orders list    |
+:-------------------------:
+| ![](assets/images/Orders_before.png)|
+
+| Creating order |
+:-------------------------:
+| ![](assets/images/Order.png)|
+
+|  Order added |
+:-------------------------:
+| ![](assets/images/Orders_after.png)|
+
+## Use case 19, UC19 - Modify an Order
+## Scenario 19.1
+| Orders list    |
+:-------------------------:
+| ![](assets/images/Orders_after.png)|
+
+| Modifying order |
+:-------------------------:
+| ![](assets/images/Order_mod.png)|
+
+|  Order modified |
+:-------------------------:
+| ![](assets/images/Orders_after_mod.png)|

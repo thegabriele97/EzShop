@@ -97,7 +97,7 @@ On the right side, we always have our **Summary** with two buttons:
 ## Scenario 13.1
 | Search view     |  View after Search |
 :-------------------------:|:-------------------------:
-| ![](assets/images/13_Search.png)| ![](assets/images/13.1_After_Search.png)|
+| ![](assets/images/L.png)| ![](assets/images/M.png)|
 
 ## Use case 18, UC18 - Create an Order
 ## Scenario 18.1

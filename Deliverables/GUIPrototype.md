@@ -192,3 +192,27 @@ On the right side, we always have our **Summary** with two buttons:
 |  Order modified |
 :-------------------------:
 | ![](assets/images/Orders_after_mod.png)|
+
+## Use case 20, UC20 - Delete an Order
+## Scenario 20.1
+| Orders list    |
+:-------------------------:
+| ![](assets/images/Orders_after.png)|
+
+| Successful deletion |
+:-------------------------:
+| ![](assets/images/Order_Del.png)|
+
+|  Order deleted |
+:-------------------------:
+| ![](assets/images/Orders_after_mod.png)|
+
+## Use case 21, UC21 - Commit an Order
+## Scenario 21.1 and 21.2
+| Orders list    |
+:-------------------------:
+| ![](assets/images/Orders_after.png)|
+
+| Successful commit     |  Error with commit      |
+:-------------------------:|:-------------------------:
+| ![](assets/images/Orders_CommitSucc.png) | ![](assets/images/Orders_CommitErr.png) |

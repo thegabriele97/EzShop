@@ -215,4 +215,4 @@ On the right side, we always have our **Summary** with two buttons:
 
 | Successful commit     |  Error with commit      |
 :-------------------------:|:-------------------------:
-| ![](assets/images/Orders_CommitSucc.png) | ![](assets/images/Orders_CommitErr.png) |
+| ![](assets/images/Orders_CommitSucc.png) | ![](assets/images/Order_CommitErr.png) |

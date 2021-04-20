@@ -1,10 +1,10 @@
 # Requirements Document 
 
-Authors:
+Authors: Baldazzi Alessandro, D'Anzi Francesco, Galota Simone, La Greca Salvatore Gabriele
 
-Date:
+Date: 20/04/2021
 
-Version:
+Version: 1.0
 
 # Contents
 
@@ -96,7 +96,7 @@ EZShop is a software application to:
 
 
 # Stakeholders
-
+We based the project on a work experience in a small furniture shop
 
 | Stakeholder name  | Description | 
 | ----------------- |-----------|
@@ -105,7 +105,7 @@ EZShop is a software application to:
 |   Customer		| Registered in shop's internal DB after the first purchase |
 |	Supplier		| Who supplies the items to sell			|
 |	Developer		| Who develops and maintains the software application	|
-|	Printer			| Used to print receipt / purchase notes	|
+|	Printer			| Used to print sales ticket, invoice or purchase notes	|
 |	Bar code reader | Used to read the bar code of each product			|
 |	POS				| Used to manage payment with credit card		|
 |	Email Gateway	| Used to send the order to the supplier		|
@@ -367,8 +367,8 @@ package "Managing Orders" {
 
 ### Use case 1, UC1 - Add an Employee
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
-|  Precondition     | Employee E doesn't exists |  
+| ------------- |-------------| 
+|  Precondition     | Employee E doesn't exist |  
 |  Post condition     | Employee E exists and registered in the system |
 |  Nominal Scenario     | The owner creates a new Employee with all the required details |
 |  Variants     | The owner may try to insert a duplicate Employee (identified by a duplicated email nor duplicted Fiscal Code) and will result in an error |
@@ -401,7 +401,7 @@ package "Managing Orders" {
 
 ### Use case 2, UC2 - Modify an Employee
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Employee E exists |  
 |  Post condition     | Employee E exists and updated |
 |  Nominal Scenario     | The owner modify one or more fields of the Employee |
@@ -453,7 +453,7 @@ package "Managing Orders" {
 
 ### Use case 4, UC4 - Add a Customer
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Customer C doesn't exists |  
 |  Post condition     | Customer C exists and registered in the system |
 |  Nominal Scenario     | The employee creates a new Customer with all the required details |
@@ -488,7 +488,7 @@ package "Managing Orders" {
 
 ### Use case 5, UC5 - Modify a Customer
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Customer C exists |  
 |  Post condition     | Customer C exists and updated |
 |  Nominal Scenario     | The employee modify one or more fields of the Customer |
@@ -522,7 +522,7 @@ package "Managing Orders" {
 
 ### Use case 6, UC6 - Delete a Customer
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Customer C exists |  
 |  Post condition     | Customer C removed |
 |  Nominal Scenario     | The employee wants to delete a customer from the system |
@@ -540,8 +540,8 @@ package "Managing Orders" {
 
 ### Use case 7, UC7 - Search a Customer
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
-|  Precondition     |  |  
+| ------------- |-------------| 
+|  Precondition     | Owner / Employee wants to search a Customer |  
 |  Post condition     | The list of customer corresponding to the search is visualized |
 |  Nominal Scenario     | The employee wants to search a specific customer on the system |
 |  Variants     |  |
@@ -559,7 +559,7 @@ package "Managing Orders" {
 
 ### Use case 8, UC8 - Managing Sales (Creating a shopping cart)
 | Actors Involved        | Employee / Product / Barcode Reader  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | There are no pending shopping carts |  
 |  Post condition     | A shopping cart is created |
 |  Nominal Scenario     | A shopping cart is created and its details are defined |
@@ -594,7 +594,7 @@ package "Managing Orders" {
 
 ### Use case 9, UC9 - Managing Sales (Committing shopping cart)
 | Actors Involved        | Employee / Printer / POS / Product |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | An existing shopping cart is going to be committed |  
 |  Post condition     | - A shopping cart is payed and committed - The inventory is updated |
 |  Nominal Scenario     | A shopping cart is committed and the customer pays correctly |
@@ -654,7 +654,7 @@ package "Managing Orders" {
 
 ### Use case 10, UC10 - Managing Inventory (Register new item)
 | Actors Involved        | Employee / Product / Barcode Reader |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Item I doesn't exists |  
 |  Post condition     | Item I registered in the system |
 |  Nominal Scenario     | Employee Item I register a new item with all the required details (like price) |
@@ -689,7 +689,7 @@ package "Managing Orders" {
 
 ### Use case 11, UC11 - Managing Inventory (Modify quantity/price of an existing item)
 | Actors Involved        | Employee / Product |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Item C exists |  
 |  Post condition     | Item C exists and updated |
 |  Nominal Scenario     | The employee modify one or more fields of the Item |
@@ -710,7 +710,7 @@ package "Managing Orders" {
 
 ### Use case 12, UC12 - Managing Inventory (Delete an item)
 | Actors Involved        | Employee / Product |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Item I exists |  
 |  Post condition     | Item I removed |
 |  Nominal Scenario     | The employee wants to delete an Item from the system |
@@ -720,7 +720,7 @@ package "Managing Orders" {
 
 | Scenario 12.1 | Deleting an Item |
 | ------------- |-------------| 
-|  Precondition     | Employee wants to delete an Item |
+|  Precondition     | Owner / Employee wants to delete an Item |
 |  Post condition     | Item I deleted |
 | Step#        | Description  |
 |  1     | Employee selects "Delete this Item" |
@@ -728,8 +728,8 @@ package "Managing Orders" {
 
 ### Use case 13, UC13 - Managing Inventory (Search an item)
 | Actors Involved        | Employee / Product  |
-| ------------- |-------------:| 
-|  Precondition     |  |  
+| ------------- |-------------| 
+|  Precondition     | Employee wants to search an Item |  
 |  Post condition     | The list of Items corresponding to the search is visualized |
 |  Nominal Scenario     | The employee wants to search a specific Item on the system |
 |  Variants     |  |
@@ -747,7 +747,7 @@ package "Managing Orders" {
 
 ### Use case 14, UC14 - Add a Supplier
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Supplier S doesn't exists |  
 |  Post condition     | Supplier S exists and registered in the system |
 |  Nominal Scenario     | The employee creates a new Supplier with all the required details |
@@ -782,7 +782,7 @@ package "Managing Orders" {
 
 ### Use case 15, UC15 - Modify a Supplier
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Supplier S exists |  
 |  Post condition     | Supplier S exists and updated |
 |  Nominal Scenario     | The employee modify one or more fields of the Supplier |
@@ -816,7 +816,7 @@ package "Managing Orders" {
 
 ### Use case 16, UC16 - Delete a Supplier
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Supplier S exists |  
 |  Post condition     | Supplier S removed |
 |  Nominal Scenario     | The employee wants to delete a Supplier from the system |
@@ -834,8 +834,8 @@ package "Managing Orders" {
 
 ### Use case 17, UC17 - Search a Supplier
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
-|  Precondition     |  |  
+| ------------- |-------------| 
+|  Precondition     | Owner / Employee wants to search a Supplier |  
 |  Post condition     | The list of suppliers corresponding to the search is visualized |
 |  Nominal Scenario     | The employee wants to search a specific Supplier on the system |
 |  Variants     |  |
@@ -853,7 +853,7 @@ package "Managing Orders" {
 
 ### Use case 18, UC18 - Create an Order
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Order O doesn't exists |  
 |  Post condition     | Order O exists |
 |  Nominal Scenario     | The employee creates a new Order with all the required details |
@@ -873,7 +873,7 @@ package "Managing Orders" {
 
 ### Use case 19, UC19 - Modify an Order
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Order O exists |  
 |  Post condition     | Order O exists and  is updated |
 |  Nominal Scenario     | The employee modify one or more fields of the Order |
@@ -894,7 +894,7 @@ package "Managing Orders" {
 
 ### Use case 20, UC20 - Destroy an Order
 | Actors Involved        | Owner / Employee  |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Order O exists |  
 |  Post condition     | Order O destroyed |
 |  Nominal Scenario     | The employee wants to destroy an uncommitted Order |
@@ -912,7 +912,7 @@ package "Managing Orders" {
 
 ### Use case 21, UC21 - Commit an Order
 | Actors Involved        | Owner / Employee / EmailGateway |
-| ------------- |-------------:| 
+| ------------- |-------------| 
 |  Precondition     | Order O exists |  
 |  Post condition     | Order O is committed |
 |  Nominal Scenario     | The employee wants to commit an Order |
@@ -1050,17 +1050,15 @@ Sale o-left- Cart
 Cart "*" -up- "*" Product : " is made of >"
 ```
 
-\<use UML class diagram to define important terms, or concepts in the domain of the system, and their relationships> 
 
-\<concepts are used consistently all over the document, ex in use cases, requirements etc>
 
 # System Design
-\<describe here system design>
+
 ```plantuml
 class DesktopPC
 DesktopPC o-- CashRegister
 ```
-\<must be consistent with Context diagram>
+
 
 # Deployment Diagram 
 The software runs on one or more PC
@@ -1070,4 +1068,4 @@ node PC
 artifact EZShopSoftware
 EZShopSoftware -- "1..*" PC
 ```
-\<describe here deployment diagram >
+

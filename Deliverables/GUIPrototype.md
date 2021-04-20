@@ -1,10 +1,10 @@
 # Graphical User Interface Prototype  
 
-Authors:
+Authors: Baldazzi Alessandro, D'Anzi Francesco, Galota Simone, La Greca Salvatore Gabriele
 
-Date:
+Date: 20/04/2021
 
-Version:
+Version: 1.0
 
 ## Login Page
 ![](assets/images/LoginPage.png)
@@ -201,11 +201,11 @@ On the right side, we always have our **Summary** with two buttons:
 
 | Successful deletion |
 :-------------------------:
-| ![](assets/images/Order_Del.png)|
+| ![](assets/images/Orders_Del.png)|
 
 |  Order deleted |
 :-------------------------:
-| ![](assets/images/Orders_after_mod.png)|
+| ![](assets/images/Orders_before.png)|
 
 ## Use case 21, UC21 - Commit an Order
 ## Scenario 21.1 and 21.2

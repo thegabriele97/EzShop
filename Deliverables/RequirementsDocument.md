@@ -147,7 +147,7 @@ EZShop --> Product
 | ------------- |-------------| -----|
 |   Owner, Employee 	| GUI 	| keyboard, mouse and display (PC)|
 |   Printer 		| GUI 	| LAN link |
-|   Barcode Reader 	|  		| USB |
+|   Barcode Reader 	| GUI 		| USB |
 |   POS 			| MyPOS API https://developers.mypos.eu/en/doc/more_apis/v1_0/16-payment-initiation-service-(pis)	| Ethernet  |
 |   Email Gateway 	| GUI 	| Internet  |
 

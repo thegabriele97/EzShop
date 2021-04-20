@@ -17,6 +17,50 @@ Version:
 ## Accounting
 ![Logged User (Employee)](assets/images/Accounting.png)
 
+## Employees List
+![](assets/images/Employee-Search.png)
+
+## Use case 1, UC1 - Adding Employees
+![](assets/images/Employee-Add(UC1).png)
+
+## Scenario 1.1 and 1.2
+| Successful adding        |  Error with adding      |
+:-------------------------:|:-------------------------:
+| ![](assets/images/Employee-Add-Success(Scenario1.1).png) | ![](assets/images/Employee-Add-Error(Scenario1.2).png) |
+
+## Use case 2, UC2 - Modifying Employees
+![](assets/images/Employee-Modify(UC2).png)
+
+## Scenario 2.1 and 2.2
+| Successful modifying     |  Error with modifying      |
+:-------------------------:|:-------------------------:
+| ![](assets/images/Employee-Modify-Success(Scenario2.1).png) | ![](assets/images/Employee-Modify-Error(Scenario2.2).png) |
+
+## Use case 3, UC3 - Deleting Employees
+![](assets/images/Employee-Delete(UC3).png)
+
+## Customers List
+![](assets/images/Customer-Search(UC7).png)
+
+## Use case 4, UC4 - Adding Customers
+![](assets/images/Customer-Add(UC4).png)
+
+## Scenario 4.1 and 4.2
+| Successful adding        |  Error with adding      |
+:-------------------------:|:-------------------------:
+| ![](assets/images/Customer-Add-Success(Scenario4.1).png) | ![](assets/images/Customer-Add-Error(Scenario4.2).png) |
+
+## Use case 5, UC5 - Modifying Customers
+![](assets/images/Customer-Modify(UC5).png)
+
+## Scenario 5.1 and 5.2
+| Successful modifying     |  Error with modifying      |
+:-------------------------:|:-------------------------:
+| ![](assets/images/Customer-Modify-Success(Scenario5.1).png) | ![](assets/images/Customer-Modify-Error(Scenario5.2).png) |
+
+## Use case 6, UC6 - Deleting Customers
+![](assets/images/Customer-Delete(UC6).png)
+
 ## Use case 8, UC8 - Managing Sales 
 
 | Today Sales             |  All Sales |
@@ -98,6 +142,28 @@ On the right side, we always have our **Summary** with two buttons:
 | Search view     |  View after Search |
 :-------------------------:|:-------------------------:
 | ![](assets/images/L.png)| ![](assets/images/M.png)|
+
+## Suppliers List
+![](assets/images/Supplier-Search(UC17).png)
+
+## Use case 14, UC14 - Adding Suppliers
+![](assets/images/Supplier-Add(UC14).png)
+
+## Scenario 14.1 and 14.2
+| Successful adding        |  Error with adding      |
+:-------------------------:|:-------------------------:
+| ![](assets/images/Supplier-Add-Success(Scenario14.1).png) | ![](assets/images/Supplier-Add-Error(Scenario14.2).png) |
+
+## Use case 15, UC15 - Modifying Suppliers
+![](assets/images/Supplier-Modify(UC15).png)
+
+## Scenario 15.1 and 15.2
+| Successful modifying     |  Error with modifying      |
+:-------------------------:|:-------------------------:
+| ![](assets/images/Supplier-Modify-Success(Scenario15.1).png) | ![](assets/images/Supplier-Modify-Error(Scenario15.2).png) |
+
+## Use case 16, UC16 - Deleting Suppliers
+![](assets/images/Supplier-Delete(UC16).png)
 
 ## Use case 18, UC18 - Create an Order
 ## Scenario 18.1

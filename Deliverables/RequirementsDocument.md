@@ -1061,11 +1061,18 @@ DesktopPC o-- CashRegister
 
 
 # Deployment Diagram 
-The software runs on one or more PC
+The software runs on one or more PC. The synchronization is achieved by a communication between Clients and Server.
 
 ```plantuml
-node PC
-artifact EZShopSoftware
-EZShopSoftware -- "1..*" PC
+node WorkerPC
+node ShopServer
+
+artifact EzShopServer
+artifact EzShopClient
+
+EzShopServer -down-> ShopServer : <<deploy>>
+EzShopClient -down-> WorkerPC : <<deploy>>
+
+WorkerPC "*" -left- ShopServer : internet link
 ```
 

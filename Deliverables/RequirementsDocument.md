@@ -1061,7 +1061,7 @@ DesktopPC o-- CashRegister
 
 
 # Deployment Diagram 
-The software runs on one or more PC. The synchronization is achieved by a communication between Clients and Server.
+The software runs on one or more PC. The synchronization between Clients is achieved by centralized Server.
 
 ```plantuml
 node WorkerPC

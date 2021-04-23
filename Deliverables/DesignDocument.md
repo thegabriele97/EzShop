@@ -24,18 +24,118 @@ The design must satisfy the Official Requirements document, notably functional a
 <discuss architectural styles used, if any>
 <report package diagram>
 
+```plantuml
+package "it.polito.ezshop.gui" as GUI #DDDDDD {
 
+}
 
+package "it.polito.ezshop.logic" as Backend {
 
+    package "it.polito.ezshop.data" as data {
 
+    }
+
+    package "it.polito.ezshop.exceptions" as excp {
+
+    }
+
+    package "it.polito.ezshop.model" as model {
+
+    }
+
+    data ..> excp
+    data ..> model
+
+}
+
+GUI .up.> data
+```
 
 # Low level design
 
 <for each package, report class diagram>
 
 
+```plantuml
+package "it.polito.ezshop.data" as data {
 
+    interface "EZShopInterface" as ezinterface {
+        
+        {method} +reset(): void
+        +createUser(): Integer
+        +deleteUser(): boolean
+        +getAllUsers(): List<User>
+        +getUser(): User
+        +updateUserRights(): boolean
+        +login(): User
+        +logout(): boolean
+        +createProductType(): Integer
+        +updateProduct(): boolean
+        +deleteProductType(): boolean
+        +getAllProductTypes(): List<ProductType>
+        +getProductTypeByBarCode(): ProductType
+        +getProductTypesByDescription(): List<ProductType>
+        +updateQuantity(): boolean
+        +updatePosition(): boolean
+        +issueReorder(): Integer
+        +payOrderFor(): Integer
+        +payOrder(): boolean
+        +recordOrderArrival(): boolean
+        +getAllOrders(): List<Order>
+        +defineCustomer(): Integer
+        +modifyCustomer(): boolean
+        +deleteCustomer(): boolean
+        +getCustomer(): Customer
+        +getAllCustomers(): List<Customer>
+        +createCard(): String
+        +attachCardToCustomer(): boolean
+        +modifyPointsOnCard(): boolean
+        +startSaleTransaction(): Integer
+        +addProductToSale(): boolean
+        +deleteProductFromSale(): boolean
+    }
 
+    class "EZShop" as ezshop {
+
+    }
+
+    class LoginManager {
+
+    }
+
+    class RightsManager {
+
+    }
+
+    class DataManager {
+
+    }
+
+    note top of LoginManager
+     <b>Singleton class</b> 
+     to manage logged 
+     user sessions or login
+     requests
+    end note
+
+    note top of RightsManager
+     <b>Singleton class</b> 
+     to manage users' rights
+    end note
+
+    note right of DataManager
+     <b>Singleton class</b> 
+     to manage all App's data
+    end note
+
+    ezshop -up-|> ezinterface : <<implements>
+    ezshop .right.> LoginManager
+    ezshop .left.> RightsManager
+    ezshop .down.> DataManager
+    
+
+}
+```
 
 
 

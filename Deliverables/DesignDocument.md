@@ -25,11 +25,11 @@ The design must satisfy the Official Requirements document, notably functional a
 <report package diagram>
 
 ```plantuml
-package "it.polito.ezshop.gui" as GUI #DDDDDD {
+package "GUI" as GUI #DDDDDD {
 
 }
 
-package "it.polito.ezshop.logic" as Backend {
+package "Application Logic" as Backend {
 
     package "it.polito.ezshop.data" as data {
 

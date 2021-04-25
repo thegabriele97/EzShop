@@ -171,6 +171,7 @@ package "it.polito.ezshop.data" as data {
 
 
 ```plantuml
+
 package "it.polito.ezshop.model" as model {
     class User {
         -ID: Integer
@@ -202,7 +203,7 @@ package "it.polito.ezshop.model" as model {
     }
 
     class Sale {
-        -ID: Integer
+        -transactionId: Integer
         -date: Date
         -cost: Double
         -paymentType: String
@@ -215,6 +216,10 @@ package "it.polito.ezshop.model" as model {
     }
 
     class ReturnTransaction {
+
+    }
+
+    class CReturn {
         -SaleTransaction: SaleTransaction
         -returnedProduct: ProductType
         -quantity: Integer
@@ -235,15 +240,17 @@ package "it.polito.ezshop.model" as model {
         -status: 
     }
 
-    enum TransactionTypeEnum {
-        +Credit
-        +Debit
-    }
-
     class BalanceTransaction {
         -value: Double
-        -transactionType: TransactionTypeEnum
         -description: String
+    }
+
+    abstract Credit <<abstract>> {
+
+    }
+
+    abstract Debit <<abstract>> {
+
     }
 
     class Customer {
@@ -264,21 +271,26 @@ package "it.polito.ezshop.model" as model {
 
 
     ProductType --> Position
-    ReturnTransaction --> ProductType
+    CReturn --> ProductType
     Sale --> ProductType
-    Sale -- ReturnTransaction
+    Sale <-- CReturn
 
-    LoyaltyCard -- Customer
-    Sale -- LoyaltyCard
+    LoyaltyCard <--> Customer
+    Sale <--> LoyaltyCard
 
-    BalanceTransaction <|-- Ticket
-    BalanceTransaction <|-- ReturnTransaction
-    BalanceTransaction <|-- OrderTransaction
+    BalanceTransaction <|-- Credit
+    BalanceTransaction <|-- Debit
+
+    Credit <|-- Ticket
+    Debit <|-- ReturnTransaction
+    Debit <|-- OrderTransaction
 
     OrderTransaction --> Order
+    Order --> ProductType
     Ticket --> Sale
 
-    BalanceTransaction -right-> TransactionTypeEnum
+    CReturn <-up- ReturnTransaction 
+
 }
 
 ```

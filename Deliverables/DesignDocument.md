@@ -166,6 +166,118 @@ package "it.polito.ezshop.data" as data {
     
 
 }
+
+
+package "it.polito.ezshop.model" as model {
+    class User {
+        -ID: Integer
+        -username: String
+        -password: String
+        -role: String
+        {method} +setRole(): void
+        +getRole(): string
+    }
+
+    class ProductType {
+        -barcode: String
+        -description: String
+        -selfPrice: Double
+        -quantity: Integer
+        -discountRate: Double
+        -notes: String
+        -position: Position
+    }
+
+    class Position {
+        -aisleID: Integer
+        -rackID: String
+        -levelID: Integer
+    }
+
+    class Ticket {
+
+    }
+
+    class Sale {
+        -ID: Integer
+        -date: Date
+        -cost: Double
+        -paymentType: String
+        -discountRate: Double
+        -loyaltyCard: SaleTransaction
+        -committed: boolean
+        -Products: Map<ProductType, Integer>
+        -ReturnTransaction: List<ReturnTransaction>
+        {method} +addProduct(): void
+    }
+
+    class ReturnTransaction {
+        -SaleTransaction: SaleTransaction
+        -returnedProduct: ProductType
+        -quantity: Integer
+        -returnedValue: Double
+        -committed: boolean
+    }
+
+    class OrderTransaction {
+        -relatedOrder: Order
+    }
+
+    class Order {
+        -ID: Integer
+        -supplier: String
+        -pricePerUnit: Double
+        -quantity: Integer
+        -product: ProductType
+        -status: 
+    }
+
+    enum TransactionTypeEnum {
+        +Credit
+        +Debit
+    }
+
+    class BalanceTransaction {
+        -value: Double
+        -transactionType: TransactionTypeEnum
+        -description: String
+    }
+
+    class Customer {
+        -name: String
+        -surname: String
+        - loyaltyCard: LoyaltyCard
+    }
+
+    class LoyaltyCard {
+        -ID: String
+        -points: Integer
+        -customer: Customer
+        -SaleTransactions: List<SaleTransaction>
+        {method} +addCustomer(): boolean
+        +addPoints(): void
+        +getPoints(): void
+    }
+
+
+    ProductType --> Position
+    ReturnTransaction --> ProductType
+    Sale --> ProductType
+    Sale -- ReturnTransaction
+
+    LoyaltyCard -- Customer
+    Sale -- LoyaltyCard
+
+    BalanceTransaction <|-- Ticket
+    BalanceTransaction <|-- ReturnTransaction
+    BalanceTransaction <|-- OrderTransaction
+
+    OrderTransaction --> Order
+    Ticket --> Sale
+
+    BalanceTransaction -right-> TransactionTypeEnum
+}
+
 ```
 
 

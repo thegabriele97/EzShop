@@ -189,3 +189,30 @@ package "it.polito.ezshop.data" as data {
 # Verification sequence diagrams 
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
+## Scenario 2-1
+
+```plantuml
+participant GUI
+
+GUI -> EZShop: createUser()
+activate EZShop
+
+EZShop -> RightManager: canManageUsers()
+activate RightManager
+
+RightManager -> LoginManager: isUserLogged()
+activate LoginManager
+LoginManager -> RightManager: user is logged
+deactivate LoginManager
+
+RightManager -> EZShop: user has permissions
+deactivate RightManager
+
+EZShop -> DataManager: insertUser()
+activate DataManager
+DataManager -> EZShop: user created and saved in the DB
+deactivate DataManager
+
+EZShop -> GUI: Done
+deactivate EZShop
+```

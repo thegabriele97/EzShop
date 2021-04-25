@@ -167,7 +167,10 @@ package "it.polito.ezshop.data" as data {
 
 }
 
+```
 
+
+```plantuml
 package "it.polito.ezshop.model" as model {
     class User {
         -ID: Integer

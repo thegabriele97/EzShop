@@ -99,39 +99,70 @@ package "it.polito.ezshop.data" as data {
 
     }
 
-    class LoginManager {
-
+    class LoginManager << (S,#FF7700) Singleton >> {
+        -loggedUser: User
+        +tryLogin(): boolean
+        +tryLogout(): boolean
+        +isUserLogged(): boolean
+        +getLoggedUser(): User
     }
 
-    class RightsManager {
-
+    class RightsManager << (S,#FF7700) Singleton >> {
+        +canManageUsers(): boolean
+        +canManageProductCatalog(): boolean
+        +canListAllProductsTypes(): boolean
+        +canManageInventory(): boolean
+        +canManageCustomers(): boolean
+        +canManageSaleTransaction(): boolean
+        +canUseBarcodeReader(): boolean
+        +canManageAccounting(): boolean
     }
 
-    class DataManager {
-
+    class "DataManager" as DataManager << (S,#FF7700) Singleton >> {
+        ..Getters..
+        {method} +getUsers(): List<User>
+        +getProductTypes(): List<ProductType>
+        +getOrders(): List<Order>
+        +getCustomers(): List<Customer>
+        ..Data Insert..
+        +insertUser(): User
+        ..Data Update..
+        +updateUser(): boolean
+        ..Data Delete..
+        +deleteUser(): boolean
     }
-
-    note top of LoginManager
-     <b>Singleton class</b> 
-     to manage logged 
-     user sessions or login
-     requests
-    end note
 
     note top of RightsManager
-     <b>Singleton class</b> 
-     to manage users' rights
+        <b>Manages users' rights</b>
+        (checks if a generic User
+        (passed as argument) can
+        do a certain action)
     end note
 
-    note right of DataManager
-     <b>Singleton class</b> 
-     to manage all App's data
+    note top of DataManager
+        <b>Manages all App's data</b>
+        (interface towards backend data
+        storage, complete transparent to
+        the entire system)
     end note
 
-    ezshop -up-|> ezinterface : <<implements>
-    ezshop .right.> LoginManager
-    ezshop .left.> RightsManager
-    ezshop .down.> DataManager
+    note left of LoginManager::isUserLogged
+        This method accepts both
+        0 or 1 argument.
+        - If 0, checks if an user is logged in
+        (i.e. getLoggedUser() != null)
+        - If 1, it's an <<User>> object and checks
+        if this user is actually logged
+        (i.e. getLoggedUser() == arg_user)
+    end note
+
+    ezshop -up-|> ezinterface : <<implements>>
+    ezshop ..> LoginManager
+    ezshop ..> RightsManager
+    ezshop .left.> DataManager
+
+    RightsManager .left.> LoginManager
+    LoginManager .up.> DataManager
     
 
 }

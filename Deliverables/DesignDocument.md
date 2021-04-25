@@ -172,6 +172,7 @@ package "it.polito.ezshop.data" as data {
 
 ```plantuml
 
+
 package "it.polito.ezshop.model" as model {
     class User {
         -ID: Integer
@@ -190,12 +191,19 @@ package "it.polito.ezshop.model" as model {
         -discountRate: Double
         -notes: String
         -position: Position
+        {method} +addQuantityOffset(): boolean
+        +getAssignedPosition(): Position
+        +assignToPosition(): void
     }
 
     class Position {
         -aisleID: Integer
         -rackID: String
         -levelID: Integer
+        -product: ProductType
+        {method} +assignToProduct(): void
+        +getAssignedProduct(): ProductType
+        +toString(): String
     }
 
     class Ticket {
@@ -237,20 +245,18 @@ package "it.polito.ezshop.model" as model {
         -pricePerUnit: Double
         -quantity: Integer
         -product: ProductType
-        -status: 
+        -status: String 
+    }
+
+    enum TransactionTypeEnum {
+        +Credit
+        +Debit
     }
 
     class BalanceTransaction {
         -value: Double
+        -transactionType: TransactionTypeEnum
         -description: String
-    }
-
-    abstract Credit <<abstract>> {
-
-    }
-
-    abstract Debit <<abstract>> {
-
     }
 
     class Customer {
@@ -270,26 +276,25 @@ package "it.polito.ezshop.model" as model {
     }
 
 
-    ProductType --> Position
+    ProductType <--> Position
     CReturn --> ProductType
     Sale --> ProductType
-    Sale <-- CReturn
+    Sale <-right- CReturn
 
     LoyaltyCard <--> Customer
     Sale <--> LoyaltyCard
 
-    BalanceTransaction <|-- Credit
-    BalanceTransaction <|-- Debit
-
-    Credit <|-- Ticket
-    Debit <|-- ReturnTransaction
-    Debit <|-- OrderTransaction
+    BalanceTransaction <|-- Ticket
+    BalanceTransaction <|-- ReturnTransaction
+    BalanceTransaction <|-- OrderTransaction
 
     OrderTransaction --> Order
     Order --> ProductType
     Ticket --> Sale
 
     CReturn <-up- ReturnTransaction 
+
+    BalanceTransaction -right-> TransactionTypeEnum
 
 }
 

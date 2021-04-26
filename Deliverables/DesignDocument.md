@@ -191,7 +191,7 @@ package "it.polito.ezshop.model" as model {
         -discountRate: Double
         -notes: String
         -position: Position
-        {method} +addQuantityOffset(): boolean
+        +addQuantityOffset(): boolean
         +getAssignedPosition(): Position
         +assignToPosition(): void
     }
@@ -201,42 +201,72 @@ package "it.polito.ezshop.model" as model {
         -rackID: String
         -levelID: Integer
         -product: ProductType
-        {method} +assignToProduct(): void
+        ~assignToProduct(): void
         +getAssignedProduct(): ProductType
         +toString(): String
     }
 
     class Ticket {
+        -ticketId: Integer
+        -relatedSaleTransaction: Sale
+        +getTicketId(): Integer
+        +getRelatedTransaction(): Sale
+        +getTotalValue(): Double <<override>>
+    }
 
+    abstract ProductList <<abstract>> {
+        ~products: Map<ProductType, Integer>
+        +getProductsList(): List<ProductType>
+        +getQuantityByProduct(): Integer
+        +addProduct(): void
     }
 
     class Sale {
         -transactionId: Integer
         -date: Date
-        -cost: Double
-        -paymentType: String
         -discountRate: Double
-        -loyaltyCard: SaleTransaction
+        -loyaltyCard: LoyaltyCard
         -committed: boolean
-        -Products: Map<ProductType, Integer>
-        -ReturnTransaction: List<ReturnTransaction>
-        {method} +addProduct(): void
+        -productsDiscountRate: Map<ProductType, double>
+        -returnTransaction: List<ReturnTransaction>
+        ~addReturnTransaction(): void
+        +getTotalCost(): Double
+        +applyDiscountRateToSale(): void
+        +applyDiscountRateToProductGroup(): void
+        +attachLoyaltyCard(): void
+        +getAttachedLoyaltyCard(): LoyaltyCard
+        +setAsCommitted(): void
+        +getTransactionId(): Integer
+        +isCommitted(): boolean
     }
 
     class ReturnTransaction {
-
+        -relatedReturnTransaction: CReturn
+        +getRelatedTransaction(): CReturn
+        +getTotalValue(): Double <<override>>
     }
 
     class CReturn {
-        -SaleTransaction: SaleTransaction
-        -returnedProduct: ProductType
-        -quantity: Integer
-        -returnedValue: Double
+        -returnId: Intger
+        -saleTransaction: Sale
         -committed: boolean
+        +addProduct(): void <<override>>
+        +setAsCommitted(): void
+        +getTotalReturnValue(): Double
+        +getReturnid(): Double
+        +isCommitted(): boolean
     }
 
     class OrderTransaction {
         -relatedOrder: Order
+        +getRelatedOrder(): Order
+        +getTotalValue(): Double <<override>>
+    }
+
+    enum EOrderStatus {
+        +ISSUED
+        +PAYED
+        +COMPLETED
     }
 
     class Order {
@@ -245,24 +275,40 @@ package "it.polito.ezshop.model" as model {
         -pricePerUnit: Double
         -quantity: Integer
         -product: ProductType
-        -status: String 
+        -status: EOrderStatus 
+        +getOrderID(): Integer
+        +getQuantity(): Integer
+        +getRelatedProduct(): ProductType
+        +getStatus(): EOrderStatus
+        +setAsPayed(): void
+        +setAsCompleted(): void
     }
 
-    enum TransactionTypeEnum {
-        +Credit
-        +Debit
+    enum ETransactionType {
+        +CREDIT
+        +DEBIT
     }
 
-    class BalanceTransaction {
-        -value: Double
-        -transactionType: TransactionTypeEnum
+    abstract BalanceTransaction <<abstract>> {
+        -transactionType: ETransactionType
         -description: String
+        +getTransactionType(): ETransactionType
+        +getTotalValue(): Double <<abstract>>
+    }
+
+    class DummyTransaction {
+        -value: Double
+        +getTotalValue(): Double <<override>>
     }
 
     class Customer {
+        -customerID: Integer
         -name: String
         -surname: String
-        - loyaltyCard: LoyaltyCard
+        -loyaltyCard: LoyaltyCard
+        +attachLoyaltyCard(): void
+        +setName(): void
+        +setSurname(): void
     }
 
     class LoyaltyCard {
@@ -270,15 +316,13 @@ package "it.polito.ezshop.model" as model {
         -points: Integer
         -customer: Customer
         -SaleTransactions: List<SaleTransaction>
-        {method} +addCustomer(): boolean
+        +addCustomer(): void
         +addPoints(): void
         +getPoints(): void
     }
 
 
     ProductType <--> Position
-    CReturn --> ProductType
-    Sale --> ProductType
     Sale <-right- CReturn
 
     LoyaltyCard <--> Customer
@@ -287,6 +331,7 @@ package "it.polito.ezshop.model" as model {
     BalanceTransaction <|-- Ticket
     BalanceTransaction <|-- ReturnTransaction
     BalanceTransaction <|-- OrderTransaction
+    BalanceTransaction <|-- DummyTransaction
 
     OrderTransaction --> Order
     Order --> ProductType
@@ -294,7 +339,12 @@ package "it.polito.ezshop.model" as model {
 
     CReturn <-up- ReturnTransaction 
 
-    BalanceTransaction -right-> TransactionTypeEnum
+    BalanceTransaction -right-> ETransactionType
+    Order -right-> EOrderStatus
+
+    ProductList <|-up- Sale
+    ProductList <|-up- CReturn
+    ProductList -right-> ProductType
 
 }
 

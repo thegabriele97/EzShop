@@ -298,7 +298,7 @@ package "it.polito.ezshop.model" as model {
 | FR5 | X | X | X | X |   | | | | | | | | X |   | X |   |
 | FR6 | X | X | X | X |   | X | X | | | X | X |  | X | X | | |
 | FR7 | X | X | X | X |   | X | X | | | X | X |  |   |   | | |
-| FR8 | X | X | X | X | X | | X | X | X | X | | | | | | |
+| FR8 | X | X | X | X |   | X | X | X | X |   | | | | | | |
 
 
 

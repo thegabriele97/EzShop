@@ -221,7 +221,6 @@ package "it.polito.ezshop.model" as model {
         -productsDiscountRate: Map<ProductType, double>
         -returnTransaction: List<ReturnTransaction>
         ~addReturnTransaction(): void
-        +getTotalCost(): Double
         +applyDiscountRateToSale(): void
         +applyDiscountRateToProductGroup(): void
         +attachLoyaltyCard(): void
@@ -237,7 +236,6 @@ package "it.polito.ezshop.model" as model {
         -committed: boolean
         +addProduct(): void <<override>>
         +setAsCommitted(): void
-        +getTotalReturnValue(): Double
         +getReturnid(): Double
         +isCommitted(): boolean
     }
@@ -289,12 +287,12 @@ package "it.polito.ezshop.model" as model {
         +getPoints(): void
     }
 
-    interface ICredit {
-
+    interface ICredit <<interface>> {
+        +getTotalValue(): Double
     }
 
-    interface IDebit {
-
+    interface IDebit <<interface>> {
+        +getTotalValue(): Double
     }
 
     class CreditTransaction {
@@ -309,12 +307,10 @@ package "it.polito.ezshop.model" as model {
 
     class DummyCredit {
         -value: Double
-        +getValue(): Double
     }
 
     class DummyDebit {
         -value: Double
-        +getValue(): Double
     }
 
     ProductType <-right-> Position

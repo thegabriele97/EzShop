@@ -313,11 +313,11 @@ package "it.polito.ezshop.model" as model {
         -value: Double
     }
 
-    ProductType <-right-> Position
+    ProductType <-left-> Position
     Sale <-right- CReturn
 
-    LoyaltyCard <--> Customer
-    Sale <-left-> LoyaltyCard
+    LoyaltyCard <-down-> Customer
+    Sale <-down-> LoyaltyCard
 
     'BalanceTransaction <|-- SaleTransaction
     'BalanceTransaction <|-- ReturnTransaction
@@ -330,17 +330,17 @@ package "it.polito.ezshop.model" as model {
 
     'CReturn <-up- ReturnTransaction 
 
-    Order --> EOrderStatus
+    Order -right-> EOrderStatus
 
     ProductList <|-up- Sale
     ProductList <|-up- CReturn
     ProductList --> ProductType
 
-    Sale -up-|> IDebit
+    Sale -up-|> ICredit
     Order -up-|> IDebit
-    CReturn -up-|> ICredit
+    CReturn -up-|> IDebit
     DummyCredit -left-|> ICredit
-    DummyDebit -right-|> IDebit
+    DummyDebit -left-|> IDebit
 
     BalanceTransaction <|-- CreditTransaction
     BalanceTransaction <|-- DebitTransaction

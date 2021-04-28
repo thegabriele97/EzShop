@@ -172,7 +172,6 @@ package "it.polito.ezshop.data" as data {
 
 ```plantuml
 
-
 package "it.polito.ezshop.model" as model {
     class User {
         -ID: Integer
@@ -265,6 +264,7 @@ package "it.polito.ezshop.model" as model {
     }
 
     abstract BalanceTransaction <<abstract>> {
+        -balanceId: Integer
         -description: String
         -value: Double
         +getTransactionType(): ETransactionType
@@ -299,10 +299,12 @@ package "it.polito.ezshop.model" as model {
 
     class CreditTransaction {
         -relatedCreditOperation: ICredit
+        +getRelated(): ICredit
     }
 
     class DebitTransaction {
         -relatedDebitOperation: IDebit
+        +getRelated(): IDebit
     }
 
     class DummyCredit {

@@ -391,8 +391,8 @@ package "it.polito.ezshop.model" as model {
     ProductType <-left-> Position
     Sale <-right- CReturn
 
-    LoyaltyCard <-down-> Customer
-    Sale <-down-> LoyaltyCard
+    LoyaltyCard <--> Customer
+    'Sale <-down-> LoyaltyCard
 
     'BalanceTransaction <|-- SaleTransaction
     'BalanceTransaction <|-- ReturnTransaction

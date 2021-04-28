@@ -522,6 +522,34 @@ package "it.polito.ezshop.exceptions" {
 # Verification sequence diagrams 
 \<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
+## Scenario 1-1
+
+```plantuml
+participant GUI
+
+GUI -> EZShop: createProductType()
+activate EZShop
+
+EZShop -> RightManager: canManageProductCatalogue()
+activate RightManager
+
+RightManager -> LoginManager: isUserLogged()
+activate LoginManager
+LoginManager -> RightManager: user is logged
+deactivate LoginManager
+
+RightManager -> EZShop: user has permissions
+deactivate RightManager
+
+EZShop -> DataManager: insertProductType()
+activate DataManager
+DataManager -> EZShop: product type created and saved in the DB
+deactivate DataManager
+
+EZShop -> GUI: Done
+deactivate EZShop
+```
+
 ## Scenario 2-1
 
 ```plantuml

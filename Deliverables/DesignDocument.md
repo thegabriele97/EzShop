@@ -257,6 +257,7 @@ package "it.polito.ezshop.model" as model {
     }
 
     class ProductType {
+        -productId: Integer
         -barcode: String
         -description: String
         -selfPrice: Double

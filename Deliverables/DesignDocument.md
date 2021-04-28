@@ -21,8 +21,15 @@ The design must satisfy the Official Requirements document, notably functional a
 
 # High level design 
 
-<discuss architectural styles used, if any>
-<report package diagram>
+<discuss architectural styles used, if any. Report package diagram>
+
+Patterns used:
+- Facade
+- Singleton
+
+Architectural styles used:
+- 3-tier architecture
+- MV
 
 ```plantuml
 package "GUI" as GUI #DDDDDD {

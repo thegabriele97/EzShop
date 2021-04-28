@@ -575,7 +575,97 @@ deactivate DataManager
 EZShop -> GUI: Done
 deactivate EZShop
 ```
+## Scenario 6-1
+```plantuml
+participant GUI
 
+GUI -> EZShop: 1: startSaleTransaction()
+activate EZShop
+
+EZShop -> RightManager: 2: canManageUsers()
+activate RightManager
+
+RightManager -> LoginManager: 3: isUserLogged()
+activate LoginManager
+LoginManager -> RightManager: user is logged
+deactivate LoginManager
+
+RightManager -> EZShop: user has permissions
+deactivate RightManager
+
+EZShop -> DataManager: 4: insertSale()
+activate DataManager
+
+DataManager -> EZShop: Sale created and saved in the DB
+deactivate DataManager
+
+EZShop -> GUI: Done
+deactivate EZShop
+
+GUI->EZShop: 5: addProductToSale()
+activate EZShop
+
+EZShop -> DataManager: 6: getSales()
+activate DataManager
+
+DataManager -> EZShop: got sale interested
+deactivate DataManager
+
+EZShop -> DataManager: 7: getProductTypes()
+activate DataManager
+
+DataManager -> EZShop: got Product interested
+deactivate DataManager
+
+
+EZShop -> Sale: 8: addProduct()
+activate Sale
+
+Sale -> EZShop: product added to sale
+deactivate Sale
+
+
+EZShop -> ProductType: 9: addQuantityOffset()
+activate ProductType
+
+ProductType -> EZShop: product quantity updated
+deactivate ProductType
+
+EZShop -> DataManager: 10: UpdateProductType()
+activate DataManager
+
+DataManager -> EZShop: quantity updated
+deactivate DataManager
+
+EZShop -> DataManager: 11: UpdateSale()
+activate DataManager
+
+DataManager -> EZShop: sale updated
+deactivate DataManager
+
+
+EZShop -> GUI: Done
+deactivate EZShop
+
+
+GUI -> EZShop: 12: endSaleTransaction()
+activate EZShop
+
+EZShop -> DataManager: 13: getSales()
+activate DataManager
+
+DataManager -> EZShop: got sale interested
+deactivate DataManager
+
+EZShop -> Sale: 14: SetAsCommitted()
+activate Sale
+
+Sale -> EZShop: sale committed
+deactivate Sale
+
+EZShop -> GUI: Done
+deactivate EZShop
+```
 
 ## Scenario 7-1
 

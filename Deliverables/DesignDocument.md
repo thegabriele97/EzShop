@@ -138,7 +138,7 @@ package "it.polito.ezshop.data" as data {
         +canManageInventory(): boolean
         +canManageCustomers(): boolean
         +canManageSaleTransaction(): boolean
-        +canUseBarcodeReader(): boolean
+        +canManagePayments(): boolean
         +canManageAccounting(): boolean
     }
 
@@ -494,17 +494,15 @@ package "it.polito.ezshop.exceptions" {
 
 # Verification traceability matrix
 \<NON DIMENTICARE DI CONTROLLARE LA CORRISPONDENZA DEGLI FR>
-\<for each functional requirement from the requirement document, list which classes concur to implement it>
-|      | EZShop | DataManager | LoginManager | RightsManager | User | Ticket | ReturnTransaction | OrderTransaction | DummyTransaction | Sale | Return | Order | LoyaltyCard | ProductType | Customer | Position |              
-| ----- | ---- | --- | ---- | --- | ---- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ------ | ---- | ---- |  --- |
-| FR1 | X | X | X | X | X | | | | | | | |   |   |   |   | 
-| FR3 | X | X | X | X |   | | | | | | | |   | X |   | X |
-| FR4 | X | X | X | X |   | | | | | | | X |   | X |   | X |
-| FR5 | X | X | X | X |   | | | | | | | | X |   | X |   |
-| FR6 | X | X | X | X |   | X | X | | | X | X |  | X | X | | |
-| FR7 | X | X | X | X |   | X | X | | | X | X |  |   |   | | |
-| FR8 | X | X | X | X |   | X | X | X | X |   | | | | | | |
-
+|     | EZShop | DataManager | LoginManager | RightsManager | CreditCardSystem | User | CreditTransaction | DebitTransaction | DummyDebit | DummyCredit | Sale | CReturn | Order | LoyaltyCard | ProductType | Customer | Position |
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| FR1 | X      | X           | X            | X             |                   | X    |                   |                  |            |             |      |         |       |             |             |          |          |
+| FR3 | X      | X           | X            | X             |                   | X    |                   |                  |            |             |      |         |       |             | X           |          |          |
+| FR4 | X      | X           | X            | X             |                   | X    |                   | X                |            |             |      |         | X     |             | X           |          | X        |
+| FR5 | X      | X           | X            | X             |                   | X    |                   |                  |            |             |      |         |       | X           |             | X        |          |
+| FR6 | X      | X           | X            | X             |                   | X    | X                 | X                |            |             | X    | X       |       |             |             |          |          |
+| FR7 | X      | X           | X            | X             | X                 | X    |                   |                  |            |             |      |         |       |             |             |          |          |
+| FR8 | X      | X           | X            | X             |                   | X    | X                 | X                | X          | X           |      |         |       |             |             |          |          |
 
 
 
@@ -572,6 +570,64 @@ deactivate RightManager
 EZShop -> DataManager: insertUser()
 activate DataManager
 DataManager -> EZShop: user created and saved in the DB
+deactivate DataManager
+
+EZShop -> GUI: Done
+deactivate EZShop
+```
+
+
+## Scenario 7-1
+
+```plantuml
+participant GUI
+
+GUI -> EZShop: receiveCreditCardPayment()
+activate EZShop
+
+EZShop -> RightManager: canManagePayments()
+activate RightManager
+
+RightManager -> LoginManager: isUserLogged()
+activate LoginManager
+LoginManager -> RightManager: user is logged
+deactivate LoginManager
+
+RightManager -> EZShop: user has permissions
+deactivate RightManager
+
+EZShop -> CreditCardSystem: isValidNumber()
+activate CreditCardSystem
+CreditCardSystem -> EZShop: the number is valid
+deactivate CreditCardSystem
+
+EZShop -> DataManager: getSales()
+activate DataManager
+
+DataManager -> EZShop: return list of Sales, extraction of the required one
+deactivate DataManager
+
+EZShop -> Sale: getTotal()
+activate Sale
+Sale -> EZShop: the total is computed and returned
+deactivate Sale
+
+EZShop -> CreditCardSystem: hasEnoughBalance()
+activate CreditCardSystem
+CreditCardSystem -> EZShop: the balance is enough
+deactivate CreditCardSystem
+
+EZShop -> CreditCardSystem: updateBalance()
+activate CreditCardSystem
+CreditCardSystem -> EZShop: the balance is updated
+deactivate CreditCardSystem
+
+EZShop -> EZShop: creates balance transaction (as CreditTransaction)
+
+EZShop -> DataManager: insertBalanceTransaction()
+activate DataManager
+
+DataManager -> EZShop: transaction recorded
 deactivate DataManager
 
 EZShop -> GUI: Done

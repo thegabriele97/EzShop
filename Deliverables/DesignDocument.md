@@ -419,8 +419,69 @@ package "it.polito.ezshop.model" as model {
 
 ```
 
+```plantuml
+package "it.polito.ezshop.exceptions" {
+    class InvalidCreditCardException {
+    }
+
+    class InvalidCustomerCardException {
+    }
+
+    class InvalidCustomerIdException {
+    }
+
+    class InvalidCustomerNameException {
+    }
+
+    class InvalidDiscountRateException {
+    }
+
+    class InvalidLocationException {
+    }
+
+    class InvalidOrderIdException {
+    }
+
+    class InvalidPasswordException {
+    }
+
+    class InvalidPaymentException {
+    }
+
+    class InvalidPricePerUnitException {
+    }
+
+    class InvalidProductCodeException {
+    }
+
+    class InvalidProductDescriptionException {
+    }
+
+    class InvalidProductIdException {
+    }
+
+    class InvalidQuantityException {
+    }
+
+    class InvalidRoleException {
+    }
+
+    class InvalidTransactionIdException {
+    }
+
+    class InvalidUserIdException {
+    }
+
+    class InvalidUsernameException {
+    }
+
+    class UnauthorizedException {
+    }
 
 
+}
+
+```
 
 
 # Verification traceability matrix

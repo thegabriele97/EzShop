@@ -494,17 +494,15 @@ package "it.polito.ezshop.exceptions" {
 
 # Verification traceability matrix
 \<NON DIMENTICARE DI CONTROLLARE LA CORRISPONDENZA DEGLI FR>
-\<for each functional requirement from the requirement document, list which classes concur to implement it>
-|      | EZShop | DataManager | LoginManager | RightsManager | User | Ticket | ReturnTransaction | OrderTransaction | DummyTransaction | Sale | Return | Order | LoyaltyCard | ProductType | Customer | Position |              
-| ----- | ---- | --- | ---- | --- | ---- | ----- | ----- | ----- | ----- | ----- | ----- | ----- | ------ | ---- | ---- |  --- |
-| FR1 | X | X | X | X | X | | | | | | | |   |   |   |   | 
-| FR3 | X | X | X | X |   | | | | | | | |   | X |   | X |
-| FR4 | X | X | X | X |   | | | | | | | X |   | X |   | X |
-| FR5 | X | X | X | X |   | | | | | | | | X |   | X |   |
-| FR6 | X | X | X | X |   | X | X | | | X | X |  | X | X | | |
-| FR7 | X | X | X | X |   | X | X | | | X | X |  |   |   | | |
-| FR8 | X | X | X | X |   | X | X | X | X |   | | | | | | |
-
+|     | EZShop | DataManager | LoginManager | RightsManager | CreditCardManager | User | CreditTransaction | DebitTransaction | DummyDebit | DummyCredit | Sale | CReturn | Order | LoyaltyCard | ProductType | Customer | Position |
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| FR1 | X      | X           | X            | X             |                   | X    |                   |                  |            |             |      |         |       |             |             |          |          |
+| FR3 | X      | X           | X            | X             |                   | X    |                   |                  |            |             |      |         |       |             | X           |          |          |
+| FR4 | X      | X           | X            | X             |                   | X    |                   | X                |            |             |      |         | X     |             | X           |          | X        |
+| FR5 | X      | X           | X            | X             |                   | X    |                   |                  |            |             |      |         |       | X           |             | X        |          |
+| FR6 | X      | X           | X            | X             |                   | X    | X                 | X                |            |             | X    | X       |       |             |             |          |          |
+| FR7 | X      | X           | X            | X             | X                 | X    |                   |                  |            |             |      |         |       |             |             |          |          |
+| FR8 | X      | X           | X            | X             |                   | X    | X                 | X                | X          | X           |      |         |       |             |             |          |          |
 
 
 

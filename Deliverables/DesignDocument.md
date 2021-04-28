@@ -57,11 +57,11 @@ GUI .up.> data
 
 
 ```plantuml
+
 package "it.polito.ezshop.data" as data {
 
     interface "EZShopInterface" as ezinterface {
-        
-        {method} +reset(): void
+        +reset(): void
         +createUser(): Integer
         +deleteUser(): boolean
         +getAllUsers(): List<User>
@@ -77,7 +77,7 @@ package "it.polito.ezshop.data" as data {
         +getProductTypesByDescription(): List<ProductType>
         +updateQuantity(): boolean
         +updatePosition(): boolean
-        +issueReorder(): Integer
+        +issueOrder(): Integer
         +payOrderFor(): Integer
         +payOrder(): boolean
         +recordOrderArrival(): boolean
@@ -93,6 +93,23 @@ package "it.polito.ezshop.data" as data {
         +startSaleTransaction(): Integer
         +addProductToSale(): boolean
         +deleteProductFromSale(): boolean
+        +applyDiscountRateToProduct(): boolean
+        +applyDiscountRateToSale(): boolean
+        +computePointsForSale(): int
+        +endSaleTransaction(): boolean
+        +deleteSaleTransaction(): boolean
+        +getSaleTransaction(): SaleTransaction
+        +startReturnTransaction(): Integer
+        +returnProduct(): boolean
+        +endReturnTransaction(): boolean
+        +deleteReturnTransaction(): boolean
+        +receiveCashPayment(): double
+        +receiveCreditCardPayment(): boolean
+        +returnCashPayment(): double
+        +returnCreditCardPayment(): double
+        +recordBalanceUpdate(): boolean
+        +getCreditsAndDebits(): List<BalanceOperation>
+        +computeBalance(): double
     }
 
     class "EZShop" as ezshop {
@@ -120,19 +137,68 @@ package "it.polito.ezshop.data" as data {
 
     class "DataManager" as DataManager << (S,#FF7700) Singleton >> {
         ..Getters..
-        {method} +getUsers(): List<User>
+        +getUsers(): List<User>
         +getProductTypes(): List<ProductType>
+        +getPositions(): List<Position>
         +getOrders(): List<Order>
         +getCustomers(): List<Customer>
+        +getLoyaltyCards(): List<LoyaltyCard>
+        +getSales(): List<Sale>
+        +getReturns(): List<CReturn>
+        +getDummyCredit(): List<DummyCredit>
+        +getDummyDebit(): List<DummyDebit>
+        +getBalanceOperations(): List<BalanceOperation>
         ..Data Insert..
-        +insertUser(): User
+        +insertUser(): boolean
+        +insertProductType(): boolean
+        +insertOrder(): boolean
+        +insertCustomer(): boolean
+        +insertLoyaltyCard(): boolean
+        +insertSale(): boolean
+        +insertReturn(): boolean
+        +insertPosition(): boolean
+        +insertDummyCredit(): boolean
+        +insertDummyDebit(): boolean
+        +insertBalanceOperation(): boolean
         ..Data Update..
         +updateUser(): boolean
+        +updateProductType(): boolean
+        +updateOrder(): boolean
+        +updateCustomer(): boolean
+        +updateLoyaltyCard(): boolean
+        +updateSale(): boolean
+        +updateReturn(): boolean
+        +updatePosition(): boolean
+        +updateDummyCredit(): boolean
+        +updateDummyDebit(): boolean
+        +updateBalanceOperation(): boolean
         ..Data Delete..
         +deleteUser(): boolean
+        +deleteProductType(): boolean
+        +deleteOrder(): boolean
+        +deleteCustomer(): boolean
+        +deteleteLoyaltyCard(): boolean
+        +deleteSale(): boolean
+        +deleteReturn(): boolean
+        +deletePosition(): boolean
+        +deleteDummyCredit(): boolean
+        +deleteDummyDebit(): boolean
+        +deleteBalanceOperation(): boolean
+        ..Queries..
+        +getAllCreditTransactions(): List<CreditTransaction>
+        +getAllDebitTransactions(): List<DebitTransaction>
+        +computeBalance(): Double
     }
 
-    note top of RightsManager
+    class CreditCardSystem << (S,#FF7700) Singleton >> {
+        -creditsCardBalance: Map<String, Double>
+        +isValidNumber(): boolean
+        +isRegistered(): boolean
+        +hasEnoughBalance(): boolean
+        +updateBalance(): boolean
+    }
+
+    note right of RightsManager
         <b>Manages users' rights</b>
         (checks if a generic User
         (passed as argument) can
@@ -146,20 +212,21 @@ package "it.polito.ezshop.data" as data {
         the entire system)
     end note
 
-    note left of LoginManager::isUserLogged
-        This method accepts both
-        0 or 1 argument.
-        - If 0, checks if an user is logged in
-        (i.e. getLoggedUser() != null)
-        - If 1, it's an <<User>> object and checks
-        if this user is actually logged
-        (i.e. getLoggedUser() == arg_user)
-    end note
+    'note left of LoginManager::isUserLogged
+    '    This method accepts both
+    '    0 or 1 argument.
+    '    - If 0, checks if an user is logged in
+    '    (i.e. getLoggedUser() != null)
+    '    - If 1, it's an <<User>> object and checks
+    '    if this user is actually logged
+    '    (i.e. getLoggedUser() == arg_user)
+    'end note
 
     ezshop -up-|> ezinterface : <<implements>>
     ezshop ..> LoginManager
     ezshop ..> RightsManager
     ezshop .left.> DataManager
+    ezshop .right.> CreditCardSystem
 
     RightsManager .left.> LoginManager
     LoginManager .up.> DataManager

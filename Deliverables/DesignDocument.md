@@ -206,12 +206,9 @@ package "it.polito.ezshop.model" as model {
         +toString(): String
     }
 
-    class Ticket {
-        -ticketId: Integer
-        -relatedSaleTransaction: Sale
-        +getTicketId(): Integer
+    class SaleTransaction {
+        -relatedSale: Sale
         +getRelatedTransaction(): Sale
-        +getTotalValue(): Double <<override>>
     }
 
     abstract ProductList <<abstract>> {
@@ -222,7 +219,7 @@ package "it.polito.ezshop.model" as model {
     }
 
     class Sale {
-        -transactionId: Integer
+        -saleId: Integer
         -date: Date
         -discountRate: Double
         -loyaltyCard: LoyaltyCard
@@ -236,14 +233,13 @@ package "it.polito.ezshop.model" as model {
         +attachLoyaltyCard(): void
         +getAttachedLoyaltyCard(): LoyaltyCard
         +setAsCommitted(): void
-        +getTransactionId(): Integer
+        +getSaleId(): Integer
         +isCommitted(): boolean
     }
 
     class ReturnTransaction {
         -relatedReturnTransaction: CReturn
         +getRelatedTransaction(): CReturn
-        +getTotalValue(): Double <<override>>
     }
 
     class CReturn {
@@ -260,7 +256,6 @@ package "it.polito.ezshop.model" as model {
     class OrderTransaction {
         -relatedOrder: Order
         +getRelatedOrder(): Order
-        +getTotalValue(): Double <<override>>
     }
 
     enum EOrderStatus {
@@ -270,7 +265,7 @@ package "it.polito.ezshop.model" as model {
     }
 
     class Order {
-        -ID: Integer
+        -orderId: Integer
         -supplier: String
         -pricePerUnit: Double
         -quantity: Integer
@@ -292,23 +287,21 @@ package "it.polito.ezshop.model" as model {
     abstract BalanceTransaction <<abstract>> {
         -transactionType: ETransactionType
         -description: String
+        -value: Double
         +getTransactionType(): ETransactionType
-        +getTotalValue(): Double <<abstract>>
+        +getTotalValue(): Double
     }
 
     class DummyTransaction {
-        -value: Double
-        +getTotalValue(): Double <<override>>
+
     }
 
     class Customer {
         -customerID: Integer
         -name: String
-        -surname: String
         -loyaltyCard: LoyaltyCard
         +attachLoyaltyCard(): void
         +setName(): void
-        +setSurname(): void
     }
 
     class LoyaltyCard {
@@ -328,14 +321,14 @@ package "it.polito.ezshop.model" as model {
     LoyaltyCard <--> Customer
     Sale <--> LoyaltyCard
 
-    BalanceTransaction <|-- Ticket
+    BalanceTransaction <|-- SaleTransaction
     BalanceTransaction <|-- ReturnTransaction
     BalanceTransaction <|-- OrderTransaction
     BalanceTransaction <|-- DummyTransaction
 
     OrderTransaction --> Order
     Order --> ProductType
-    Ticket --> Sale
+    SaleTransaction --> Sale
 
     CReturn <-up- ReturnTransaction 
 

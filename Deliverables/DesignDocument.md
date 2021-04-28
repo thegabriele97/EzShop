@@ -206,14 +206,6 @@ package "it.polito.ezshop.model" as model {
         +toString(): String
     }
 
-    class Ticket {
-        -ticketId: Integer
-        -relatedSaleTransaction: Sale
-        +getTicketId(): Integer
-        +getRelatedTransaction(): Sale
-        +getTotalValue(): Double <<override>>
-    }
-
     abstract ProductList <<abstract>> {
         ~products: Map<ProductType, Integer>
         +getProductsList(): List<ProductType>
@@ -222,7 +214,7 @@ package "it.polito.ezshop.model" as model {
     }
 
     class Sale {
-        -transactionId: Integer
+        -saleId: Integer
         -date: Date
         -discountRate: Double
         -loyaltyCard: LoyaltyCard
@@ -236,14 +228,8 @@ package "it.polito.ezshop.model" as model {
         +attachLoyaltyCard(): void
         +getAttachedLoyaltyCard(): LoyaltyCard
         +setAsCommitted(): void
-        +getTransactionId(): Integer
+        +getSaleId(): Integer
         +isCommitted(): boolean
-    }
-
-    class ReturnTransaction {
-        -relatedReturnTransaction: CReturn
-        +getRelatedTransaction(): CReturn
-        +getTotalValue(): Double <<override>>
     }
 
     class CReturn {
@@ -257,12 +243,6 @@ package "it.polito.ezshop.model" as model {
         +isCommitted(): boolean
     }
 
-    class OrderTransaction {
-        -relatedOrder: Order
-        +getRelatedOrder(): Order
-        +getTotalValue(): Double <<override>>
-    }
-
     enum EOrderStatus {
         +ISSUED
         +PAYED
@@ -270,7 +250,7 @@ package "it.polito.ezshop.model" as model {
     }
 
     class Order {
-        -ID: Integer
+        -orderId: Integer
         -supplier: String
         -pricePerUnit: Double
         -quantity: Integer
@@ -284,31 +264,19 @@ package "it.polito.ezshop.model" as model {
         +setAsCompleted(): void
     }
 
-    enum ETransactionType {
-        +CREDIT
-        +DEBIT
-    }
-
     abstract BalanceTransaction <<abstract>> {
-        -transactionType: ETransactionType
         -description: String
-        +getTransactionType(): ETransactionType
-        +getTotalValue(): Double <<abstract>>
-    }
-
-    class DummyTransaction {
         -value: Double
-        +getTotalValue(): Double <<override>>
+        +getTransactionType(): ETransactionType
+        +getTotalValue(): Double
     }
 
     class Customer {
         -customerID: Integer
         -name: String
-        -surname: String
         -loyaltyCard: LoyaltyCard
         +attachLoyaltyCard(): void
         +setName(): void
-        +setSurname(): void
     }
 
     class LoyaltyCard {
@@ -321,30 +289,66 @@ package "it.polito.ezshop.model" as model {
         +getPoints(): void
     }
 
+    interface ICredit {
 
-    ProductType <--> Position
+    }
+
+    interface IDebit {
+
+    }
+
+    class CreditTransaction {
+        -relatedCreditOperation: ICredit
+    }
+
+    class DebitTransaction {
+        -relatedDebitOperation: IDebit
+    }
+
+    class DummyCredit {
+        -value: Double
+        +getValue(): Double
+    }
+
+    class DummyDebit {
+        -value: Double
+        +getValue(): Double
+    }
+
+    ProductType <-right-> Position
     Sale <-right- CReturn
 
     LoyaltyCard <--> Customer
-    Sale <--> LoyaltyCard
+    Sale <-left-> LoyaltyCard
 
-    BalanceTransaction <|-- Ticket
-    BalanceTransaction <|-- ReturnTransaction
-    BalanceTransaction <|-- OrderTransaction
-    BalanceTransaction <|-- DummyTransaction
+    'BalanceTransaction <|-- SaleTransaction
+    'BalanceTransaction <|-- ReturnTransaction
+    'BalanceTransaction <|-- OrderTransaction
+    'BalanceTransaction <|-- DummyTransaction
 
-    OrderTransaction --> Order
+    'OrderTransaction --> Order
     Order --> ProductType
-    Ticket --> Sale
+    'SaleTransaction --> Sale
 
-    CReturn <-up- ReturnTransaction 
+    'CReturn <-up- ReturnTransaction 
 
-    BalanceTransaction -right-> ETransactionType
-    Order -right-> EOrderStatus
+    Order --> EOrderStatus
 
     ProductList <|-up- Sale
     ProductList <|-up- CReturn
-    ProductList -right-> ProductType
+    ProductList --> ProductType
+
+    Sale -up-|> IDebit
+    Order -up-|> IDebit
+    CReturn -up-|> ICredit
+    DummyCredit -left-|> ICredit
+    DummyDebit -right-|> IDebit
+
+    BalanceTransaction <|-- CreditTransaction
+    BalanceTransaction <|-- DebitTransaction
+
+    CreditTransaction --> ICredit
+    DebitTransaction --> IDebit
 
 }
 

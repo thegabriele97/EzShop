@@ -247,7 +247,7 @@ package "it.polito.ezshop.data" as data {
 ```plantuml
 
 package "it.polito.ezshop.model" as model {
-    class User {
+    class User <<persistent>> {
         -ID: Integer
         -username: String
         -password: String
@@ -256,7 +256,7 @@ package "it.polito.ezshop.model" as model {
         +getRole(): string
     }
 
-    class ProductType {
+    class ProductType <<persistent>> {
         -productId: Integer
         -barcode: String
         -description: String
@@ -270,7 +270,7 @@ package "it.polito.ezshop.model" as model {
         +assignToPosition(): void
     }
 
-    class Position {
+    class Position <<persistent>> {
         -aisleID: Integer
         -rackID: String
         -levelID: Integer
@@ -287,7 +287,7 @@ package "it.polito.ezshop.model" as model {
         +addProduct(): void
     }
 
-    class Sale {
+    class Sale <<persistent>> {
         -saleId: Integer
         -date: Date
         -discountRate: Double
@@ -305,7 +305,7 @@ package "it.polito.ezshop.model" as model {
         +isCommitted(): boolean
     }
 
-    class CReturn {
+    class CReturn <<persistent>> {
         -returnId: Intger
         -saleTransaction: Sale
         -committed: boolean
@@ -321,7 +321,7 @@ package "it.polito.ezshop.model" as model {
         +COMPLETED
     }
 
-    class Order {
+    class Order <<persistent>> {
         -orderId: Integer
         -supplier: String
         -pricePerUnit: Double
@@ -336,7 +336,7 @@ package "it.polito.ezshop.model" as model {
         +setAsCompleted(): void
     }
 
-    abstract BalanceTransaction <<abstract>> {
+    abstract BalanceTransaction <<abstract>> <<persistent>> {
         -balanceId: Integer
         -description: String
         -value: Double
@@ -344,7 +344,7 @@ package "it.polito.ezshop.model" as model {
         +getTotalValue(): Double
     }
 
-    class Customer {
+    class Customer <<persistent>> {
         -customerID: Integer
         -name: String
         -loyaltyCard: LoyaltyCard
@@ -352,7 +352,7 @@ package "it.polito.ezshop.model" as model {
         +setName(): void
     }
 
-    class LoyaltyCard {
+    class LoyaltyCard <<persistent>> {
         -ID: String
         -points: Integer
         -customer: Customer
@@ -379,11 +379,11 @@ package "it.polito.ezshop.model" as model {
         +getRelated(): IDebit
     }
 
-    class DummyCredit {
+    class DummyCredit <<persistent>> {
         -value: Double
     }
 
-    class DummyDebit {
+    class DummyDebit <<persistent>> {
         -value: Double
     }
 

@@ -1,11 +1,11 @@
 # Design Document 
 
 
-Authors: 
+Authors: Baldazzi Alessandro, D'Anzi Francesco, Galota Simone, La Greca Salvatore Gabriele
 
-Date:
+Date: 29/04/2021
 
-Version:
+Version: 1.0
 
 
 # Contents
@@ -20,8 +20,6 @@ Version:
 The design must satisfy the Official Requirements document, notably functional and non functional requirements
 
 # High level design 
-
-<discuss architectural styles used, if any. Report package diagram>
 
 Patterns used:
 - Facade
@@ -59,8 +57,6 @@ GUI .up.> data
 ```
 
 # Low level design
-
-<for each package, report class diagram>
 
 
 ```plantuml
@@ -492,7 +488,6 @@ package "it.polito.ezshop.exceptions" {
 
 
 # Verification traceability matrix
-\<NON DIMENTICARE DI CONTROLLARE LA CORRISPONDENZA DEGLI FR>
 |     | EZShop | DataManager | LoginManager | RightsManager | CreditCardSystem | User | CreditTransaction | DebitTransaction | DummyDebit | DummyCredit | Sale | CReturn | Order | LoyaltyCard | ProductType | Customer | Position |
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | FR1 | X      | X           | X            | X             |                   | X    |                   |                  |            |             |      |         |       |             |             |          |          |
@@ -517,7 +512,6 @@ package "it.polito.ezshop.exceptions" {
 
 
 # Verification sequence diagrams 
-\<select key scenarios from the requirement document. For each of them define a sequence diagram showing that the scenario can be implemented by the classes and methods in the design>
 
 ## Scenario 1-1
 

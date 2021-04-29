@@ -356,7 +356,6 @@ package "it.polito.ezshop.model" as model {
         -ID: String
         -points: Integer
         -customer: Customer
-        -SaleTransactions: List<SaleTransaction>
         +addCustomer(): void
         +addPoints(): void
         +getPoints(): void
@@ -662,6 +661,12 @@ activate Sale
 
 Sale -> EZShop: sale committed
 deactivate Sale
+
+EZShop -> DataManager: 11: UpdateSale()
+activate DataManager
+
+DataManager -> EZShop: sale updated
+deactivate DataManager
 
 EZShop -> GUI: Done
 deactivate EZShop

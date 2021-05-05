@@ -72,6 +72,8 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public ProductType getProductTypeByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
+        //TODO: The barcode number related to a product type should be a string of digits of either 
+        //12, 13 or 14 numbers validated following this algorithm  https://www.gs1.org/services/how-calculate-check-digit-manually
         return null;
     }
 

@@ -4,7 +4,9 @@ import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.model.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
+
+import static java.util.stream.Collectors.*;
 
 
 public class EZShop implements EZShopInterface {
@@ -17,37 +19,142 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        return null;
+        
+        if (!(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
+            throw new InvalidRoleException();
+        }
+
+        if (username == null || username.isEmpty()) {
+            throw new InvalidUsernameException();
+        }
+
+        if (password == null || password.isEmpty()) {
+            throw new InvalidPasswordException();
+        }
+
+        boolean usernameExists = DataManager.getInstance()
+            .getUsers()
+            .stream()
+            .anyMatch(user -> user.getUsername().equals(username));
+
+        if (usernameExists) {
+            return -1;
+        }
+
+        OptionalInt maxId = DataManager.getInstance()
+            .getUsers()
+            .stream()
+            .mapToInt(it.polito.ezshop.model.User::getId)
+            .max();
+
+        int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
+        if (!DataManager.getInstance().insertUser(new it.polito.ezshop.model.User(newId, username, password, role))) {
+            return -1;
+        }
+
+        return newId;
     }
 
     @Override
     public boolean deleteUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return false;
+        
+        if (id == null || id <= 0) throw new InvalidUserIdException();
+
+        if (!RightsManager.getInstance().canManageUsers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        Optional<it.polito.ezshop.model.User> optUser = DataManager.getInstance()
+            .getUsers()
+            .stream()
+            .filter(u -> u.getId().equals(id))
+            .findFirst();
+
+        if (!optUser.isPresent()) return false; 
+        
+        return DataManager.getInstance().deleteUser(optUser.get());
     }
 
     @Override
     public List<User> getAllUsers() throws UnauthorizedException {
-        return null;
+
+        if (!RightsManager.getInstance().canManageUsers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        return DataManager.getInstance()
+            .getUsers()
+            .stream()
+            .map(u -> (User)u)
+            .collect(toList());
     }
 
     @Override
     public User getUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return null;
+        
+        if (id == null || id <= 0) throw new InvalidUserIdException();
+
+        if (!RightsManager.getInstance().canManageUsers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        Optional<it.polito.ezshop.model.User> optUser = DataManager.getInstance()
+            .getUsers()
+            .stream()
+            .filter(u -> u.getId().equals(id))
+            .findFirst();
+
+        return optUser.orElse(null);
     }
 
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
-        return false;
+
+        if (id == null || id <= 0) throw new InvalidUserIdException();
+
+        if (!(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
+            throw new InvalidRoleException();
+        }
+
+        if (!RightsManager.getInstance().canManageUsers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        Optional<it.polito.ezshop.model.User> optUser = DataManager.getInstance()
+            .getUsers()
+            .stream()
+            .filter(u -> u.getId().equals(id))
+            .findFirst();
+
+        optUser.ifPresent(u -> {
+            u.setId(id);
+            DataManager.getInstance().updateUser(u);
+        });
+
+        return optUser.isPresent();       
     }
 
     @Override
     public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
-        return null;
+        
+        if (username == null || username.isEmpty()) {
+            throw new InvalidUsernameException();
+        }
+
+        if (password == null || password.isEmpty()) {
+            throw new InvalidPasswordException();
+        }
+
+        if (!LoginManager.getInstance().tryLogin(username, password)) {
+            return null;
+        }
+
+        return (User)LoginManager.getInstance().getLoggedUser();
     }
 
     @Override
     public boolean logout() {
-        return false;
+        return LoginManager.getInstance().tryLogout();
     }
 
     @Override
@@ -67,7 +174,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
-        return null;
+        return new ArrayList<>(); //TODO: to be implemented
     }
 
     @Override
@@ -79,7 +186,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
-        return null;
+        return new ArrayList<>(); //TODO: to be implemented
     }
 
     @Override
@@ -114,7 +221,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<Order> getAllOrders() throws UnauthorizedException {
-        return null;
+        return new ArrayList<>(); //TODO: to be implemented
     }
 
     @Override
@@ -139,7 +246,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<Customer> getAllCustomers() throws UnauthorizedException {
-        return null;
+        return new ArrayList<>(); //TODO: to be implemented
     }
 
     @Override
@@ -249,7 +356,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
-        return null;
+        return new ArrayList<>(); //TODO: to be implemented
     }
 
     @Override

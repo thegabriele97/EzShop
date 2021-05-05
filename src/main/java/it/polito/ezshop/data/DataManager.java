@@ -254,7 +254,11 @@ public class DataManager implements Serializable {
         return updateIntoAndSave(balanceTransactions, o);
     }
 
-    public boolean deleteProductTypes(it.polito.ezshop.model.ProductType o) {
+    public boolean deleteUser(it.polito.ezshop.model.User o) {
+        return deleteIntoAndSave(users, o);
+    }
+
+    public boolean deleteProductType(it.polito.ezshop.model.ProductType o) {
         return deleteIntoAndSave(productTypes, o);
     }
     

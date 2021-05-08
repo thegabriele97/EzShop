@@ -1,5 +1,7 @@
 package it.polito.ezshop.model;
 //simone
+import it.polito.ezshop.data.TicketEntry;
+
 import java.io.Serializable;
 
 import it.polito.ezshop.data.*;

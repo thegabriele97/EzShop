@@ -1,6 +1,7 @@
 package it.polito.ezshop.model;
 
-import it.polito.ezshop.data.TicketEntry;
+import it.polito.ezshop.data.DataManager;
+import it.polito.ezshop.data.ProductType;
 
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,8 @@ public abstract class ProductList {
 
     protected Map<ProductType, Integer> products;
 
-    public List<TicketEntry> getProductsList(){
-        return this.products.keySet().stream().collect(Collectors.toList());
+    public List<ProductType> getProductsList(){
+        return products.keySet().stream().collect(Collectors.toList());
     }
 
     public Integer getQuantityByProduct(ProductType product){
@@ -19,10 +20,20 @@ public abstract class ProductList {
     }
 
     public void addProduct(ProductType product, Integer quantity){
-        if (products.containsKey(product))
+        addProduct(product, quantity, false);
+    }
+
+    public void addProduct(ProductType product, Integer quantity, boolean replace){
+        if (!replace && products.containsKey(product))
             products.replace(product, products.get(product)+quantity);
         else
             products.put(product, quantity);
+
+        if (this instanceof Sale) {
+            DataManager.getInstance().updateSale((Sale)this);
+        } else if (this instanceof CReturn) {
+            DataManager.getInstance().updateReturn((CReturn)this);
+        }
     }
 
 }

@@ -8,10 +8,10 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 	private String name;
 	private LoyaltyCard loyaltyCard; 
 	
-	public Customer(Integer iD, String name, String loyaltyCard) {
+	public Customer(Integer iD, String name, LoyaltyCard loyaltyCard) {
 		this.setId(iD);
 		this.setCustomerName(name);
-		this.setCustomerCard(loyaltyCard);
+		this.loyaltyCard = loyaltyCard;
 	}
 
 	

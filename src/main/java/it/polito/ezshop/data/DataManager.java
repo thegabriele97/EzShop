@@ -170,7 +170,7 @@ public class DataManager implements Serializable {
         return insertIntoAndSave(users, o);
     }
 
-    public boolean insertProductTypes(it.polito.ezshop.model.ProductType o) {
+    public boolean insertProductType(it.polito.ezshop.model.ProductType o) {
         return insertIntoAndSave(productTypes, o);
     }
 

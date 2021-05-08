@@ -1,22 +1,25 @@
 package it.polito.ezshop.model;
 
+import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.data.SaleTransaction;
 import it.polito.ezshop.data.TicketEntry;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Sale extends ProductList implements Serializable, SaleTransaction {
 
     private Integer ticketNumber;
-    private Date date;
+    private LocalDate date;
     private Double discountRate;
     private LoyaltyCard loyaltyCard;
     private boolean committed;
     private Map<ProductType, Double> productsDiscountRate;
     private List<CReturn> returnTransaction;
 
-    public Sale(Integer ticketNumber, Date date, Double discountRate, LoyaltyCard loyaltyCard) {
+    public Sale(Integer ticketNumber, LocalDate date, Double discountRate, LoyaltyCard loyaltyCard) {
         this.ticketNumber = ticketNumber;
         this.date = date;
         this.discountRate = discountRate;
@@ -35,16 +38,82 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
     @Override
     public void setTicketNumber(Integer ticketNumber) {
         this.ticketNumber = ticketNumber;
+        Update();
     }
 
     @Override
     public List<TicketEntry> getEntries() {
-        return this.getProductsList();
+        return this.products
+            .keySet()
+            .stream()
+            .map(p -> new TicketEntry(){
+                @Override
+                public int getAmount() {
+                    return getQuantityByProduct(p);
+                }
+
+                @Override
+                public String getBarCode() {
+                    return p.getBarCode();
+                }
+
+                @Override
+                public double getDiscountRate() {
+                    return productsDiscountRate.get(p);
+                }
+
+                @Override
+                public double getPricePerUnit() {
+                    return p.getPricePerUnit();
+                }
+
+                @Override
+                public String getProductDescription() {
+                    return p.getProductDescription();
+                }
+
+                @Override
+                public void setAmount(int amount) {
+                    if (amount < 0) return;
+                    products.replace(p, amount);
+
+                    addProduct(p, amount, true);
+                }
+
+                @Override
+                public void setBarCode(String barCode) {
+                    p.setBarCode(barCode);
+                }
+
+                @Override
+                public void setDiscountRate(double discountRate) {
+                    applyDiscountRateToProductGroup((it.polito.ezshop.model.ProductType)p, discountRate);
+                }
+
+                @Override
+                public void setPricePerUnit(double pricePerUnit) {
+                    p.setPricePerUnit(pricePerUnit);
+                }
+
+                @Override
+                public void setProductDescription(String productDescription) {
+                    p.setProductDescription(productDescription);
+                }
+
+            })
+            .collect(Collectors.toList());
     }
 
     @Override
     public void setEntries(List<TicketEntry> entries) {
-        entries.forEach(x -> products.containsKey(x) ? products.replace(x, products.get(x)+1) : products.put(x, 1));
+        entries.stream()
+            .collect(Collectors
+                .toMap(t -> DataManager
+                        .getInstance()
+                        .getProductTypes()
+                        .stream()
+                        .filter(p -> p.getBarCode().equals(t.getBarCode())), 
+                       t -> t.getAmount()));
     }
 
     @Override
@@ -55,28 +124,33 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
     @Override
     public void setDiscountRate(double discountRate) {
         this.discountRate = discountRate;
+        Update();
     }
 
     @Override
     public double getPrice() {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setPrice(double price) {
-
+        Update();
+        throw new UnsupportedOperationException();
     }
 
     public void addReturnTransaction(CReturn returnT){
         this.returnTransaction.add(returnT);
+        Update();
     }
 
     public void applyDiscountRateToProductGroup(ProductType product, double discountRate){
         this.productsDiscountRate.replace(product, discountRate);
+        Update();
     }
 
     public void attachLoyaltyCard(LoyaltyCard loyaltyCard){
         this.loyaltyCard = loyaltyCard;
+        Update();
     }
 
     public LoyaltyCard getAttachedLoyaltyCard(){
@@ -85,10 +159,15 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
 
     public void setAsCommitted(){
         this.committed = true;
+        Update();
     }
 
     public boolean isCommitted(){
         return this.committed;
+    }
+
+    private void Update() {
+        DataManager.getInstance().updateSale(this);
     }
 
 }

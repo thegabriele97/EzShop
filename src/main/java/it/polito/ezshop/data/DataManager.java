@@ -214,7 +214,7 @@ public class DataManager implements Serializable {
         return updateIntoAndSave(users, o);
     }
     
-    public boolean updateProductTypes(it.polito.ezshop.model.ProductType o) {
+    public boolean updateProductType(it.polito.ezshop.model.ProductType o) {
         return updateIntoAndSave(productTypes, o);
     }
     

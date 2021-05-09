@@ -475,40 +475,159 @@ public class EZShop implements EZShopInterface {
             .stream()
             .anyMatch(c -> c.getID().equals(newCustomerCard));
 
-        if (isCardBusy) {
-            // TODO: to be implemented
+            if (isCardBusy) {
+                // TODO: to be implemented
         }
 
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean deleteCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        return false;
+        
+        if (!RightsManager.getInstance().canManageCustomers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (id == null || id <= 0) {
+            throw new InvalidCustomerIdException();
+        }
+
+        Optional<it.polito.ezshop.model.Customer> customer = DataManager.getInstance()
+            .getCustomers()
+            .stream()
+            .filter(s -> s.getId() == id)
+            .findFirst();
+
+        if (customer.isEmpty()) return false;
+
+        return DataManager.getInstance().deleteCustomer(customer.get());
     }
 
     @Override
     public Customer getCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        return null;
+        
+        if (!RightsManager.getInstance().canManageCustomers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (id == null || id <= 0) {
+            throw new InvalidCustomerIdException();
+        }
+
+        Optional<it.polito.ezshop.model.Customer> customer = DataManager.getInstance()
+            .getCustomers()
+            .stream()
+            .filter(s -> s.getId() == id)
+            .findFirst();
+
+        return customer.orElse(null);
     }
 
     @Override
     public List<Customer> getAllCustomers() throws UnauthorizedException {
-        return new ArrayList<>(); //TODO: to be implemented
+        
+        if (!RightsManager.getInstance().canManageCustomers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        return DataManager.getInstance()
+            .getCustomers()
+            .stream()
+            .collect(toList());
     }
 
     @Override
     public String createCard() throws UnauthorizedException {
-        return null;
+        
+        if (!RightsManager.getInstance().canManageCustomers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        OptionalInt maxId = DataManager.getInstance()
+            .getLoyaltyCards()
+            .stream()
+            .mapToInt(c -> Integer.parseInt(c.getID()))
+            .max();
+
+        int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
+        String newIdAsStr = String.format("%010d", newId);
+        LoyaltyCard newCard = new LoyaltyCard(newIdAsStr, 0, null);
+
+        return DataManager.getInstance().insertLoyaltyCard(newCard) ? newIdAsStr : "";
     }
 
     @Override
     public boolean attachCardToCustomer(String customerCard, Integer customerId) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
-        return false;
+        
+        if (!RightsManager.getInstance().canManageCustomers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (customerId == null || customerId <= 0) {
+            throw new InvalidCustomerIdException();
+        }
+
+        if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10) {
+            throw new InvalidCustomerCardException();
+        } else {
+            try {
+                Integer.parseInt(customerCard);
+            } catch (NumberFormatException e) {
+                throw new InvalidCustomerCardException();
+            }
+        }
+
+        Optional<it.polito.ezshop.model.Customer> customer = DataManager.getInstance()
+            .getCustomers()
+            .stream()
+            .filter(s -> s.getId() == customerId)
+            .findFirst();
+
+        Optional<LoyaltyCard> card = DataManager.getInstance()
+            .getLoyaltyCards()
+            .stream()
+            .filter(c -> c.getID().equals(customerCard))
+            .findFirst();
+
+        if (customer.isEmpty() || card.isEmpty() || card.get().getCustomer() != null) {
+            return false;
+        }
+
+        customer.get().setCustomerCard(customerCard);
+
+        return DataManager.getInstance().updateLoyaltyCard(card.get()) && DataManager.getInstance().updateCustomer(customer.get());
     }
 
     @Override
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
-        return false;
+        
+        if (!RightsManager.getInstance().canManageCustomers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10) {
+            throw new InvalidCustomerCardException();
+        } else {
+            try {
+                Integer.parseInt(customerCard);
+            } catch (NumberFormatException e) {
+                throw new InvalidCustomerCardException();
+            }
+        }
+
+        Optional<LoyaltyCard> card = DataManager.getInstance()
+            .getLoyaltyCards()
+            .stream()
+            .filter(c -> c.getID().equals(customerCard))
+            .findFirst();
+
+        if (card.isEmpty() || (pointsToBeAdded < 0 && card.get().getPoints() < pointsToBeAdded)) {
+            return false;
+        }
+
+        card.get().addPoints(pointsToBeAdded);
+        return DataManager.getInstance().updateLoyaltyCard(card.get());
     }
 
     @Override

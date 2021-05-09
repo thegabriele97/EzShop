@@ -1,6 +1,8 @@
 package it.polito.ezshop.model;
 //Simone
 import java.io.Serializable;
+import java.util.Optional;
+
 import it.polito.ezshop.data.*;
 
 public class Customer implements Serializable, it.polito.ezshop.data.Customer {
@@ -29,13 +31,40 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 
 	@Override
 	public String getCustomerCard() {
-		return loyaltyCard.getID();
+		return loyaltyCard != null ? loyaltyCard.getID() : "";
 	}
 
 	@Override
 	public void setCustomerCard(String customerCard) {
 		
-		
+		if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10) {
+            return;
+        } else {
+            try {
+                Integer.parseInt(customerCard);
+            } catch (NumberFormatException e) {
+                return;
+            }
+        }
+
+		Optional<LoyaltyCard> card = DataManager.getInstance()
+            .getLoyaltyCards()
+            .stream()
+            .filter(c -> c.getID().equals(customerCard))
+            .findFirst();
+
+		if (card.isEmpty() || card.get().getCustomer() != null) return;
+
+		if (this.loyaltyCard != null) {
+			this.loyaltyCard.addCustomer(null);
+			DataManager.getInstance().updateLoyaltyCard(this.loyaltyCard);
+		}
+
+		this.loyaltyCard = card.get();
+		card.get().addCustomer(this);
+
+		DataManager.getInstance().updateLoyaltyCard(card.get());
+		DataManager.getInstance().updateCustomer(this);
 	}
 
 	@Override
@@ -48,17 +77,34 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 		if (id <= 0) return;
 		this.ID=id;
 		DataManager.getInstance().updateCustomer(this);
-		
 	}
 
 	@Override
 	public Integer getPoints() {		
-		return this.loyaltyCard.getPoints();
+		return loyaltyCard != null ? this.loyaltyCard.getPoints() : 0;
 	}
 
 	@Override
 	public void setPoints(Integer points) {
 		
+		if (loyaltyCard == null) return;
+
+		if (points < 0 && loyaltyCard.getPoints() < points) {
+			return;
+		}
+
+		loyaltyCard.addPoints(points);
+		DataManager.getInstance().updateCustomer(this);
+	}
+
+	@Override
+	public int hashCode() {
+		return this.ID;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return this.ID == ((Customer)obj).ID;
 	}
     
 }

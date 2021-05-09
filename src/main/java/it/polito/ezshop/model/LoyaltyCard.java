@@ -9,7 +9,7 @@ public class LoyaltyCard implements Serializable {
 	
 	public LoyaltyCard(String iD, Integer points, Customer customer) {
 		this.setID(iD);
-		this.addPoints(points);
+		this.points = points;
 		this.addCustomer(customer);
 	}
 	
@@ -27,7 +27,7 @@ public class LoyaltyCard implements Serializable {
 	}
 
 	public void addPoints(Integer points) {
-		this.points = points;
+		this.points += points;
 	}
 
 	public Customer getCustomer() {
@@ -38,7 +38,14 @@ public class LoyaltyCard implements Serializable {
 		this.customer = customer;
 	}
 
-	
-	
+	@Override
+	public int hashCode() {
+		return Integer.parseInt(this.ID);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return this.ID.equals(((LoyaltyCard)obj).ID);
+	}
     
 }

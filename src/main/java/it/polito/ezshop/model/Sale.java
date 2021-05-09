@@ -18,6 +18,7 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
     private boolean committed;
     private Map<ProductType, Double> productsDiscountRate;
     private List<CReturn> returnTransaction;
+    private double price;
 
     public Sale(Integer ticketNumber, LocalDate date, Double discountRate, LoyaltyCard loyaltyCard) {
         this.ticketNumber = ticketNumber;
@@ -27,6 +28,7 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
         this.committed = false;
         this.productsDiscountRate = new HashMap<>();
         this.returnTransaction = new ArrayList<>();
+        this.price = 0.0;
     }
 
 
@@ -129,13 +131,26 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
 
     @Override
     public double getPrice() {
-        throw new UnsupportedOperationException();
+        
+        this.price = 0.0;
+        for (it.polito.ezshop.data.ProductType prod : getProductsList()) {
+            it.polito.ezshop.model.ProductType xProd = (it.polito.ezshop.model.ProductType)prod;
+
+            this.price += (xProd.getPricePerUnit() * getQuantityByProduct(xProd))*(1-getDiscountRateFOrProductGroup(xProd));
+        }
+
+        this.price *= (1-getDiscountRate());
+        return this.price;
     }
 
     @Override
     public void setPrice(double price) {
+        this.price = price;
         Update();
-        throw new UnsupportedOperationException();
+    }
+
+    public double getDiscountRateFOrProductGroup(ProductType product){
+        return this.productsDiscountRate.get(product);
     }
 
     public void addReturnTransaction(CReturn returnT){

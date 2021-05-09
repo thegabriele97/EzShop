@@ -3,6 +3,7 @@ package it.polito.ezshop.model;
 import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.data.ProductType;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,6 +11,10 @@ import java.util.stream.Collectors;
 public abstract class ProductList {
 
     protected Map<ProductType, Integer> products;
+
+    protected ProductList() {
+        products = new HashMap<>();
+    }
 
     public List<ProductType> getProductsList(){
         return products.keySet().stream().collect(Collectors.toList());

@@ -669,8 +669,128 @@ public class EZShop implements EZShopInterface {
             throw new InvalidQuantityException();
         }
 
-        if (true) { //TODO: to be completed
+        Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
+            .getProductTypes()
+            .stream()
+            .filter(p -> p.getBarCode().equals(productCode))
+            .findFirst();
+
+        if (prod.isEmpty() || prod.get().getQuantity() < amount) return false;
+
+        Optional<Sale> sale = DataManager.getInstance()
+            .getSales()
+            .stream()
+            .filter(s -> s.getTicketNumber() == transactionId)
+            .findFirst();
+
+        if (!sale.isPresent() || sale.get().isCommitted()) {
             return false;
+        }
+
+        sale.get().addProduct(prod.get(), amount);
+        prod.get().addQuantityOffset(-amount);
+
+        return DataManager.getInstance().updateSale(sale.get()) && DataManager.getInstance().updateProductType(prod.get());
+    }
+
+    @Override
+    public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
+        
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (transactionId == null || transactionId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        if (!isValidBarcode(productCode)) {
+            throw new InvalidProductCodeException();
+        }
+
+        if (amount < 0) {
+            throw new InvalidQuantityException();
+        }
+
+        Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
+            .getProductTypes()
+            .stream()
+            .filter(p -> p.getBarCode().equals(productCode))
+            .findFirst();
+
+        if (prod.isEmpty()) return false;
+
+        Optional<Sale> sale = DataManager.getInstance()
+            .getSales()
+            .stream()
+            .filter(s -> s.getTicketNumber() == transactionId)
+            .findFirst();
+
+        if (!sale.isPresent() || sale.get().isCommitted()) {
+            return false;
+        }
+
+        sale.get().addProduct(prod.get(), -amount);
+        prod.get().addQuantityOffset(amount);
+
+        return DataManager.getInstance().updateSale(sale.get()) && DataManager.getInstance().updateProductType(prod.get());
+    }
+
+    @Override
+    public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
+        
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (transactionId == null || transactionId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        if (!isValidBarcode(productCode)) {
+            throw new InvalidProductCodeException();
+        }
+
+        if (discountRate < 0.0 || discountRate >= 1.0) {
+            throw new InvalidDiscountRateException();
+        }
+
+        Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
+            .getProductTypes()
+            .stream()
+            .filter(p -> p.getBarCode().equals(productCode))
+            .findFirst();
+
+        if (prod.isEmpty()) return false;
+
+        Optional<Sale> sale = DataManager.getInstance()
+            .getSales()
+            .stream()
+            .filter(s -> s.getTicketNumber() == transactionId)
+            .findFirst();
+
+        if (!sale.isPresent() || sale.get().isCommitted() || !sale.get().getProductsList().contains(prod.get()) ) {
+            return false;
+        }
+
+        sale.get().applyDiscountRateToProductGroup(prod.get(), discountRate);
+
+        return DataManager.getInstance().updateSale(sale.get());
+    }
+
+    @Override
+    public boolean applyDiscountRateToSale(Integer transactionId, double discountRate) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
+        
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (transactionId == null || transactionId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        if (discountRate < 0.0 || discountRate >= 1.0) {
+            throw new InvalidDiscountRateException();
         }
 
         Optional<Sale> sale = DataManager.getInstance()
@@ -683,56 +803,107 @@ public class EZShop implements EZShopInterface {
             return false;
         }
 
-        Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
-            .getProductTypes()
-            .stream()
-            .filter(p -> p.getBarCode().equals(productCode))
-            .findFirst();
+        sale.get().setDiscountRate(discountRate);
 
-        if (!prod.isPresent() /** TODO: || prod.get().getQuantity() < amount */) {
-            return false;
-        }
+        return DataManager.getInstance().updateSale(sale.get());
 
-        //TODO: decrease available quantity for productype
-        sale.get().addProduct(prod.get(), amount);
-        DataManager.getInstance().updateSale(sale.get());
-
-        return true;
-    }
-
-    @Override
-    public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-        return false;
-    }
-
-    @Override
-    public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
-        return false;
-    }
-
-    @Override
-    public boolean applyDiscountRateToSale(Integer transactionId, double discountRate) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
-        return false;
     }
 
     @Override
     public int computePointsForSale(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (transactionId == null || transactionId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        Optional<Sale> sale = DataManager.getInstance()
+            .getSales()
+            .stream()
+            .filter(s -> s.getTicketNumber() == transactionId)
+            .findFirst();
+
+        if (!sale.isPresent()) return -1;
+
+        int points = 0;
+        for (; points < sale.get().getPrice(); points++);
+
+        return points;
     }
 
     @Override
     public boolean endSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (transactionId == null || transactionId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        Optional<Sale> sale = DataManager.getInstance()
+            .getSales()
+            .stream()
+            .filter(s -> s.getTicketNumber() == transactionId)
+            .findFirst();
+
+        if (!sale.isPresent() || sale.get().isCommitted()) return false;
+
+        sale.get().setAsCommitted();
+        return DataManager.getInstance().updateSale(sale.get());
     }
 
     @Override
     public boolean deleteSaleTransaction(Integer saleNumber) throws InvalidTransactionIdException, UnauthorizedException {
-        return false;
+        
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (saleNumber == null || saleNumber <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        Optional<Sale> sale = DataManager.getInstance()
+            .getSales()
+            .stream()
+            .filter(s -> s.getTicketNumber() == saleNumber)
+            .findFirst();
+
+        if (!sale.isPresent() || sale.get().isCommitted()) return false;
+
+        for (it.polito.ezshop.data.ProductType prod : sale.get().getProductsList()) {
+            it.polito.ezshop.model.ProductType xProd = (it.polito.ezshop.model.ProductType)prod;
+
+            xProd.addQuantityOffset(sale.get().getQuantityByProduct(xProd));
+            DataManager.getInstance().updateProductType(xProd);
+        }
+
+        return DataManager.getInstance().deleteSale(sale.get());
     }
 
     @Override
     public SaleTransaction getSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
-        return null;
+        
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (transactionId == null || transactionId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        Optional<Sale> sale = DataManager.getInstance()
+            .getSales()
+            .stream()
+            .filter(s -> s.getTicketNumber() == transactionId)
+            .findFirst();
+
+        return sale.orElse(null);
     }
 
     @Override

@@ -234,7 +234,7 @@ public class EZShop implements EZShopInterface {
             .anyMatch(p -> p.getBarCode().equals(newCode));
             
 
-        if (isNewCodeAlreadyUsed || prod.isEmpty()) {
+        if (isNewCodeAlreadyUsed || !(prod.isPresent())) {
             return false;
         }
 
@@ -263,7 +263,7 @@ public class EZShop implements EZShopInterface {
             .filter(p -> p.getId() == id)
             .findFirst();
 
-        if (prod.isEmpty()) return false;
+        if (!(prod.isPresent())) return false;
 
         return DataManager.getInstance().deleteProductType(prod.get());
     }
@@ -378,9 +378,9 @@ public class EZShop implements EZShopInterface {
             .findFirst();
         
         String[] pieces = newPos.split("-");
-        Position actualPos = pos.isEmpty() ? new Position(Integer.valueOf(pieces[0]),pieces[1],Integer.valueOf(pieces[2]), null) : pos.get();
+        Position actualPos = !(pos.isPresent()) ? new Position(Integer.valueOf(pieces[0]),pieces[1],Integer.valueOf(pieces[2]), null) : pos.get();
 
-        if (pos.isEmpty()) {
+        if (!(pos.isPresent())) {
             DataManager.getInstance().insertPosition(actualPos);
         }
 
@@ -467,8 +467,9 @@ public class EZShop implements EZShopInterface {
             .stream()
             .filter(s -> s.getId() == id)
             .findFirst();
+       
 
-        if (customer.isEmpty()) return false;
+        if (!(customer.isPresent())) return false;
 
         boolean isCardBusy = DataManager.getInstance()
             .getLoyaltyCards()
@@ -499,7 +500,7 @@ public class EZShop implements EZShopInterface {
             .filter(s -> s.getId() == id)
             .findFirst();
 
-        if (customer.isEmpty()) return false;
+        if (!(customer.isPresent())) return false;
 
         return DataManager.getInstance().deleteCustomer(customer.get());
     }
@@ -590,7 +591,7 @@ public class EZShop implements EZShopInterface {
             .filter(c -> c.getID().equals(customerCard))
             .findFirst();
 
-        if (customer.isEmpty() || card.isEmpty() || card.get().getCustomer() != null) {
+        if (!(customer.isPresent()) || !(card.isPresent()) || card.get().getCustomer() != null) {
             return false;
         }
 
@@ -622,7 +623,7 @@ public class EZShop implements EZShopInterface {
             .filter(c -> c.getID().equals(customerCard))
             .findFirst();
 
-        if (card.isEmpty() || (pointsToBeAdded < 0 && card.get().getPoints() < pointsToBeAdded)) {
+        if (!(card.isPresent()) || (pointsToBeAdded < 0 && card.get().getPoints() < pointsToBeAdded)) {
             return false;
         }
 
@@ -675,7 +676,7 @@ public class EZShop implements EZShopInterface {
             .filter(p -> p.getBarCode().equals(productCode))
             .findFirst();
 
-        if (prod.isEmpty() || prod.get().getQuantity() < amount) return false;
+        if (!(prod.isPresent()) || prod.get().getQuantity() < amount) return false;
 
         Optional<Sale> sale = DataManager.getInstance()
             .getSales()
@@ -718,7 +719,7 @@ public class EZShop implements EZShopInterface {
             .filter(p -> p.getBarCode().equals(productCode))
             .findFirst();
 
-        if (prod.isEmpty()) return false;
+        if (!(prod.isPresent())) return false;
 
         Optional<Sale> sale = DataManager.getInstance()
             .getSales()
@@ -761,7 +762,7 @@ public class EZShop implements EZShopInterface {
             .filter(p -> p.getBarCode().equals(productCode))
             .findFirst();
 
-        if (prod.isEmpty()) return false;
+        if (!(prod.isPresent())) return false;
 
         Optional<Sale> sale = DataManager.getInstance()
             .getSales()

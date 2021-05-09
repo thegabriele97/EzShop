@@ -53,7 +53,7 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
             .filter(c -> c.getID().equals(customerCard))
             .findFirst();
 
-		if (card.isEmpty() || card.get().getCustomer() != null) return;
+		if (!(card.isPresent()) || card.get().getCustomer() != null) return;
 
 		if (this.loyaltyCard != null) {
 			this.loyaltyCard.addCustomer(null);

@@ -113,7 +113,7 @@ public class ProductType implements Serializable,  it.polito.ezshop.data.Product
 			.filter(ps -> ps.toString().equals(location))
 			.findFirst();
 		
-		if (pos.isEmpty()) {
+		if (!(pos.isPresent())) {
 			String[] pieces = location.split("-");
 
 			if (pieces.length != 3) {

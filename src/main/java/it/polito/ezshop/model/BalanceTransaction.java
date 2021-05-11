@@ -5,57 +5,58 @@ import java.time.LocalDate;
 import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.DataManager;
 
-//Baldaz
+//Fra
 
 public abstract class BalanceTransaction implements Serializable, BalanceOperation {
     
     private int balanceId;
     private String description;
     private double value;
+    private LocalDate date;
 
-    public BalanceTransaction(int balanceId, String description, double value){
-        setBalanceId(balanceId);
-        setDescription(description);
-        setValue(value);
+    protected BalanceTransaction(int balanceId, double value){
+        this.balanceId = balanceId;
+        this.value = value;
+        this.date = LocalDate.now();
     }
 
-    public int getBalanceId(){
+    @Override
+    public int getBalanceId() {
         return this.balanceId;
     }
 
-    public void setBalanceId(int balanceId){
-        if(balanceId <= 0) return;
+    @Override
+    public void setBalanceId(int balanceId) {
         this.balanceId = balanceId;
-        DataManager.getInstance().updateBalanceTransaction(this);
     }
 
-    public void setDescription(String descr){
-        if(descr.isEmpty() || descr.isBlank() || descr == null) return;
-        this.description = descr;
-        DataManager.getInstance().updateBalanceTransaction(this);
-
+    @Override
+    public LocalDate getDate() {
+        return this.date;
     }
 
-    public void setValue(double value){
-        if(value == 0) return;
-        this.value = value;
-        DataManager.getInstance().updateBalanceTransaction(this);
+    @Override
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    /*public LocalDate getDate(){
-
+    @Override
+    public double getMoney() {
+        return this.value;
     }
 
-    void setDate(LocalDate date){
-
+    @Override
+    public void setMoney(double money) {
+        this.value = money;
     }
 
-    double getMoney();
+    @Override
+    public String getType() {
+        return null;
+    }
 
-    void setMoney(double money);
+    @Override
+    public void setType(String type) {
 
-    String getType();
-
-    void setType(String type);*/
-
+    }
 }

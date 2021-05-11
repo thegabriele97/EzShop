@@ -3,6 +3,7 @@ package it.polito.ezshop.model;
 import it.polito.ezshop.data.TicketEntry;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import it.polito.ezshop.data.*;
 
@@ -43,6 +44,11 @@ public class ProductType implements Serializable,  it.polito.ezshop.data.Product
 
 	@Override ///////////////////************** CONTROLLARE ****************//////////////////////
 	public String getLocation() {
+
+		if (this.position == null) {
+			return "";
+		}
+
 		return this.position.toString();
 	}
 
@@ -91,9 +97,36 @@ public class ProductType implements Serializable,  it.polito.ezshop.data.Product
 
 	@Override
 	public void setLocation(String location) {
-		String[] pieces = location.split("-");
-		Position p = new Position(Integer.valueOf(pieces[0]),pieces[1],Integer.valueOf(pieces[2]), this);
-		this.position=p;
+
+		if (location == null || location.isEmpty()) {
+			if (this.position != null) {
+				this.position.assignToProduct(null);
+			}
+
+			this.position = null;
+			return;
+		}
+		
+		Optional<Position> pos = DataManager.getInstance()
+			.getPositions()
+			.stream()
+			.filter(ps -> ps.toString().equals(location))
+			.findFirst();
+		
+		if (!(pos.isPresent())) {
+			String[] pieces = location.split("-");
+
+			if (pieces.length != 3) {
+				return;
+			}
+
+			Position p = new Position(Integer.valueOf(pieces[0]),pieces[1],Integer.valueOf(pieces[2]), null);
+			DataManager.getInstance().insertPosition(p);
+			this.assingToPosition(p);
+		} else {
+			this.assingToPosition(pos.get());
+		}
+		
 		DataManager.getInstance().updateProductType(this);
 	}
 
@@ -105,13 +138,12 @@ public class ProductType implements Serializable,  it.polito.ezshop.data.Product
 
 	@Override
 	public void setProductDescription(String productDescription) {
-		if(this.getNote()==null)
-			this.description="";
+		
+		if (productDescription == null || productDescription.isEmpty()) {
+            return;
+        }
 
-		else 
-		{	
-			this.description=productDescription;
-		}
+		this.description=productDescription;
 		DataManager.getInstance().updateProductType(this);
 
 	}
@@ -137,26 +169,44 @@ public class ProductType implements Serializable,  it.polito.ezshop.data.Product
 		DataManager.getInstance().updateProductType(this);
 
 	}
+
 	public boolean addQuantityOffset(int quantity) {
-		if(quantity==0)
+
+		if (getQuantity() + quantity < 0) return false;
+
+		this.quantity+=quantity;
+		DataManager.getInstance().updateProductType(this);
+
+		return true;
+	}
+
+    @Override
+    public int hashCode() {
+        return this.getId();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.getId() == ((ProductType)obj).getId();
+    }
+
+	public boolean assingToPosition(Position pos) {
+
+		if (pos.getAssignedProduct() != null) {
 			return false;
-		else 
-		{
-			this.quantity+=quantity;
-			DataManager.getInstance().updateProductType(this);
-			return true;
 		}
+
+		if (this.position != null) {
+			pos.assignToProduct(null);
+		}
+		
+		this.position = pos;
+		pos.assignToProduct(this);
+		
+		return true;
 	}
-	
-	///SERVONO REALMENTE? avendo già set and get LOCATION	
-	/*public Position getAssignedPosition() { 
-		Position P = new Position();
-		return P;
-	}*/
 
-	public void assingToPosition() {
-
+	public Position getAssignedPosition() {
+		return this.position;
 	}
-
-
 }

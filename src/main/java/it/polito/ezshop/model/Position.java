@@ -47,13 +47,13 @@ public class Position implements Serializable{
 	}
 
 	public void setLevelID(Integer levelID) {
-		if(levelID>0) {
+		//if(levelID>0) {
 			this.levelID = levelID;
 			DataManager.getInstance().updatePosition(this);
-		}
+		/*}
 			
 		else
-			return;
+			return;*/
 	
 	}
 
@@ -67,12 +67,12 @@ public class Position implements Serializable{
 	}
 
 
-	@Override
-	public String toString() {
+	public String toStringP() {
 		return "Position of product"+ product.getId()+"[aisleID=" + getAisleID() + ", rackID=" + getRackID() + ", levelID=" + getLevelID() + "]";
 	}
 	
-	public String toStringP() {
+	@Override
+	public String toString() {
 		return (getAisleID() + "-" + getRackID() + "-" + getLevelID());	
 	}
 	

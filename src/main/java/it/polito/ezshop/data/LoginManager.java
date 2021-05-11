@@ -26,7 +26,7 @@ class LoginManager {
     }
 
     boolean isUserLogged(it.polito.ezshop.model.User user) {
-        return isUserLogged() && loggedUser.equals(user);
+        return user != null && isUserLogged() && loggedUser.equals(user);
     }
 
     it.polito.ezshop.model.User getLoggedUser() {

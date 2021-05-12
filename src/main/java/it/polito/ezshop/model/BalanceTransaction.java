@@ -13,11 +13,15 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     private String description;
     private double value;
     private LocalDate date;
+    private String type; // I hate this
 
     public BalanceTransaction(int balanceId, double value){
         setBalanceId(balanceId);
         setValue(value);
         date = LocalDate.now();
+
+        // TODO: to be tested
+        this.type = (this instanceof CreditTransaction) ? "Credit" : "Debit";
     }
 
     public int getBalanceId(){
@@ -27,13 +31,13 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     public void setBalanceId(int balanceId){
         if(balanceId <= 0) return;
         this.balanceId = balanceId;
-        DataManager.getInstance().updateBalanceTransaction(this);
+        Update();
     }
 
     public void setDescription(String descr){
         if(descr.isEmpty() || descr.isBlank() || descr == null) return;
         this.description = descr;
-        DataManager.getInstance().updateBalanceTransaction(this);
+        Update();
     }
 
     public String getDescription(){
@@ -47,7 +51,7 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     public void setValue(double value){
         if(value == 0) return;
         this.value = value;
-        DataManager.getInstance().updateBalanceTransaction(this);
+        Update();
     }
 
     public LocalDate getDate(){
@@ -57,8 +61,7 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     public void setDate(LocalDate date){
         if(date == null) return;
         this.date = date;
-        DataManager.getInstance().updateBalanceTransaction(this);
-
+        Update();
     }
 
     public double getMoney() {
@@ -67,20 +70,18 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
 
     public void setMoney(double money) {
        setValue(money);
+       Update();
     }
 
     public String getType() {
-        if(value > 0){
-            return "credit";
-        }
-        if(value < 0){
-            return "debit";
-        }
-        return null;
+        return this.type;
     }
 
+    // Why this method exists?
     public void setType(String type) {
-        throw new UnsupportedOperationException(); //TODO: to be implemented, but how?
+        if (type == null || !type.equals("Credit") || !type.equals("Debit")) return;
+        this.type = type;
+        Update();
     }
 
     @Override
@@ -91,6 +92,10 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     @Override
     public boolean equals(Object obj) {
         return this.balanceId == ((BalanceTransaction)obj).balanceId;
+    }
+
+    private void Update() {
+        DataManager.getInstance().updateBalanceTransaction(this);
     }
 
 }

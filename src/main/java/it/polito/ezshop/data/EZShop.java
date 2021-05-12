@@ -359,6 +359,7 @@ public class EZShop implements EZShopInterface {
             prod.get().setLocation("");
 
             DataManager.getInstance().updateProductType(prod.get());
+            //CONTROLLARE:perchè aggiorniamo una posizione già esistente?
             DataManager.getInstance().updatePosition(oldpos);
 
             return true;
@@ -391,27 +392,190 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+        if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (productCode == null ||  productCode.isEmpty() || !isValidBarcode(productCode)) {
+            throw new InvalidProductCodeException();
+        }
+
+        if (quantity <= 0){
+            throw new InvalidQuantityException();
+        }
+
+        if (pricePerUnit <= 0){
+            throw new InvalidPricePerUnitException();
+        }
+
+        Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
+                .getProductTypes()
+                .stream()
+                .filter(p -> p.getBarCode() == productCode)
+                .findFirst();
+
+        if(!(prod.isPresent())) {
+            return -1;
+        }
+
+        OptionalInt maxId = DataManager.getInstance()
+                .getOrders()
+                .stream()
+                .mapToInt(it.polito.ezshop.model.Order::getOrderId)
+                .max();
+        int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
+
+        it.polito.ezshop.model.Order newOrder = new it.polito.ezshop.model.Order(newId, pricePerUnit, quantity, prod.get(), EOrderStatus.ISSUED);
+        if(!DataManager.getInstance().insertOrder(newOrder)){
+            return -1;
+        }
+        return newId;
     }
 
     @Override
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+        if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (productCode == null ||  productCode.isEmpty() || !isValidBarcode(productCode)) {
+            throw new InvalidProductCodeException();
+        }
+
+        if (quantity <= 0){
+            throw new InvalidQuantityException();
+        }
+
+        if (pricePerUnit <= 0){
+            throw new InvalidPricePerUnitException();
+        }
+
+        if ((quantity*pricePerUnit > this.computeBalance())){
+            return -1;
+        }
+
+        Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
+                .getProductTypes()
+                .stream()
+                .filter(p -> p.getBarCode() == productCode)
+                .findFirst();
+
+        if(!(prod.isPresent())) {
+            return -1;
+        }
+
+        OptionalInt maxOrdId = DataManager.getInstance()
+                .getOrders()
+                .stream()
+                .mapToInt(it.polito.ezshop.model.Order::getOrderId)
+                .max();
+        int newOrdId = !maxOrdId.isPresent() ? 1 : (maxOrdId.getAsInt() + 1);
+
+        it.polito.ezshop.model.Order newOrder = new it.polito.ezshop.model.Order(newOrdId, pricePerUnit, quantity, prod.get(), EOrderStatus.PAYED);
+        if(!DataManager.getInstance().insertOrder(newOrder)){
+            return -1;
+        }
+
+        OptionalInt maxBalId = DataManager.getInstance()
+                .getBalanceTransactions()
+                .stream()
+                .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+                .max();
+        int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
+
+        newOrder.setBalanceId(newBalId);
+        it.polito.ezshop.model.DebitTransaction newDebT = new it.polito.ezshop.model.DebitTransaction(newBalId, newOrder.getTotalValue(), newOrder);
+        if(!DataManager.getInstance().insertBalanceTransaction(newDebT)){
+            return -1;
+        }
+
+        return newOrdId;
     }
 
     @Override
     public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
-        return false;
+        if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+        if (orderId == null || orderId <= 0){
+            throw new InvalidOrderIdException();
+        }
+
+        Optional<it.polito.ezshop.model.Order> ord = DataManager.getInstance()
+                .getOrders()
+                .stream()
+                .filter(p -> p.getOrderId() == orderId)
+                .findFirst();
+
+        if (!(ord.isPresent())){
+            return false;
+        }
+
+        if (!(ord.get().getStatus().equals(EOrderStatus.ISSUED.toString()) || ord.get().getStatus().equals(EOrderStatus.PAYED.toString()))){
+            return false;
+        }
+
+        ord.get().setAsPayed();
+
+        OptionalInt maxBalId = DataManager.getInstance()
+                .getBalanceTransactions()
+                .stream()
+                .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+                .max();
+        int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
+
+        ord.get().setBalanceId(newBalId);
+        it.polito.ezshop.model.DebitTransaction newDebT = new it.polito.ezshop.model.DebitTransaction(newBalId, ord.get().getTotalValue(), ord.get());
+        if(!DataManager.getInstance().insertBalanceTransaction(newDebT)){
+            return false;
+        }
+
+        return DataManager.getInstance().updateOrder(ord.get());
     }
 
     @Override
     public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
-        return false;
+        if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+        if (orderId == null || orderId <= 0){
+            throw new InvalidOrderIdException();
+        }
+
+        Optional<it.polito.ezshop.model.Order> ord = DataManager.getInstance()
+                .getOrders()
+                .stream()
+                .filter(p -> p.getOrderId() == orderId)
+                .findFirst();
+
+        if (!(ord.isPresent())){
+            return false;
+        }
+
+        if (ord.get().getRelatedProduct().getAssignedPosition() == null){
+            throw new InvalidLocationException();
+        }
+
+        if (!(ord.get().getStatus().equals(EOrderStatus.PAYED.toString()) || ord.get().getStatus().equals(EOrderStatus.COMPLETED.toString()))){
+            return false;
+        }
+
+        if (ord.get().getStatus().equals(EOrderStatus.PAYED.toString())){
+            ord.get().setAsCompleted();
+            ord.get().getRelatedProduct().addQuantityOffset(ord.get().getQuantity());
+            DataManager.getInstance().updateProductType(ord.get().getRelatedProduct());
+        }
+
+        return DataManager.getInstance().updateOrder(ord.get());
     }
 
     @Override
     public List<Order> getAllOrders() throws UnauthorizedException {
-        return new ArrayList<>(); //TODO: to be implemented
+        if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        return DataManager.getInstance().getOrders().stream().collect(toList());
     }
 
     @Override

@@ -14,9 +14,8 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     private double value;
     private LocalDate date;
 
-    public BalanceTransaction(int balanceId, String description, double value){
+    public BalanceTransaction(int balanceId, double value){
         setBalanceId(balanceId);
-        setDescription(description);
         setValue(value);
         date = LocalDate.now();
     }

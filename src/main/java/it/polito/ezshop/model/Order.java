@@ -3,18 +3,18 @@ package it.polito.ezshop.model;
 import java.io.Serializable;
 import java.util.Locale;
 
-public class Order implements Serializable, it.polito.ezshop.data.Order {
+public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit {
     private Integer orderId;
     private String supplier;
     private Double pricePerUnit;
     private Integer quantity;
     private ProductType product;
+    private Integer balanceId;
     private EOrderStatus status;
 
 
-    public Order(Integer orderId, String supplier, Double pricePerUnit, Integer quantity, ProductType product, EOrderStatus status) {
+    public Order(Integer orderId, Double pricePerUnit, Integer quantity, ProductType product, EOrderStatus status) {
         this.orderId = orderId;
-        this.supplier = supplier;
         this.pricePerUnit = pricePerUnit;
         this.quantity = quantity;
         this.product = product;
@@ -23,12 +23,12 @@ public class Order implements Serializable, it.polito.ezshop.data.Order {
 
     @Override
     public Integer getBalanceId() {
-        return 0;
+        return this.balanceId;
     }
 
     @Override
     public void setBalanceId(Integer balanceId) {
-
+        this.balanceId = balanceId;
     }
 
     @Override
@@ -93,5 +93,8 @@ public class Order implements Serializable, it.polito.ezshop.data.Order {
         this.status = EOrderStatus.COMPLETED;
     }
 
-
+    @Override
+    public Double getTotalValue() {
+        return (this.quantity * this.pricePerUnit);
+    }
 }

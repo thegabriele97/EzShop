@@ -1075,7 +1075,6 @@ public class EZShop implements EZShopInterface {
     @Override
     public Integer startReturnTransaction(Integer transactionId) throws /*InvalidTicketNumberException,*/InvalidTransactionIdException, UnauthorizedException {
     	 
-        
         if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
             throw new UnauthorizedException();
         }
@@ -1098,112 +1097,108 @@ public class EZShop implements EZShopInterface {
         
         if (!sale.isPresent()) return -1;
 
-            int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
-            CReturn newCReturn = new CReturn(newId, sale.get());
-            DataManager.getInstance().insertReturn(newCReturn);
+        int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
+        CReturn newCReturn = new CReturn(newId, sale.get());
+        DataManager.getInstance().insertReturn(newCReturn);
             
-	return newId;
-}
+        return newId;
+    }
 
 
     @Override
     public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
 
     	if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
-             throw new UnauthorizedException();
-         }
-    	 if (returnId == null || returnId <= 0) {
-             throw new InvalidTransactionIdException();
-         }
-    	 if (!isValidBarcode(productCode)) {
-             throw new InvalidProductCodeException();
-         }
+            throw new UnauthorizedException();
+        }
+    	
+        if (returnId == null || returnId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+    	
+        if (!isValidBarcode(productCode)) {
+            throw new InvalidProductCodeException();
+        }
 
-         if (amount <= 0) {
-             throw new InvalidQuantityException();
-         }
+        if (amount <= 0) {
+            throw new InvalidQuantityException();
+        }
     	 
     	 
-    	 Optional<CReturn> Creturn = DataManager.getInstance()
-    	            .getReturns()
-    	            .stream()
-    	            .filter(r -> r.getReturnid() == returnId)
-    	            .findFirst();
+        Optional<CReturn> Creturn = DataManager.getInstance()
+                .getReturns()
+                .stream()
+                .filter(r -> r.getReturnid() == returnId)
+                .findFirst();
     	 
-    	 Sale sale = Creturn.get().getSaleTransaction();
+        Sale sale = Creturn.get().getSaleTransaction();
     	 
-    	 Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
-    	            .getProductTypes()
-    	            .stream()
-    	            .filter(p -> p.getBarCode().equals(productCode))
-    	            .findFirst();
+        Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
+                .getProductTypes()
+                .stream()
+                .filter(p -> p.getBarCode().equals(productCode))
+                .findFirst();
     	 
     	 
-    	 if (!Creturn.isPresent()) return false;
+        if (!Creturn.isPresent()) return false;
     	 
-         if (!prod.isPresent() || sale.getQuantityByProduct(prod.get()) < amount) return false;
+        if (!prod.isPresent() || sale.getQuantityByProduct(prod.get()) < amount) return false;
     	 
-    	 if(!sale.getProductsList().contains(prod.get())) return false;
+        if(!sale.getProductsList().contains(prod.get())) return false;
 
 
     	Creturn.get().addProduct(prod.get(), amount);
-
-    	DataManager.getInstance().updateReturn(Creturn.get());
-    	 
-    	 
-    	return true;
+    	return DataManager.getInstance().updateReturn(Creturn.get());
     }
 
     @Override
     public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException, UnauthorizedException {
         
-    	 if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
-             throw new UnauthorizedException();
-         }
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
 
-         if (returnId == null || returnId <= 0) {
-             throw new InvalidTransactionIdException();
-         }
+        if (returnId == null || returnId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
 
          
-    	 Optional<CReturn> Creturn = DataManager.getInstance()
-    	            .getReturns()
-    	            .stream()
-    	            .filter(r -> r.getReturnid() == returnId)
-    	            .findFirst();
+        Optional<CReturn> Creturn = DataManager.getInstance()
+                .getReturns()
+                .stream()
+                .filter(r -> r.getReturnid() == returnId)
+                .findFirst();
     	 
 
-         if (!Creturn.isPresent() || Creturn.get().isCommitted()) return false;
+        if (!Creturn.isPresent() || Creturn.get().isCommitted()) return false;
 
-         Creturn.get().setAsCommitted(); 
-         return DataManager.getInstance().updateReturn(Creturn.get());
-    	
+        Creturn.get().setAsCommitted(); 
+        return DataManager.getInstance().updateReturn(Creturn.get());
     }
 
     @Override
     public boolean deleteReturnTransaction(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
-    	 if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
-             throw new UnauthorizedException();
-         }
+     
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
 
-         if (returnId == null || returnId <= 0) {
-             throw new InvalidTransactionIdException();
-         }
+        if (returnId == null || returnId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
 
-         Optional<CReturn> Creturn = DataManager.getInstance()
- 	            .getReturns()
- 	            .stream()
- 	            .filter(r -> r.getReturnid() == returnId)
+        Optional<CReturn> Creturn = DataManager.getInstance()
+                .getReturns()
+                .stream()
+                .filter(r -> r.getReturnid() == returnId)
  	            .findFirst();
-         if (!Creturn.isPresent() || Creturn.get().isCommitted()) return false;
+        
+
+        if (!Creturn.isPresent() || Creturn.get().isCommitted()) return false;
  
-         return DataManager.getInstance().deleteReturn(Creturn.get());
-    	
-    	
+        return DataManager.getInstance().deleteReturn(Creturn.get());
     }
     
-    
-
     @Override
     public double receiveCashPayment(Integer ticketNumber, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException {
         return 0;
@@ -1259,9 +1254,6 @@ public class EZShop implements EZShopInterface {
         }
 
         return (int)(barcode.charAt(barcode.length() - 1) - '0') == (compare_num - sum);
-
-        //TODO: The barcode number related to a product type should be a string of digits of either 
-        //12, 13 or 14 numbers validated following this algorithm  https://www.gs1.org/services/how-calculate-check-digit-manually
     }
 
     protected static double getRightDoublePrecision(double value) {

@@ -8,6 +8,10 @@ import java.util.*;
 
 import static java.util.stream.Collectors.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+
 
 public class EZShop implements EZShopInterface {
 
@@ -1235,10 +1239,41 @@ public class EZShop implements EZShopInterface {
         return 0;
     }
 
-    private boolean isValidBarcode(String barcode) {
+    private static boolean isValidBarcode(String barcode) {
+
+        if (barcode == null || barcode.length() < 12 || barcode.length() > 14) return false;
+
+        if (!barcode.chars().allMatch(ch -> ch >= '0' && ch <= '9')) return false;
+
+
+        int sum = 0;
+        int mul_by = (barcode.length() % 2) == 0 ? 3 : 1;
+        for (int i = 0; i < barcode.length() - 1; i++) {
+            sum += Integer.valueOf(barcode.substring(i, i+1)) * mul_by;
+            mul_by ^= 0x2;
+        }
+
+        int compare_num = sum;
+        while (compare_num % 10 != 0) {
+            compare_num++;
+        }
+
+        return (int)(barcode.charAt(barcode.length() - 1) - '0') == (compare_num - sum);
+
         //TODO: The barcode number related to a product type should be a string of digits of either 
         //12, 13 or 14 numbers validated following this algorithm  https://www.gs1.org/services/how-calculate-check-digit-manually
-        return true;
+    }
+
+    protected static double getRightDoublePrecision(double value) {
+        return BigDecimal.valueOf(value)
+            .setScale(3, RoundingMode.HALF_UP)
+            .doubleValue();
+    }
+
+    protected static double getRightDoublePrecision(String value) {
+        return BigDecimal.valueOf(Double.parseDouble(value))
+            .setScale(3, RoundingMode.HALF_UP)
+            .doubleValue();
     }
 
 }

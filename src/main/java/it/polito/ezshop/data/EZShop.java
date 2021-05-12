@@ -6,9 +6,6 @@ import it.polito.ezshop.model.*;
 import java.time.LocalDate;
 import java.util.*;
 
-import javax.management.Descriptor;
-import javax.xml.crypto.Data;
-
 import static java.util.stream.Collectors.*;
 
 

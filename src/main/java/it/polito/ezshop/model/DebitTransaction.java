@@ -14,4 +14,8 @@ public class DebitTransaction extends BalanceTransaction {
     public void setRelatedDebitOperation(IDebit debit){
         this.relatedDebitOperation = debit;
     }
+
+    public IDebit getRelatedDebitOperation(){
+        return this.relatedDebitOperation;
+    }
 }

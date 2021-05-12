@@ -3,7 +3,6 @@ package it.polito.ezshop.model;
 import java.io.Serializable;
 
 import it.polito.ezshop.data.DataManager;
-import it.polito.ezshop.exceptions.InvalidPaymentException;
 
 //Baldaz
 
@@ -12,14 +11,15 @@ public class DummyCredit implements Serializable, ICredit {
     private int id;
     private Double value;
 
-    public DummyCredit(int id, Double value) throws InvalidPaymentException{
+    public DummyCredit(int id, Double value){
         setValue(value);
         this.id = id;
     }
 
-    public void setValue(Double value) throws InvalidPaymentException{
+    public void setValue(Double value){
         if(checkValue(value)){   
             this.value = value;
+            DataManager.getInstance().updateDummyCredit(this);
         }
     }
 
@@ -35,11 +35,11 @@ public class DummyCredit implements Serializable, ICredit {
         return this.id;
     }
 
-    private Boolean checkValue(Double value) throws InvalidPaymentException {
+    private Boolean checkValue(Double value) {
         if(value>0){
             return true;
         }
-        throw new InvalidPaymentException();
+        return false;
     }
 
     @Override

@@ -9,11 +9,12 @@ import it.polito.ezshop.exceptions.InvalidPaymentException;
 
 public class DummyCredit implements Serializable, ICredit {
 
+    private int id;
     private Double value;
 
-    public DummyCredit(Double value) throws InvalidPaymentException{
+    public DummyCredit(int id, Double value) throws InvalidPaymentException{
         setValue(value);
-        DataManager.getInstance().updateDummyCredit(this);
+        this.id = id;
     }
 
     public void setValue(Double value) throws InvalidPaymentException{
@@ -30,11 +31,25 @@ public class DummyCredit implements Serializable, ICredit {
         return getValue();
     }
 
-    private Boolean checkValue(Double value) throws InvalidPaymentException{
+    public int getId() {
+        return this.id;
+    }
+
+    private Boolean checkValue(Double value) throws InvalidPaymentException {
         if(value>0){
             return true;
         }
         throw new InvalidPaymentException();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.id == ((DummyCredit)obj).id;
     }
     
 }

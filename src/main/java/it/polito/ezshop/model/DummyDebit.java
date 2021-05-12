@@ -8,11 +8,12 @@ import it.polito.ezshop.exceptions.InvalidPaymentException;
 
 public class DummyDebit implements Serializable, IDebit {
 
+    public int id;
     private Double value;
 
-    public DummyDebit(Double value) throws InvalidPaymentException{
+    public DummyDebit(int id, Double value) throws InvalidPaymentException{
         setValue(value);
-        DataManager.getInstance().updateDummyDebit(this);
+        this.id = id;
     }
 
     public void setValue(Double value) throws InvalidPaymentException{
@@ -29,11 +30,25 @@ public class DummyDebit implements Serializable, IDebit {
         return getValue();
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     private Boolean checkValue(Double value) throws InvalidPaymentException{
         if(value<0){
             return true;
         }
         throw new InvalidPaymentException();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.id == ((DummyDebit)obj).id;
     }
     
 }

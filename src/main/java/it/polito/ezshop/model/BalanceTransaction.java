@@ -42,20 +42,39 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
         DataManager.getInstance().updateBalanceTransaction(this);
     }
 
-    /*public LocalDate getDate(){
+    public LocalDate getDate(){
+        throw new UnsupportedOperationException(); //TODO: to be implemented
+    }
+
+    public void setDate(LocalDate date){
+        throw new UnsupportedOperationException(); //TODO: to be implemented
 
     }
 
-    void setDate(LocalDate date){
-
+    public double getMoney() {
+        throw new UnsupportedOperationException(); //TODO: to be implemented
     }
 
-    double getMoney();
+    public void setMoney(double money) {
+       throw new UnsupportedOperationException(); //TODO: to be implemented
+    }
 
-    void setMoney(double money);
+    public String getType() {
+        throw new UnsupportedOperationException(); //TODO: to be implemented
+    }
 
-    String getType();
+    public void setType(String type) {
+        throw new UnsupportedOperationException(); //TODO: to be implemented
+    }
 
-    void setType(String type);*/
+    @Override
+    public int hashCode() {
+        return this.balanceId;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.balanceId == ((BalanceTransaction)obj).balanceId;
+    }
 
 }

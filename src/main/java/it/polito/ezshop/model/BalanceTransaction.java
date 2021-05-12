@@ -12,11 +12,13 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     private int balanceId;
     private String description;
     private double value;
+    private LocalDate date;
 
     public BalanceTransaction(int balanceId, String description, double value){
         setBalanceId(balanceId);
         setDescription(description);
         setValue(value);
+        date = LocalDate.now();
     }
 
     public int getBalanceId(){
@@ -33,7 +35,14 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
         if(descr.isEmpty() || descr.isBlank() || descr == null) return;
         this.description = descr;
         DataManager.getInstance().updateBalanceTransaction(this);
+    }
 
+    public String getDescription(){
+        return this.description;
+    }
+
+    public double getValue(){
+        return this.value;
     }
 
     public void setValue(double value){
@@ -43,28 +52,36 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     }
 
     public LocalDate getDate(){
-        throw new UnsupportedOperationException(); //TODO: to be implemented
+        return this.date;
     }
 
     public void setDate(LocalDate date){
-        throw new UnsupportedOperationException(); //TODO: to be implemented
+        if(date == null) return;
+        this.date = date;
+        DataManager.getInstance().updateBalanceTransaction(this);
 
     }
 
     public double getMoney() {
-        throw new UnsupportedOperationException(); //TODO: to be implemented
+        return getValue();
     }
 
     public void setMoney(double money) {
-       throw new UnsupportedOperationException(); //TODO: to be implemented
+       setValue(money);
     }
 
     public String getType() {
-        throw new UnsupportedOperationException(); //TODO: to be implemented
+        if(value > 0){
+            return "credit";
+        }
+        if(value < 0){
+            return "debit";
+        }
+        return null;
     }
 
     public void setType(String type) {
-        throw new UnsupportedOperationException(); //TODO: to be implemented
+        throw new UnsupportedOperationException(); //TODO: to be implemented, but how?
     }
 
     @Override

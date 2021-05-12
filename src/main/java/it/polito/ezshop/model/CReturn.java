@@ -1,10 +1,15 @@
 package it.polito.ezshop.model;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public class CReturn extends ProductList implements Serializable {
 
-    private Integer returnId;
+    public Sale getSaleTransaction() {
+		return saleTransaction;
+	}
+
+	private Integer returnId;
     private Sale saleTransaction;
     private boolean committed;
 

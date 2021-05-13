@@ -1328,12 +1328,7 @@ public class EZShop implements EZShopInterface {
         double balance = 0;
         
         for(BalanceTransaction b : DataManager.getInstance().getBalanceTransactions()){
-            //balance += (b instanceof CreditTransaction) ? b.getValue() : -b.getValue();
-            if (b instanceof CreditTransaction) {
-                balance += b.getValue();
-            } else if (b instanceof DebitTransaction) {
-                balance -= b.getValue();
-            }
+            balance += (b instanceof CreditTransaction) ? b.getValue() : -b.getValue();
         }
 
         return getRightDoublePrecision(balance);

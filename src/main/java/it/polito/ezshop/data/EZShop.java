@@ -1107,6 +1107,18 @@ public class EZShop implements EZShopInterface {
         
         if (!sale.isPresent()) return -1;
 
+        // TODO: check if this check is necessary and if it returns the right value when fails
+        boolean isPaid = DataManager.getInstance()
+            .getBalanceTransactions()
+            .stream()
+            .filter(bt -> bt instanceof CreditTransaction)
+            .map(bt -> (CreditTransaction)bt)
+            .filter(ct -> ct.getRelatedCreditOperation() instanceof it.polito.ezshop.model.Sale)
+            .filter(ct -> ((it.polito.ezshop.model.Sale)ct.getRelatedCreditOperation()).equals(sale.get()))
+            .count() == 1;
+
+        if (!isPaid) return -1;
+
         int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
         CReturn newCReturn = new CReturn(newId, sale.get());
         DataManager.getInstance().insertReturn(newCReturn);

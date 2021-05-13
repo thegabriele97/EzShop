@@ -1,6 +1,5 @@
 package it.polito.ezshop.model;
 
-import it.polito.ezshop.EZShop;
 import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.data.SaleTransaction;
 import it.polito.ezshop.data.TicketEntry;
@@ -23,15 +22,16 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
     private List<CReturn> returnTransaction;
     private double price;
 
-    public Sale(Integer ticketNumber, LocalDate date, Double discountRate, LoyaltyCard loyaltyCard) {
+    public Sale(Integer ticketNumber, Double discountRate, LoyaltyCard loyaltyCard) {
         this.ticketNumber = ticketNumber;
-        this.date = date;
         this.discountRate = discountRate;
         this.loyaltyCard = loyaltyCard;
         this.committed = false;
         this.productsDiscountRate = new HashMap<>();
         this.returnTransaction = new ArrayList<>();
         this.price = 0.0;
+
+        this.date = LocalDate.now();
     }
 
 

@@ -18,9 +18,8 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     public BalanceTransaction(int balanceId, double value){
         setBalanceId(balanceId);
         setValue(value);
-        date = LocalDate.now();
 
-        // TODO: to be tested
+        this.date = LocalDate.now();
         this.type = (this instanceof CreditTransaction) ? "CREDIT" : "DEBIT";
     }
 

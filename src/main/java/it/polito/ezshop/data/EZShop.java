@@ -395,6 +395,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
+        
         if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
             throw new UnauthorizedException();
         }
@@ -414,7 +415,7 @@ public class EZShop implements EZShopInterface {
         Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
                 .getProductTypes()
                 .stream()
-                .filter(p -> p.getBarCode() == productCode)
+                .filter(p -> p.getBarCode().equals(productCode))
                 .findFirst();
 
         if(!(prod.isPresent())) {
@@ -497,9 +498,11 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean payOrder(Integer orderId) throws InvalidOrderIdException, UnauthorizedException {
+        
         if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
             throw new UnauthorizedException();
         }
+        
         if (orderId == null || orderId <= 0){
             throw new InvalidOrderIdException();
         }
@@ -518,6 +521,8 @@ public class EZShop implements EZShopInterface {
             return false;
         }
 
+        if (ord.get().getTotalValue() > computeBalance()) return false;
+
         ord.get().setAsPayed();
 
         OptionalInt maxBalId = DataManager.getInstance()
@@ -525,11 +530,12 @@ public class EZShop implements EZShopInterface {
                 .stream()
                 .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
                 .max();
+
         int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
 
         ord.get().setBalanceId(newBalId);
         DebitTransaction newDebT = new DebitTransaction(newBalId, ord.get());
-        if(!DataManager.getInstance().insertBalanceTransaction(newDebT)){
+        if (!DataManager.getInstance().insertBalanceTransaction(newDebT)){
             return false;
         }
 
@@ -538,9 +544,11 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
+        
         if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
             throw new UnauthorizedException();
         }
+        
         if (orderId == null || orderId <= 0){
             throw new InvalidOrderIdException();
         }
@@ -809,7 +817,7 @@ public class EZShop implements EZShopInterface {
             .max();
 
         int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
-        Sale newSale = new Sale(newId, LocalDate.now(), 0.0, null);
+        Sale newSale = new Sale(newId, 0.0, null);
 
         DataManager.getInstance().insertSale(newSale);
         return newId;
@@ -1334,7 +1342,7 @@ public class EZShop implements EZShopInterface {
         return getRightDoublePrecision(balance);
     }
 
-    private static boolean isValidBarcode(String barcode) {
+    public static boolean isValidBarcode(String barcode) {
 
         if (barcode == null || barcode.length() < 12 || barcode.length() > 14) return false;
 

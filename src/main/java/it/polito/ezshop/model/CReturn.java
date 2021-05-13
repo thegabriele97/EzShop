@@ -2,8 +2,6 @@ package it.polito.ezshop.model;
 
 import java.io.Serializable;
 
-import it.polito.ezshop.data.DataManager;
-
 public class CReturn extends ProductList implements Serializable, IDebit {
     
     private Integer returnId;

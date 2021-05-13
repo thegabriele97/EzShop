@@ -1,13 +1,12 @@
 package it.polito.ezshop.model;
 //simone
-import it.polito.ezshop.data.TicketEntry;
 
 import java.io.Serializable;
 import java.util.Optional;
 
 import it.polito.ezshop.data.*;
 
-public class ProductType implements Serializable,  it.polito.ezshop.data.ProductType {
+public class ProductType implements Serializable, it.polito.ezshop.data.ProductType {
 
 	private int productId;
 	private String barcode;

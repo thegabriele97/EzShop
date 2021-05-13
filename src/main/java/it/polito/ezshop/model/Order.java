@@ -1,7 +1,8 @@
 package it.polito.ezshop.model;
 
 import java.io.Serializable;
-import java.util.Locale;
+
+import it.polito.ezshop.data.EZShop;
 
 public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit {
     private Integer orderId;
@@ -11,7 +12,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
     private ProductType product;
     private Integer balanceId;
     private EOrderStatus status;
-
+    private String productCode;
 
     public Order(Integer orderId, Double pricePerUnit, Integer quantity, ProductType product, EOrderStatus status) {
         this.orderId = orderId;
@@ -19,6 +20,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
         this.quantity = quantity;
         this.product = product;
         this.status = status;
+        this.productCode = product.getBarCode();
     }
 
     @Override
@@ -33,12 +35,13 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public String getProductCode() {
-        return null;
+        return this.productCode;
     }
 
     @Override
     public void setProductCode(String productCode) {
-
+        if (!EZShop.isValidBarcode(productCode)) return;
+        this.productCode = productCode;
     }
 
     @Override

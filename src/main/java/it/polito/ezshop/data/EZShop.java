@@ -635,25 +635,42 @@ public class EZShop implements EZShopInterface {
             throw new InvalidCustomerNameException();
         }
 
+        if (!newCustomerCard.isEmpty() && (newCustomerCard.length() != 10 || !newCustomerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9'))) {
+             return false;
+        }
+
         Optional<it.polito.ezshop.model.Customer> customer = DataManager.getInstance()
             .getCustomers()
             .stream()
             .filter(s -> s.getId() == id)
             .findFirst();
-       
+        
+        if (!customer.isPresent()) return false;
 
-        if (!(customer.isPresent())) return false;
+        if (newCustomerCard !=null) {
+            if (newCustomerCard.isEmpty()) {
 
-        boolean isCardBusy = DataManager.getInstance()
-            .getLoyaltyCards()
-            .stream()
-            .anyMatch(c -> c.getID().equals(newCustomerCard));
+                LoyaltyCard card = customer.get().getLoyaltyCard();
 
-            if (isCardBusy) {
-                // TODO: to be implemented
+                customer.get().setCustomerCard("");
+                DataManager.getInstance().updateLoyaltyCard(card);
+            } else {
+
+                Optional<LoyaltyCard> card = DataManager.getInstance()
+                    .getLoyaltyCards()
+                    .stream()
+                    .filter(c -> c.getID().equals(newCustomerCard))
+                    .findFirst();
+    
+                if (!card.isPresent() || card.get().getCustomer() != null) return false;
+
+                customer.get().setCustomerCard(newCustomerCard);
+                DataManager.getInstance().updateLoyaltyCard(customer.get().getLoyaltyCard());
+            }
         }
 
-        throw new UnsupportedOperationException();
+        customer.get().setCustomerName(newCustomerName);
+        return DataManager.getInstance().updateCustomer(customer.get());
     }
 
     @Override
@@ -742,14 +759,8 @@ public class EZShop implements EZShopInterface {
             throw new InvalidCustomerIdException();
         }
 
-        if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10) {
+        if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10 || !customerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9')) {
             throw new InvalidCustomerCardException();
-        } else {
-            try {
-                Integer.parseInt(customerCard);
-            } catch (NumberFormatException e) {
-                throw new InvalidCustomerCardException();
-            }
         }
 
         Optional<it.polito.ezshop.model.Customer> customer = DataManager.getInstance()

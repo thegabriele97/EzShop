@@ -37,15 +37,16 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 	@Override
 	public void setCustomerCard(String customerCard) {
 		
-		if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10) {
-            return;
-        } else {
-            try {
-                Integer.parseInt(customerCard);
-            } catch (NumberFormatException e) {
-                return;
-            }
-        }
+		if (customerCard.isEmpty()) {
+			this.loyaltyCard.addCustomer(null);
+			DataManager.getInstance().updateLoyaltyCard(this.loyaltyCard);
+			
+			this.loyaltyCard = null;
+			DataManager.getInstance().updateCustomer(this);
+			return;
+		}
+		
+		if (customerCard.length() != 10 || !customerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9')) return;
 
 		Optional<LoyaltyCard> card = DataManager.getInstance()
             .getLoyaltyCards()
@@ -95,6 +96,10 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 
 		loyaltyCard.addPoints(points);
 		DataManager.getInstance().updateCustomer(this);
+	}
+
+	public LoyaltyCard getLoyaltyCard() {
+		return this.loyaltyCard;
 	}
 
 	@Override

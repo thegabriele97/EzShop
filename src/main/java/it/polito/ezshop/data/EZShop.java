@@ -487,7 +487,7 @@ public class EZShop implements EZShopInterface {
         int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
 
         newOrder.setBalanceId(newBalId);
-        it.polito.ezshop.model.DebitTransaction newDebT = new it.polito.ezshop.model.DebitTransaction(newBalId, newOrder.getTotalValue(), newOrder);
+        DebitTransaction newDebT = new DebitTransaction(newBalId, newOrder);
         if(!DataManager.getInstance().insertBalanceTransaction(newDebT)){
             return -1;
         }
@@ -528,7 +528,7 @@ public class EZShop implements EZShopInterface {
         int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
 
         ord.get().setBalanceId(newBalId);
-        it.polito.ezshop.model.DebitTransaction newDebT = new it.polito.ezshop.model.DebitTransaction(newBalId, ord.get().getTotalValue(), ord.get());
+        DebitTransaction newDebT = new DebitTransaction(newBalId, ord.get());
         if(!DataManager.getInstance().insertBalanceTransaction(newDebT)){
             return false;
         }
@@ -1243,30 +1243,57 @@ public class EZShop implements EZShopInterface {
 
     @Override //baldaz
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
+        
         if (!RightsManager.getInstance().canManageBalanceTransactions(LoginManager.getInstance().getLoggedUser())) {
             throw new UnauthorizedException();
         }
 
         double totalBalance = computeBalance();
 
-        if(totalBalance + toBeAdded >= 0 && toBeAdded != 0){
+        if (totalBalance + toBeAdded >= 0) {
 
-            int id = DataManager.getInstance().getBalanceTransactions().size()+1;
+            OptionalInt maxId = DataManager.getInstance()
+                .getBalanceTransactions()
+                .stream()
+                .mapToInt(BalanceTransaction::getBalanceId)
+                .max();
+
+            int id = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
             BalanceTransaction bt = null;
 
-            if(toBeAdded > 0){
-                CreditTransaction ct = new CreditTransaction(id, toBeAdded, 
-                    new DummyCredit(DataManager.getInstance().getDummyCredits().size()+1, toBeAdded));
+            if (toBeAdded >= 0) {
+
+                maxId = DataManager.getInstance()
+                    .getDummyCredits()
+                    .stream()
+                    .mapToInt(DummyCredit::getId)
+                    .max();
+        
+                int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
+
+                DummyCredit dc = new DummyCredit(newId, toBeAdded);
+                CreditTransaction ct = new CreditTransaction(id, dc);
+
                 bt = ct;
-            }
-            else{
-                DebitTransaction dt = new DebitTransaction(id, toBeAdded, 
-                    new DummyDebit(DataManager.getInstance().getDummyDebits().size()+1, toBeAdded));
+                DataManager.getInstance().insertDummyCredit(dc);
+            } else {
+
+                maxId = DataManager.getInstance()
+                    .getDummyCredits()
+                    .stream()
+                    .mapToInt(DummyCredit::getId)
+                    .max();
+        
+                int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
+
+                DummyDebit dd = new DummyDebit(newId, -toBeAdded);
+                DebitTransaction dt = new DebitTransaction(id, dd);
+
                 bt = dt;
+                DataManager.getInstance().insertDummyDebit(dd);
             }
             
-            DataManager.getInstance().getBalanceTransactions().add(bt);
-            return true;
+            return DataManager.getInstance().insertBalanceTransaction(bt);
         }
 
         return false;
@@ -1281,9 +1308,9 @@ public class EZShop implements EZShopInterface {
         
         List<BalanceOperation> returnList = new ArrayList<BalanceOperation>();
             
-        for(int i=0; i < DataManager.getInstance().getBalanceTransactions().size(); i++){
+        for (int i=0; i < DataManager.getInstance().getBalanceTransactions().size(); i++){
             LocalDate date = DataManager.getInstance().getBalanceTransactions().get(i).getDate();
-            if((from == null || date.isAfter(from)) && (to == null || date.isBefore(to))){
+            if ((from == null || date.isAfter(from)) && (to == null || date.isBefore(to))){
                 returnList.add(DataManager.getInstance().getBalanceTransactions().get(i));
             }
         }
@@ -1301,10 +1328,15 @@ public class EZShop implements EZShopInterface {
         double balance = 0;
         
         for(BalanceTransaction b : DataManager.getInstance().getBalanceTransactions()){
-            balance+=b.getValue();
+            //balance += (b instanceof CreditTransaction) ? b.getValue() : -b.getValue();
+            if (b instanceof CreditTransaction) {
+                balance += b.getValue();
+            } else if (b instanceof DebitTransaction) {
+                balance -= b.getValue();
+            }
         }
 
-        return balance;
+        return getRightDoublePrecision(balance);
     }
 
     private static boolean isValidBarcode(String barcode) {

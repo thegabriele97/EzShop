@@ -36,10 +36,7 @@ public class DummyCredit implements Serializable, ICredit {
     }
 
     private boolean checkValue(double value) {
-        if(value>0){
-            return true;
-        }
-        return false;
+        return value >= 0;
     }
 
     @Override

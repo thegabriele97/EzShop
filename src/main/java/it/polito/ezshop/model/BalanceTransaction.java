@@ -24,10 +24,12 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
         this.type = (this instanceof CreditTransaction) ? "CREDIT" : "DEBIT";
     }
 
+    @Override
     public int getBalanceId(){
         return this.balanceId;
     }
 
+    @Override
     public void setBalanceId(int balanceId){
         if(balanceId <= 0) return;
         this.balanceId = balanceId;
@@ -54,30 +56,36 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
         Update();
     }
 
+    @Override
     public LocalDate getDate(){
         return this.date;
     }
 
+    @Override
     public void setDate(LocalDate date){
         if(date == null) return;
         this.date = date;
         Update();
     }
 
+    @Override
     public double getMoney() {
         return getValue();
     }
 
+    @Override
     public void setMoney(double money) {
        setValue(money);
        Update();
     }
 
+    @Override
     public String getType() {
         return this.type;
     }
 
     // Why this method exists?
+    @Override
     public void setType(String type) {
         if (type == null || (!type.equals("CREDIT") && !type.equals("DEBIT"))) return;
         this.type = type;

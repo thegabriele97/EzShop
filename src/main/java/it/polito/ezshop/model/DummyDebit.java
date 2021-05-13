@@ -35,10 +35,7 @@ public class DummyDebit implements Serializable, IDebit {
     }
 
     private boolean checkValue(Double value){
-        if(value<0){
-            return true;
-        }
-        return false;
+        return value > 0;
     }
 
     @Override

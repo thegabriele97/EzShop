@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import it.polito.ezshop.data.DataManager;
 
-public class CReturn extends ProductList implements Serializable {
+public class CReturn extends ProductList implements Serializable, IDebit {
     
     private Integer returnId;
     private Sale saleTransaction;
@@ -32,6 +32,12 @@ public class CReturn extends ProductList implements Serializable {
 
     public Sale getSaleTransaction() {
         return saleTransaction;
+    }
+
+    @Override
+    public Double getTotalValue() {
+        // TODO: to be implemented
+        return null;
     }
 
 }

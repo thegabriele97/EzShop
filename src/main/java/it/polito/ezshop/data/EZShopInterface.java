@@ -722,7 +722,7 @@ public interface EZShopInterface {
      * @return the change (cash - sale price)
      *         -1   if the sale does not exists,
      *              if the cash is not enough,
-     *              if there is some problemi with the db
+     *              if there is some problem with the db
      *
      * @throws InvalidTransactionIdException if the  number is less than or equal to 0 or if it is null
      * @throws UnauthorizedException if there is no logged user or if it has not the rights to perform the operation

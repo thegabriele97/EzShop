@@ -7,6 +7,7 @@ public class CReturn extends ProductList implements Serializable, IDebit {
     private Integer returnId;
     private Sale saleTransaction;
     private boolean committed;
+    private Integer balanceId;
     
     public CReturn(Integer returnId, Sale saleTransaction) {
         this.returnId = returnId;
@@ -31,6 +32,11 @@ public class CReturn extends ProductList implements Serializable, IDebit {
     public Sale getSaleTransaction() {
         return saleTransaction;
     }
+    
+    public void setBalanceId(Integer balanceId) {
+        this.balanceId = balanceId;
+    }
+
 
     @Override
     public Double getTotalValue() {

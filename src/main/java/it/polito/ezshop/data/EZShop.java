@@ -1,5 +1,6 @@
 package it.polito.ezshop.data;
 
+import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.model.*;
 
@@ -1241,12 +1242,97 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
-        return 0;
+        
+    	  if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+              throw new UnauthorizedException();
+          }
+
+          if (returnId == null || returnId <= 0) {
+              throw new InvalidTransactionIdException();
+          }
+          
+          Optional<CReturn> Creturn = DataManager.getInstance()
+                  .getReturns()
+                  .stream()
+                  .filter(r -> r.getReturnid() == returnId)
+                  .findFirst();
+      	 
+
+          if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
+          if(DataManager.getInstance().updateReturn(Creturn.get())) return -1;
+          
+          List<ProductType> products = Creturn.get().getProductsList();
+          double money=0.0;
+          
+          for(ProductType p : products) {
+        	  int q = Creturn.get().getQuantityByProduct(p);
+        	  money += p.getPricePerUnit()*q;
+          }
+          OptionalInt maxBalId = DataManager.getInstance()
+                  .getBalanceTransactions()
+                  .stream()
+                  .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+                  .max();
+          int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
+     
+
+          Creturn.get().setBalanceId(newBalId);
+        
+          BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
+          if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
+        	  
+    	return money;
     }
 
     @Override
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-        return 0;
+    	 if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+             throw new UnauthorizedException();
+         }
+
+         if (returnId == null || returnId <= 0) {
+             throw new InvalidTransactionIdException();
+         }
+         if (CreditCardSystem.getInstance().isValidNumber(creditCard)) {
+             throw new InvalidCreditCardException();
+         }
+         if(CreditCardSystem.getInstance().isRegistered(creditCard)) return -1;
+         
+         Optional<CReturn> Creturn = DataManager.getInstance()
+                 .getReturns()
+                 .stream()
+                 .filter(r -> r.getReturnid() == returnId)
+                 .findFirst();
+     	 
+
+         if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
+         if(DataManager.getInstance().updateReturn(Creturn.get())) return -1;
+         
+         List<ProductType> products = Creturn.get().getProductsList();
+         double money=0.0;
+         
+         for(ProductType p : products) {
+       	  int q = Creturn.get().getQuantityByProduct(p);
+       	  money += p.getPricePerUnit()*q;
+         }
+         
+         OptionalInt maxBalId = DataManager.getInstance()
+                 .getBalanceTransactions()
+                 .stream()
+                 .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+                 .max();
+         int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
+    
+
+         Creturn.get().setBalanceId(newBalId);
+       
+         BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
+         
+         if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
+         
+         CreditCardSystem.getInstance().updateBalance(creditCard, -money);
+         
+    	return money;
     }
 
     @Override //baldaz
@@ -1287,9 +1373,9 @@ public class EZShop implements EZShopInterface {
             } else {
 
                 maxId = DataManager.getInstance()
-                    .getDummyCredits()
+                    .getDummyDebits()
                     .stream()
-                    .mapToInt(DummyCredit::getId)
+                    .mapToInt(DummyDebit::getId)
                     .max();
         
                 int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);

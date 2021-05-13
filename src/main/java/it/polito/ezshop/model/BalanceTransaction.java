@@ -21,7 +21,7 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
         date = LocalDate.now();
 
         // TODO: to be tested
-        this.type = (this instanceof CreditTransaction) ? "Credit" : "Debit";
+        this.type = (this instanceof CreditTransaction) ? "CREDIT" : "DEBIT";
     }
 
     public int getBalanceId(){
@@ -79,7 +79,7 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
 
     // Why this method exists?
     public void setType(String type) {
-        if (type == null || !type.equals("Credit") || !type.equals("Debit")) return;
+        if (type == null || !type.equals("CREDIT") || !type.equals("DEBIT")) return;
         this.type = type;
         Update();
     }

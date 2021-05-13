@@ -3,12 +3,13 @@ package it.polito.ezshop.model;
 import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.data.ProductType;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public abstract class ProductList {
+public abstract class ProductList implements Serializable {
 
     protected Map<ProductType, Integer> products;
 

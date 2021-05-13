@@ -1,5 +1,6 @@
 package it.polito.ezshop.model;
 
+import it.polito.ezshop.EZShop;
 import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.data.SaleTransaction;
 import it.polito.ezshop.data.TicketEntry;
@@ -9,7 +10,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Sale extends ProductList implements Serializable, SaleTransaction {
+import static it.polito.ezshop.data.EZShop.*;
+
+public class Sale extends ProductList implements Serializable, SaleTransaction, ICredit {
 
     private Integer ticketNumber;
     private LocalDate date;
@@ -61,12 +64,12 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
 
                 @Override
                 public double getDiscountRate() {
-                    return productsDiscountRate.get(p);
+                    return getDiscountRateForProductGroup((it.polito.ezshop.model.ProductType)p);
                 }
 
                 @Override
                 public double getPricePerUnit() {
-                    return p.getPricePerUnit();
+                    return getRightDoublePrecision(p.getPricePerUnit());
                 }
 
                 @Override
@@ -120,7 +123,7 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
 
     @Override
     public double getDiscountRate() {
-        return this.discountRate;
+        return getRightDoublePrecision(this.discountRate);
     }
 
     @Override
@@ -136,11 +139,11 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
         for (it.polito.ezshop.data.ProductType prod : getProductsList()) {
             it.polito.ezshop.model.ProductType xProd = (it.polito.ezshop.model.ProductType)prod;
 
-            this.price += (xProd.getPricePerUnit() * getQuantityByProduct(xProd))*(1-getDiscountRateFOrProductGroup(xProd));
+            this.price += (xProd.getPricePerUnit() * getQuantityByProduct(xProd))*(1-getDiscountRateForProductGroup(xProd));
         }
 
         this.price *= (1-getDiscountRate());
-        return this.price;
+        return getRightDoublePrecision(this.price);
     }
 
     @Override
@@ -149,8 +152,8 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
         Update();
     }
 
-    public double getDiscountRateFOrProductGroup(ProductType product){
-        return this.productsDiscountRate.get(product);
+    public double getDiscountRateForProductGroup(ProductType product){
+        return getRightDoublePrecision(productsDiscountRate.containsKey(product) ? productsDiscountRate.get(product) : 0.0);
     }
 
     public void addReturnTransaction(CReturn returnT){
@@ -180,9 +183,15 @@ public class Sale extends ProductList implements Serializable, SaleTransaction {
     public boolean isCommitted(){
         return this.committed;
     }
+    
+    @Override
+    public Double getTotalValue() {
+        return this.getPrice();
+    }
 
     private void Update() {
         DataManager.getInstance().updateSale(this);
     }
+
 
 }

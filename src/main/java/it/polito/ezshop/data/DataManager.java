@@ -102,6 +102,23 @@ public class DataManager implements Serializable {
                 
                 in.close();
                 fileIn.close();
+
+                // Cleaning not-committed sales
+                instance.getSales()
+                    .stream()
+                    .filter(sale -> !sale.isCommitted())
+                    .forEach(sale -> {
+                        
+                        for (it.polito.ezshop.data.ProductType prod : sale.getProductsList()) {
+                            it.polito.ezshop.model.ProductType xProd = (it.polito.ezshop.model.ProductType)prod;
+                
+                            xProd.addQuantityOffset(sale.getQuantityByProduct(xProd));
+                            DataManager.getInstance().updateProductType(xProd);
+                        }
+
+                        instance.deleteSale(sale);
+                    });
+
             } catch (Exception e) {
                 instance = new DataManager();
             }

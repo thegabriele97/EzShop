@@ -42,7 +42,7 @@ public class ProductType implements Serializable,  it.polito.ezshop.data.Product
 		return this.quantity;
 	}
 
-	@Override ///////////////////************** CONTROLLARE ****************//////////////////////
+	@Override
 	public String getLocation() {
 
 		if (this.position == null) {
@@ -65,7 +65,7 @@ public class ProductType implements Serializable,  it.polito.ezshop.data.Product
 		return this.notes;
 	}
 
-	@Override //////////*************CONTROLLARE*************//////////////////
+	@Override
 	public Double getPricePerUnit() {
 		return this.selfPrice;
 	}

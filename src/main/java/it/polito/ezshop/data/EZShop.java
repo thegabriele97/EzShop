@@ -1040,7 +1040,18 @@ public class EZShop implements EZShopInterface {
             .filter(s -> s.getTicketNumber() == saleNumber)
             .findFirst();
 
-        if (!sale.isPresent() || sale.get().isCommitted()) return false;
+        if (!sale.isPresent()) return false;
+
+        boolean isPaid = DataManager.getInstance()
+            .getBalanceTransactions()
+            .stream()
+            .filter(bt -> bt instanceof CreditTransaction)
+            .map(bt -> (CreditTransaction)bt)
+            .filter(ct -> ct.getRelatedCreditOperation() instanceof it.polito.ezshop.model.Sale)
+            .filter(ct -> ((it.polito.ezshop.model.Sale)ct.getRelatedCreditOperation()).equals(sale.get()))
+            .count() == 1;
+
+        if (isPaid) return false;
 
         for (it.polito.ezshop.data.ProductType prod : sale.get().getProductsList()) {
             it.polito.ezshop.model.ProductType xProd = (it.polito.ezshop.model.ProductType)prod;
@@ -1256,13 +1267,13 @@ public class EZShop implements EZShopInterface {
         return (int)(barcode.charAt(barcode.length() - 1) - '0') == (compare_num - sum);
     }
 
-    protected static double getRightDoublePrecision(double value) {
+    public static double getRightDoublePrecision(double value) {
         return BigDecimal.valueOf(value)
             .setScale(3, RoundingMode.HALF_UP)
             .doubleValue();
     }
 
-    protected static double getRightDoublePrecision(String value) {
+    public static double getRightDoublePrecision(String value) {
         return BigDecimal.valueOf(Double.parseDouble(value))
             .setScale(3, RoundingMode.HALF_UP)
             .doubleValue();

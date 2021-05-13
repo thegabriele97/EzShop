@@ -11,19 +11,19 @@ public class DummyCredit implements Serializable, ICredit {
     private int id;
     private Double value;
 
-    public DummyCredit(int id, Double value){
+    public DummyCredit(int id, double value){
         setValue(value);
         this.id = id;
     }
 
-    public void setValue(Double value){
+    public void setValue(double value){
         if(checkValue(value)){   
             this.value = value;
             DataManager.getInstance().updateDummyCredit(this);
         }
     }
 
-    public Double getValue(){
+    public double getValue(){
         return this.value;
     }
 
@@ -35,7 +35,7 @@ public class DummyCredit implements Serializable, ICredit {
         return this.id;
     }
 
-    private Boolean checkValue(Double value) {
+    private boolean checkValue(double value) {
         if(value>0){
             return true;
         }

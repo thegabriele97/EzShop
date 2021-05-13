@@ -34,7 +34,7 @@ public class DummyDebit implements Serializable, IDebit {
         return this.id;
     }
 
-    private Boolean checkValue(Double value){
+    private boolean checkValue(Double value){
         if(value<0){
             return true;
         }

@@ -4,8 +4,8 @@ public class CreditTransaction extends BalanceTransaction {
 
     private ICredit relatedCreditOperation;
  
-    public CreditTransaction(ICredit credit) {
-        super(0, 0.0); //TODO: to be implemented
+    public CreditTransaction(int balanceId, double value, ICredit credit) {
+        super(balanceId, value);
         setRelatedCreditOperation(credit);
     }
 

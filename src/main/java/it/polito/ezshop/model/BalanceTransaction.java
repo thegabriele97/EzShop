@@ -13,7 +13,7 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     private String description;
     private double value;
     private LocalDate date;
-    private String type; // I hate this
+    private String type; // I hate this  //(me too)
 
     public BalanceTransaction(int balanceId, double value){
         setBalanceId(balanceId);
@@ -79,7 +79,7 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
 
     // Why this method exists?
     public void setType(String type) {
-        if (type == null || !type.equals("CREDIT") || !type.equals("DEBIT")) return;
+        if (type == null || (!type.equals("CREDIT") && !type.equals("DEBIT"))) return;
         this.type = type;
         Update();
     }

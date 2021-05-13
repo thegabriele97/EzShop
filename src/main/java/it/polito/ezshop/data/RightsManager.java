@@ -51,4 +51,8 @@ class RightsManager {
         return LoginManager.getInstance().isUserLogged(user) && Role.valueOf(user.getRole()) != Role.Cashier;
     }
 
+    boolean canManageBalanceTransactions(it.polito.ezshop.model.User user) throws IllegalArgumentException {
+        return LoginManager.getInstance().isUserLogged(user) && Role.valueOf(user.getRole()) != Role.Cashier;
+    }
+
 }

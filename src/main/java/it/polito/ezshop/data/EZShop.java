@@ -9,7 +9,6 @@ import java.util.*;
 import static java.util.stream.Collectors.*;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 
 
@@ -1230,19 +1229,70 @@ public class EZShop implements EZShopInterface {
         return 0;
     }
 
-    @Override
+    @Override //baldaz
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
+        if (!RightsManager.getInstance().canManageBalanceTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        double totalBalance = computeBalance();
+
+        if(totalBalance + toBeAdded >= 0 && toBeAdded != 0){
+
+            int id = DataManager.getInstance().getBalanceTransactions().size()+1;
+            BalanceTransaction bt = null;
+
+            if(toBeAdded > 0){
+                CreditTransaction ct = new CreditTransaction(id, toBeAdded, 
+                    new DummyCredit(DataManager.getInstance().getDummyCredits().size()+1, toBeAdded));
+                bt = ct;
+            }
+            else{
+                DebitTransaction dt = new DebitTransaction(id, toBeAdded, 
+                    new DummyDebit(DataManager.getInstance().getDummyDebits().size()+1, toBeAdded));
+                bt = dt;
+            }
+            
+            DataManager.getInstance().getBalanceTransactions().add(bt);
+            return true;
+        }
+
         return false;
     }
 
-    @Override
+    @Override //baldaz
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
-        return new ArrayList<>(); //TODO: to be implemented
+
+        if (!RightsManager.getInstance().canManageBalanceTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+        
+        List<BalanceOperation> returnList = new ArrayList<BalanceOperation>();
+            
+        for(int i=0; i < DataManager.getInstance().getBalanceTransactions().size(); i++){
+            LocalDate date = DataManager.getInstance().getBalanceTransactions().get(i).getDate();
+            if((from == null || date.isAfter(from)) && (to == null || date.isBefore(to))){
+                returnList.add(DataManager.getInstance().getBalanceTransactions().get(i));
+            }
+        }
+
+        return returnList;
     }
 
-    @Override
+    @Override //baldaz
     public double computeBalance() throws UnauthorizedException {
-        return 0;
+
+        if (!RightsManager.getInstance().canManageBalanceTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        double balance = 0;
+        
+        for(BalanceTransaction b : DataManager.getInstance().getBalanceTransactions()){
+            balance+=b.getValue();
+        }
+
+        return balance;
     }
 
     private static boolean isValidBarcode(String barcode) {

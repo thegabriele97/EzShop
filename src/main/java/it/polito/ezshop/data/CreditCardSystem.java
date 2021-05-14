@@ -65,7 +65,7 @@ class CreditCardSystem {
 
     boolean hasEnoughBalance(String creditCard, double toRemove) {
         
-        if (creditCard == null || creditCard.isEmpty() || !isValidNumber(creditCard)) return false;
+        if (creditCard == null || creditCard.isEmpty() || !isValidNumber(creditCard) || !isRegistered(creditCard)) return false;
 
         try (Stream<String> stream = Files.lines(Paths.get("src/main/java/it/polito/ezshop/utils/CreditCards.txt"))) {
 
@@ -87,7 +87,7 @@ class CreditCardSystem {
 
     boolean updateBalance(String creditCard, double toRemove) {
         
-        if (creditCard == null || creditCard.isEmpty() || !hasEnoughBalance(creditCard, toRemove)) return false;
+        if (creditCard == null || creditCard.isEmpty() || !hasEnoughBalance(creditCard, toRemove) || !isRegistered(creditCard)) return false;
 
         try (Stream<String> stream = Files.lines(Paths.get("src/main/java/it/polito/ezshop/utils/CreditCards.txt"))) {
 

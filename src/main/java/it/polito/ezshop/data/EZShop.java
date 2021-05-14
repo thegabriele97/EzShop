@@ -1228,6 +1228,7 @@ public class EZShop implements EZShopInterface {
         if (returnId == null || returnId <= 0) {
             throw new InvalidTransactionIdException();
         }
+        
 
         Optional<CReturn> Creturn = DataManager.getInstance()
                 .getReturns()
@@ -1243,12 +1244,79 @@ public class EZShop implements EZShopInterface {
     
     @Override
     public double receiveCashPayment(Integer ticketNumber, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException {
-        return 0;
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (ticketNumber == null || ticketNumber <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        if (cash <= 0) {
+            throw new InvalidPaymentException();
+        }
+
+        Optional<Sale> sale = DataManager.getInstance()
+                                .getSales()
+                                .stream()
+                                .filter(r -> r.getTicketNumber() == ticketNumber)
+                                .findFirst();
+
+        if(!sale.isPresent() || !sale.get().isCommitted()) return -1;
+        if(sale.get().getTotalValue() > cash) return -1;
+
+        OptionalInt maxBalId = DataManager.getInstance()
+                  .getBalanceTransactions()
+                  .stream()
+                  .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+                  .max();
+        int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
+        
+        BalanceTransaction bt = new CreditTransaction(newBalId, sale.get());
+        if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
+
+        return cash - sale.get().getTotalValue();
     }
 
     @Override
     public boolean receiveCreditCardPayment(Integer ticketNumber, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-        return false;
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (ticketNumber == null || ticketNumber <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        if(creditCard.isEmpty() || creditCard == null || !CreditCardSystem.getInstance().isValidNumber(creditCard)){
+            throw new InvalidCreditCardException();
+        }
+
+        Optional<Sale> sale = DataManager.getInstance()
+                                .getSales()
+                                .stream()
+                                .filter(r -> r.getTicketNumber() == ticketNumber)
+                                .findFirst();
+
+        if(!sale.isPresent() || !sale.get().isCommitted()) return false;
+
+        if(!CreditCardSystem.getInstance().isRegistered(creditCard)) return false;
+        if(!CreditCardSystem.getInstance().hasEnoughBalance(creditCard, sale.get().getTotalValue())) return false;
+
+        OptionalInt maxBalId = DataManager.getInstance()
+                 .getBalanceTransactions()
+                 .stream()
+                 .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+                 .max();
+        int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
+
+        BalanceTransaction bt = new CreditTransaction(newBalId, sale.get());
+         
+        if(!DataManager.getInstance().insertBalanceTransaction(bt)) return false;
+         
+        CreditCardSystem.getInstance().updateBalance(creditCard, sale.get().getTotalValue());
+
+        return true;
     }
 
     @Override

@@ -54,6 +54,8 @@ public class DataManager implements Serializable {
 
     private <T> boolean insertIntoAndSave(Set<T> list, T o) {
 
+        if (o == null) return false;
+
         if (list.add(o)) {
             return this.save();
         }

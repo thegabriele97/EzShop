@@ -2,6 +2,8 @@ package it.polito.ezshop.model;
 
 import java.io.Serializable;
 
+import static it.polito.ezshop.data.EZShop.*;
+
 public class CReturn extends ProductList implements Serializable, IDebit {
     
     private Integer returnId;
@@ -40,8 +42,16 @@ public class CReturn extends ProductList implements Serializable, IDebit {
 
     @Override
     public Double getTotalValue() {
-        // TODO: to be implemented
-        return null;
+        double value = 0.0;
+        for (it.polito.ezshop.data.ProductType prod : getProductsList()) {
+            it.polito.ezshop.model.ProductType xProd = (it.polito.ezshop.model.ProductType)prod;
+
+            value += (xProd.getPricePerUnit() * this.products.get(xProd))*(1-saleTransaction.getDiscountRateForProductGroup(xProd));
+        }
+
+        value *= (1-saleTransaction.getDiscountRate());
+
+        return getRightDoublePrecision(value);
     }
 
 }

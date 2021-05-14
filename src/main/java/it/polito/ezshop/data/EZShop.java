@@ -1339,14 +1339,8 @@ public class EZShop implements EZShopInterface {
 
           if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
           if(DataManager.getInstance().updateReturn(Creturn.get())) return -1;
+        
           
-          List<ProductType> products = Creturn.get().getProductsList();
-          double money=0.0;
-          
-          for(ProductType p : products) {
-        	  int q = Creturn.get().getQuantityByProduct(p);
-        	  money += p.getPricePerUnit()*q;
-          }
           OptionalInt maxBalId = DataManager.getInstance()
                   .getBalanceTransactions()
                   .stream()
@@ -1360,7 +1354,7 @@ public class EZShop implements EZShopInterface {
           BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
           if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
         	  
-    	return money;
+    	return Creturn.get().getTotalValue();
     }
 
     @Override
@@ -1385,33 +1379,24 @@ public class EZShop implements EZShopInterface {
      	 
 
          if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
-         if(DataManager.getInstance().updateReturn(Creturn.get())) return -1;
-         
-         List<ProductType> products = Creturn.get().getProductsList();
-         double money=0.0;
-         
-         for(ProductType p : products) {
-       	  int q = Creturn.get().getQuantityByProduct(p);
-       	  money += p.getPricePerUnit()*q;
-         }
-         
+  
+     
          OptionalInt maxBalId = DataManager.getInstance()
                  .getBalanceTransactions()
                  .stream()
                  .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
                  .max();
          int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
-    
-
+         
          Creturn.get().setBalanceId(newBalId);
        
          BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
          
          if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
+         if(!CreditCardSystem.getInstance().updateBalance(creditCard, Creturn.get().getTotalValue())) return -1;
          
-         CreditCardSystem.getInstance().updateBalance(creditCard, -money);
-         
-    	return money;
+   
+    	return Creturn.get().getTotalValue();
     }
 
     @Override //baldaz

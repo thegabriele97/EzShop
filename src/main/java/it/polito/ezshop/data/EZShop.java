@@ -18,7 +18,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public void reset() {
-
+        // TODO: to be implemented
     }
 
     @Override

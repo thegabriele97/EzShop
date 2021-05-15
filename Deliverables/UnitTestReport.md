@@ -409,7 +409,7 @@ Version:
 
 ### **Class CreditCardSystem - method isValidNumber()**
 
-**Criteria for method deleteBalanceTransaction():**
+**Criteria for method isValidNumber():**
 	
  - Existence of CreditCard string object
  - Emtpiness of CreditCard string
@@ -417,7 +417,7 @@ Version:
  - Contains only numbers
 
 
-**Predicates for method deleteBalanceTransaction():**
+**Predicates for method isValidNumber():**
 
 | Criteria | Predicate |
 | -------- | --------- |
@@ -443,12 +443,46 @@ Version:
 
 | Existence of CreditCard string object | Emptiness of CreditCard string | Contains characters too | Contains Only numbers | Valid / Invalid | Description of the test case                       | JUnit test case |
 |---------------------------------------|--------------------------------|-------------------------|-----------------------|-----------------|----------------------------------------------------|-----------------|
-| Valid                                 | NO                             | YES                     | NO                    | Invalid         | isValidNumber("123s23xa223") -> false          |                 |
-| Valid                                 | NO                             | NO                      | 999999999             | Invalid         | isValidNumber("9999999") -> false              |                 |
-| Valid                                 | NO                             | NO                      | 000000000             | Valid           | isValidNumber("0000000") -> true // valid for  |                 |
-| Valid                                 | NO                             | NO                      | <\valid number\>      | Valid           | isValidNumber(<number>) -> true                |                 |
-| Valid                                 | YES                            | -                       | -                     | Invalid         | isValidNumber("") -> false                     |                 |
-| NULL                                  | -                              | -                       | -                     | Invalid         | isValidNumber(null) -> false                   |                 |
+| Valid                                 | NO                             | YES                     | NO                    | Invalid         | isValidNumber("123s23xa223") -> false          | testValidCreditCardWithCharacters()                |
+| Valid                                 | NO                             | NO                      | 999999999             | Invalid         | isValidNumber("9999999") -> false              | testValidCreditCardWithAll9s()                |
+| Valid                                 | NO                             | NO                      | 000000000             | Valid           | isValidNumber("0000000") -> true // valid for  | testValidCreditCardWithAll0s() |
+| Valid                                 | NO                             | NO                      | <\valid number\>      | Valid           | isValidNumber(<number>) -> true                | testValidCreditCardWithValidNumber()                |
+| Valid                                 | YES                            | -                       | -                     | Invalid         | isValidNumber("") -> false                     | testValidCreditCardWithEmptyString()                 |
+| NULL                                  | -                              | -                       | -                     | Invalid         | isValidNumber(null) -> false                   | testValidCreditCardWithNullString()               |
+
+
+
+### **Class CreditCardSystem - method isRegistered()**
+
+**Criteria for method isValidNumber():**
+	
+ - isValidNumber returns true
+ - card registered
+
+**Predicates for method isValidNumber():**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| isValidNumber returns true | YES |
+| - | NO |
+| Credit Card registered | YES |
+| - | NO |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+|||
+
+
+**Combination of predicates**:
+
+| isValidNumber returns true  | Credit Card registered | Valid / Invalid | Description of the test case  | JUnit test case                                   |
+|-----------------------------|------------------------|-----------------|-------------------------------|---------------------------------------------------|
+| YES                         | YES                    | Valid           | isRegistered(number) -> true  | testCardRegisteredWValidCreditCard()              |
+| -                           | NO                     | Invalid         | isRegistered(number) -> false | testCardRegisteredWValidCreditCardNotRegistered() |
+| NO                          | -                      | Invalid         | isRegistered(number) -> false | testCardRegisteredWNoValidCreditCard()            |
+
 
 # White Box Unit Tests
 

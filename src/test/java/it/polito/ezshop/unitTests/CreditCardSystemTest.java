@@ -38,5 +38,19 @@ public class CreditCardSystemTest {
         assertFalse(CreditCardSystem.getInstance().isValidNumber(null));
     }
 
+    @Test
+    public void testCardRegisteredWValidCreditCard() {
+        assertTrue(CreditCardSystem.getInstance().isRegistered("9254347527611304"));
+    }
+
+    @Test
+    public void testCardRegisteredWValidCreditCardNotRegistered() {
+        assertFalse(CreditCardSystem.getInstance().isRegistered("123456789015"));
+    }
+
+    @Test
+    public void testCardRegisteredWNoValidCreditCard() {
+        assertFalse(CreditCardSystem.getInstance().isRegistered("999999999999"));
+    }
 
 }

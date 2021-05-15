@@ -47,9 +47,9 @@ public class CreditCardSystem {
 
     public boolean isRegistered(String creditCard) {
 
-        if (creditCard == null || creditCard.isEmpty() || !isValidNumber(creditCard)) return false;
+        if (!isValidNumber(creditCard)) return false;
 
-        try (Stream<String> stream = Files.lines(Paths.get("./it.polito.ezshop.utils.CreditCards.txt"))) {
+        try (Stream<String> stream = Files.lines(Paths.get("src/main/java/it/polito/ezshop/utils/CreditCards.txt"))) {
 
             boolean result = stream
                 .filter(line -> !line.startsWith("#"))
@@ -67,7 +67,7 @@ public class CreditCardSystem {
 
     public boolean hasEnoughBalance(String creditCard, double toRemove) {
         
-        if (creditCard == null || creditCard.isEmpty() || !isValidNumber(creditCard) || !isRegistered(creditCard)) return false;
+        if (!isValidNumber(creditCard) || !isRegistered(creditCard)) return false;
 
         try (Stream<String> stream = Files.lines(Paths.get("src/main/java/it/polito/ezshop/utils/CreditCards.txt"))) {
 
@@ -89,7 +89,7 @@ public class CreditCardSystem {
 
     public boolean updateBalance(String creditCard, double toRemove) {
         
-        if (creditCard == null || creditCard.isEmpty() || !hasEnoughBalance(creditCard, toRemove) || !isRegistered(creditCard)) return false;
+        if (!hasEnoughBalance(creditCard, toRemove) || !isRegistered(creditCard)) return false;
 
         try (Stream<String> stream = Files.lines(Paths.get("src/main/java/it/polito/ezshop/utils/CreditCards.txt"))) {
 

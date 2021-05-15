@@ -2,9 +2,13 @@ package it.polito.ezshop.unitTests;
 
 import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.model.*;
+import java.util.*;
+import static java.util.stream.Collectors.*;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.*;
 
@@ -64,6 +68,10 @@ public class BBDataManagerTest {
 
     }
 
+    ////Deletes
+
+    //deleteUser()
+
     @Test
     public void testDeleteNotExistingUser() {
         User u = new User(1, "we", "mbare", "Administrator");
@@ -86,6 +94,8 @@ public class BBDataManagerTest {
         assertTrue("Databased contains " + u.getId() + " : " + u.getUsername() + "; true expected", DataManager.getInstance().deleteUser(u));
         assertFalse(DataManager.getInstance().getUsers().contains(u));
     }
+
+    //deleteProductType()
 
     @Test
     public void testDeleteNotExistingProductType() {
@@ -110,6 +120,8 @@ public class BBDataManagerTest {
         assertFalse(DataManager.getInstance().getProductTypes().contains(u));
     }
 
+    //deletePosition()
+
     @Test
     public void testDeleteNotExistingPosition() {
         Position u = new Position(3, "a", 2, null);
@@ -132,6 +144,8 @@ public class BBDataManagerTest {
         assertTrue("Databased contains " + u.toString() + "; true expected", DataManager.getInstance().deletePosition(u));
         assertFalse(DataManager.getInstance().getPositions().contains(u));
     }
+
+    //deleteOrder()
 
     @Test
     public void testDeleteNotExistingOrder() {
@@ -156,6 +170,8 @@ public class BBDataManagerTest {
         assertFalse(DataManager.getInstance().getOrders().contains(u));
     }
 
+    //deleteCustomer()
+
     @Test
     public void testDeleteNotExistingCustomer() {
         it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "", null);
@@ -178,6 +194,8 @@ public class BBDataManagerTest {
         assertTrue("Databased contains " + u.getId() + "; true expected", DataManager.getInstance().deleteCustomer(u));
         assertFalse(DataManager.getInstance().getCustomers().contains(u));
     }
+
+    //deleteLoyaltyCard()
 
     @Test
     public void testDeleteNotExistingLoyaltyCard() {
@@ -202,6 +220,8 @@ public class BBDataManagerTest {
         assertFalse(DataManager.getInstance().getLoyaltyCards().contains(u));
     }
 
+    //deleteSale()
+
     @Test
     public void testDeleteNotExistingSale() {
         it.polito.ezshop.model.Sale u = new it.polito.ezshop.model.Sale(1, 0.0, null);
@@ -224,6 +244,8 @@ public class BBDataManagerTest {
         assertTrue("Databased contains " + u.getTicketNumber() + "; true expected", DataManager.getInstance().deleteSale(u));
         assertFalse(DataManager.getInstance().getSales().contains(u));
     }
+
+    //deleteReturn()
 
     @Test
     public void testDeleteNotExistingReturn() {
@@ -248,6 +270,8 @@ public class BBDataManagerTest {
         assertFalse(DataManager.getInstance().getReturns().contains(u));
     }
 
+    //deleteDummyCredit()
+
     @Test
     public void testDeleteNotExistingDummyCredit() {
         DummyCredit u = new DummyCredit(1, 23.9);
@@ -270,6 +294,8 @@ public class BBDataManagerTest {
         assertTrue("Databased contains " + u.getId() + "; true expected", DataManager.getInstance().deleteDummyCredit(u));
         assertFalse(DataManager.getInstance().getDummyCredits().contains(u));
     }
+
+    //deleteDummyDebit()
 
     @Test
     public void testDeleteNotExistingDummyDebit() {
@@ -294,6 +320,8 @@ public class BBDataManagerTest {
         assertFalse(DataManager.getInstance().getDummyDebits().contains(u));
     }
 
+    //deleteBalanceTransaction()
+
     @Test
     public void testDeleteNotExistingBalanceTransaction() {
         BalanceTransaction u = new CreditTransaction(1, new DummyCredit(2, 3.0));
@@ -317,6 +345,10 @@ public class BBDataManagerTest {
         assertFalse(DataManager.getInstance().getBalanceTransactions().contains(u));
     }
 
+    ////Inserts
+
+    //insertUser()
+
     @Test
     public void testInsertUser() {
         User u1 = new User(1, "u1", "a", "Administrator");
@@ -327,6 +359,8 @@ public class BBDataManagerTest {
     public void testInsertNullUser() {
         assertFalse("User null, false expected", DataManager.getInstance().insertUser(null));
     }
+
+    //insertProductType()
 
     @Test
     public void testInsertProductType() {
@@ -339,6 +373,8 @@ public class BBDataManagerTest {
         assertFalse("ProductType null, false expected", DataManager.getInstance().insertProductType(null));
     }
 
+    //insertPosition()
+
     @Test
     public void testInsertPosition() {
         Position p1 = new Position(1, "a", 1, null);
@@ -349,6 +385,8 @@ public class BBDataManagerTest {
     public void testInsertNullPosition() {
         assertFalse("Position null, false expected", DataManager.getInstance().insertPosition(null));
     }
+
+    //insertOrder()
 
     @Test
     public void testInsertOrder() {
@@ -361,6 +399,8 @@ public class BBDataManagerTest {
         assertFalse("Order null, false expected", DataManager.getInstance().insertOrder(null));
     }
 
+    //insertCustomer()
+
     @Test
     public void testInsertCustomer() {
         Customer c1 = new Customer(1, "c1", null);
@@ -371,6 +411,8 @@ public class BBDataManagerTest {
     public void testInsertNullCustomer() {
         assertFalse("Customer null, false expected", DataManager.getInstance().insertCustomer(null));
     }
+
+    //insertLoyaltyCard()
 
     @Test
     public void testInsertLoyaltyCard() {
@@ -383,6 +425,8 @@ public class BBDataManagerTest {
         assertFalse("LoyaltyCard null, false expected", DataManager.getInstance().insertLoyaltyCard(null));
     }
 
+    //insertSale()
+
     @Test
     public void testInsertSale() {
         Sale s1 = new Sale(1, 0.1, null);
@@ -393,6 +437,8 @@ public class BBDataManagerTest {
     public void testInsertNullSale() {
         assertFalse("Sale null, false expected", DataManager.getInstance().insertSale(null));
     }
+
+    //insertReturn()
 
     @Test
     public void testInsertReturn() {
@@ -405,6 +451,8 @@ public class BBDataManagerTest {
         assertFalse("Return null, false expected", DataManager.getInstance().insertReturn(null));
     }
 
+    //insertDummyCredit()
+
     @Test
     public void testInsertDummyCredit() {
         DummyCredit dc1 = new DummyCredit(1, 1.0);
@@ -415,6 +463,8 @@ public class BBDataManagerTest {
     public void testInsertNullDummyCredit() {
         assertFalse("DummyCredit null, false expected", DataManager.getInstance().insertDummyCredit(null));
     }
+
+    //insertDummyDebit()
 
     @Test
     public void testInsertDummyDebit() {
@@ -427,6 +477,8 @@ public class BBDataManagerTest {
         assertFalse("DummyDebit null, false expected", DataManager.getInstance().insertDummyDebit(null));
     }
 
+    //insertBalanceTransaction()
+
     @Test
     public void testInsertBalanceTransaction() {
         CreditTransaction bt1 = new CreditTransaction(1, new Sale(1, 0.1, null));
@@ -436,5 +488,197 @@ public class BBDataManagerTest {
     @Test
     public void testNullInsertBalanceTransaction() {
         assertFalse("BalanceTransaction null, false expected", DataManager.getInstance().insertDummyDebit(null));
+    }
+
+    ////Getters
+
+    //getUsers()
+
+    @Test
+    public void testEmptyGetUsers(){
+        assertEquals(DataManager.getInstance().getUsers().size(), 0);
+    }
+
+    @Test
+    public void testFilledGetUsers(){
+        User user = new User(1, "Gianni", "14adfea356e*", "Cashier");
+        DataManager.getInstance().insertUser(user);
+        assertTrue("User present, true expected", DataManager.getInstance().getUsers().contains(user));
+    }
+
+    @Test
+    public void testEmptyGetFirstUser(){
+        assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getUsers().get(0));
+    }
+
+    //getProductTypes()
+
+    @Test
+    public void testEmptyGetProductTypes(){
+        assertEquals(DataManager.getInstance().getProductTypes().size(), 0);
+    }
+
+    @Test
+    public void testFilledGetProductTypes(){
+        ProductType pt = new ProductType(1, "sasseresos", "fancy thing", 12.0, 7, 0.25, "nothingtosay", null);
+        DataManager.getInstance().insertProductType(pt);
+        assertTrue("ProductType present, true expected", DataManager.getInstance().getProductTypes().contains(pt));
+    }
+
+    @Test
+    public void testEmptyGetFirstProductType(){
+        assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getProductTypes().get(0));
+    }
+
+    //getPositions()
+
+    @Test
+    public void testEmptyGetPositions(){
+        assertEquals(DataManager.getInstance().getPositions().size(), 0);
+    }
+
+    @Test
+    public void testFilledGetPositions(){
+        Position pos = new Position(1, "a", 1, null);
+        DataManager.getInstance().insertPosition(pos);
+        assertTrue("Position present, true expected", DataManager.getInstance().getPositions().contains(pos));
+    }
+
+    @Test
+    public void testEmptyGetFirstPosition(){
+        assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getPositions().get(0));
+    }
+
+    //getOrders()
+
+    @Test
+    public void testEmptyGetOrders(){
+        assertEquals(DataManager.getInstance().getOrders().size(), 0);
+    }
+
+    @Test
+    public void testFilledGetOrders(){
+        Order ord = new Order(1, 1.0, 1, new ProductType(1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1"), EOrderStatus.ISSUED);
+        DataManager.getInstance().insertOrder(ord);
+        assertTrue("Order present, true expected", DataManager.getInstance().getOrders().contains(ord));
+    }
+
+    @Test
+    public void testEmptyGetFirstOrder(){
+        assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getOrders().get(0));
+    }
+
+    //getCustomers()
+
+    @Test
+    public void testEmptyGetCustomers(){
+        assertEquals(DataManager.getInstance().getCustomers().size(), 0);
+    }
+
+    @Test
+    public void testFilledGetCustomers(){
+        Customer c = new Customer(1, "c1", null);
+        DataManager.getInstance().insertCustomer(c);
+        assertTrue("Customer present, true expected", DataManager.getInstance().getCustomers().contains(c));
+    }
+
+    @Test
+    public void testEmptyGetFirstCustomer(){
+        assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getCustomers().get(0));
+    }
+
+    //getLoyaltyCards()
+
+    @Test
+    public void testEmptyGetLoyaltyCards(){
+        assertEquals(DataManager.getInstance().getLoyaltyCards().size(), 0);
+    }
+
+    @Test
+    public void testFilledGetLoyaltyCards(){
+        LoyaltyCard lt = new LoyaltyCard("0001", 1, null);
+        DataManager.getInstance().insertLoyaltyCard(lt);
+        assertTrue("LoyaltyCard present, true expected", DataManager.getInstance().getLoyaltyCards().contains(lt));
+    }
+
+    @Test
+    public void testEmptyGetFirstLoyaltyCard(){
+        assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getLoyaltyCards().get(0));
+    }
+
+    //getReturns()
+
+    @Test
+    public void testEmptyGetReturns(){
+        assertEquals(DataManager.getInstance().getReturns().size(), 0);
+    }
+
+    @Test
+    public void testFilledGetReturns(){
+        CReturn ret = new CReturn(1, null);
+        DataManager.getInstance().insertReturn(ret);
+        assertTrue("Return present, true expected", DataManager.getInstance().getReturns().contains(ret));
+    }
+
+    @Test
+    public void testEmptyGetFirstReturn(){
+        assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getReturns().get(0));
+    }
+
+    //getDummyCredits()
+
+    @Test
+    public void testEmptyGetDummyCredits(){
+        assertEquals(DataManager.getInstance().getDummyCredits().size(), 0);
+    }
+
+    @Test
+    public void testFilledGetDummyCredits(){
+        DummyCredit dc = new DummyCredit(1, 1.0);
+        DataManager.getInstance().insertDummyCredit(dc);
+        assertTrue("DummyCredit present, true expected", DataManager.getInstance().getDummyCredits().contains(dc));
+    }
+
+    @Test
+    public void testEmptyGetFirstDummyCredit(){
+        assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getDummyCredits().get(0));
+    }
+
+    //getDummyDebits()
+
+    @Test
+    public void testEmptyGetDummyDebits(){
+        assertEquals(DataManager.getInstance().getDummyDebits().size(), 0);
+    }
+
+    @Test
+    public void testFilledGetDummyDebits(){
+        DummyDebit dd = new DummyDebit(1, -1.0);
+        DataManager.getInstance().insertDummyDebit(dd);
+        assertTrue("DummyDebit present, true expected", DataManager.getInstance().getDummyDebits().contains(dd));
+    }
+
+    @Test
+    public void testEmptyGetFirstDummyDebit(){
+        assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getDummyDebits().get(0));
+    }
+
+    //getBalanceTransactions()
+
+    @Test
+    public void testEmptyGetBalanceTransactions(){
+        assertEquals(DataManager.getInstance().getBalanceTransactions().size(), 0);
+    }
+
+    @Test
+    public void testFilledGetBalanceTransactions(){
+        CreditTransaction bt1 = new CreditTransaction(1, new Sale(1, 0.1, null));
+        DataManager.getInstance().insertBalanceTransaction(bt1);
+        assertTrue("BalanceTransaction present, true expected", DataManager.getInstance().getBalanceTransactions().contains(bt1));
+    }
+
+    @Test
+    public void testEmptyGetFirstBalanceTransaction(){
+        assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getBalanceTransactions().get(0));
     }
 }

@@ -26,14 +26,14 @@ Version:
     to start tests
     >
 
- ### **Class DataManager - method deleteUser()**
+### **Class DataManager - method deleteUser()**
 
 
 
 **Criteria for method deleteUser():**
-	
- - Validity of User object
- - Existence of User Object
+
+- Validity of User object
+- Existence of User Object
 
 
 **Predicates for method deleteUser():**
@@ -65,9 +65,9 @@ Version:
 ### **Class DataManager - method deleteProductType()**
 
 **Criteria for method deleteProductType():**
-	
- - Validity of ProductType object
- - Existence of ProductType Object
+
+- Validity of ProductType object
+- Existence of ProductType Object
 
 
 **Predicates for method deleteProductType():**
@@ -99,9 +99,9 @@ Version:
 ### **Class DataManager - method deletePosition()**
 
 **Criteria for method deletePosition():**
-	
- - Validity of Position object
- - Existence of Position Object
+
+- Validity of Position object
+- Existence of Position Object
 
 
 **Predicates for method deletePosition():**
@@ -133,9 +133,9 @@ Version:
 ### **Class DataManager - method deleteOrder()**
 
 **Criteria for method deleteOrder():**
-	
- - Validity of Order object
- - Existence of Order Object
+
+- Validity of Order object
+- Existence of Order Object
 
 
 **Predicates for method deleteOrder():**
@@ -167,9 +167,9 @@ Version:
 ### **Class DataManager - method deleteCustomer()**
 
 **Criteria for method deleteCustomer():**
-	
- - Validity of Customer object
- - Existence of Customer Object
+
+- Validity of Customer object
+- Existence of Customer Object
 
 
 **Predicates for method deleteCustomer():**
@@ -202,9 +202,9 @@ Version:
 
 
 **Criteria for method deleteLoyaltyCard():**
-	
- - Validity of LoyaltyCard object
- - Existence of LoyaltyCard Object
+
+- Validity of LoyaltyCard object
+- Existence of LoyaltyCard Object
 
 
 **Predicates for method deleteLoyaltyCard():**
@@ -237,9 +237,9 @@ Version:
 
 
 **Criteria for method deleteSale():**
-	
- - Validity of Sale object
- - Existence of Sale Object
+
+- Validity of Sale object
+- Existence of Sale Object
 
 
 **Predicates for method deleteSale():**
@@ -271,9 +271,9 @@ Version:
 ### **Class DataManager - method deleteReturn()**
 
 **Criteria for method deleteReturn():**
-	
- - Validity of Return object
- - Existence of Return Object
+
+- Validity of Return object
+- Existence of Return Object
 
 
 **Predicates for method deleteReturn():**
@@ -305,9 +305,9 @@ Version:
 ### **Class DataManager - method deleteDummyCredit()**
 
 **Criteria for method deleteDummyCredit():**
-	
- - Validity of DummyCredit object
- - Existence of DummyCredit Object
+
+- Validity of DummyCredit object
+- Existence of DummyCredit Object
 
 
 **Predicates for method deleteDummyCredit():**
@@ -340,9 +340,9 @@ Version:
 ### **Class DataManager - method deleteDummyDebit()**
 
 **Criteria for method deleteDummyDebit():**
-	
- - Validity of DummyDebit object
- - Existence of DummyDebit Object
+
+- Validity of DummyDebit object
+- Existence of DummyDebit Object
 
 
 **Predicates for method deleteDummyDebit():**
@@ -375,9 +375,9 @@ Version:
 ### **Class DataManager - method deleteBalanceTransaction()**
 
 **Criteria for method deleteBalanceTransaction():**
-	
- - Validity of BalanceTransaction object
- - Existence of BalanceTransaction Object
+
+- Validity of BalanceTransaction object
+- Existence of BalanceTransaction Object
 
 
 **Predicates for method deleteBalanceTransaction():**
@@ -405,83 +405,448 @@ Version:
 | Valid                  | YES                      | Invalid         | BalanceTransaction u = (1, ...)<br>DataManager.getInstance().deleteBalanceTransaction(u)<br>-> false |testDeleteExistingBalanceTransaction()|
 | Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingBalanceTransaction()|
 | NULL                   | -                        | Invalid         | BalanceTransaction u = null<br>DataManager.getInstance().deleteBalanceTransaction(u)<br>-> false|testDeleteNullBalanceTransaction()|
-
-
-### **Class CreditCardSystem - method isValidNumber()**
-
-**Criteria for method isValidNumber():**
-	
- - Existence of CreditCard string object
- - Emtpiness of CreditCard string
- - Contains characters too
- - Contains only numbers
-
-
-**Predicates for method isValidNumber():**
-
-| Criteria | Predicate |
-| -------- | --------- |
-| Existence of CreditCard string object | Valid |
-| - | NULL |
-| Emptiness of CreditCard string | Yes |
-| - | No |
-| Contains characters too | Yes |
-| - | No |
-| Contains Only numbers | 000000000 |
-| - | 99999999 |
-| - | \<valid number\> |
-| - | NO |
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-| Contains only numbers | 000000, 9999999, \<valid number\>  |
-
-
-**Combination of predicates**:
-
-| Existence of CreditCard string object | Emptiness of CreditCard string | Contains characters too | Contains Only numbers | Valid / Invalid | Description of the test case                       | JUnit test case |
-|---------------------------------------|--------------------------------|-------------------------|-----------------------|-----------------|----------------------------------------------------|-----------------|
-| Valid                                 | NO                             | YES                     | NO                    | Invalid         | isValidNumber("123s23xa223") -> false          | testValidCreditCardWithCharacters()                |
-| Valid                                 | NO                             | NO                      | 999999999             | Invalid         | isValidNumber("9999999") -> false              | testValidCreditCardWithAll9s()                |
-| Valid                                 | NO                             | NO                      | 000000000             | Valid           | isValidNumber("0000000") -> true // valid for  | testValidCreditCardWithAll0s() |
-| Valid                                 | NO                             | NO                      | <\valid number\>      | Valid           | isValidNumber(<number>) -> true                | testValidCreditCardWithValidNumber()                |
-| Valid                                 | YES                            | -                       | -                     | Invalid         | isValidNumber("") -> false                     | testValidCreditCardWithEmptyString()                 |
-| NULL                                  | -                              | -                       | -                     | Invalid         | isValidNumber(null) -> false                   | testValidCreditCardWithNullString()               |
+ 
 
 
 
-### **Class CreditCardSystem - method isRegistered()**
-
-**Criteria for method isValidNumber():**
-	
- - isValidNumber returns true
- - card registered
-
-**Predicates for method isValidNumber():**
-
-| Criteria | Predicate |
-| -------- | --------- |
-| isValidNumber returns true | YES |
-| - | NO |
-| Credit Card registered | YES |
-| - | NO |
-
-**Boundaries**:
-
-| Criteria | Boundary values |
-| -------- | --------------- |
-|||
+### **Class *DataManger* - method *insertUser***
 
 
-**Combination of predicates**:
 
-| isValidNumber returns true  | Credit Card registered | Valid / Invalid | Description of the test case  | JUnit test case                                   |
-|-----------------------------|------------------------|-----------------|-------------------------------|---------------------------------------------------|
-| YES                         | YES                    | Valid           | isRegistered(number) -> true  | testCardRegisteredWValidCreditCard()              |
-| -                           | NO                     | Invalid         | isRegistered(number) -> false | testCardRegisteredWValidCreditCardNotRegistered() |
-| NO                          | -                      | Invalid         | isRegistered(number) -> false | testCardRegisteredWNoValidCreditCard()            |
+**Criteria for method *insertUser*:**
+
+
+- Validity of User object
+
+
+
+**Predicates for method insertUser:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of User object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertUser**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertUser**
+
+
+
+| Validity of User object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | User u1 = {1, "u1", "a", "Administrator"};<br />insertUser(u1);<br /><br />->  true | testInsertUser() |
+| NULL                    | Invalid       | insertUser(null);<br /><br />-> false | testInsertNullUser() |
+
+
+
+### **Class *DataManger* - method *insertProductType***
+
+
+
+**Criteria for method *insertProductType*:**
+
+
+- Validity of ProductType object
+
+
+
+**Predicates for method insertProductType:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of ProductType object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertProductType**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertProductType**
+
+
+
+| Validity of ProductType object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | ProductType p1 = {1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1"};<br />insertProductType(p1);<br /><br />-> true | testInsertProductType() |
+| NULL                    | Invalid       | insertProductType(null);<br /><br />->  false | testInsertNullProductType() |
+
+
+
+### **Class *DataManger* - method *insertPosition***
+
+
+
+**Criteria for method *insertPosition*:**
+
+
+- Validity of Position object
+
+
+
+**Predicates for method insertPosition:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of Position object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertPosition**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertPosition**
+
+
+
+| Validity of Position object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | Position p1 = {1, "a", 1, null};<br />insertPosition(p1);<br /><br />-> true | testInsertPosition() |
+| NULL                    | Invalid       | insertPosition(null);<br /><br />->  false | testInsertNullPosition() |
+
+
+
+### **Class *DataManger* - method *insertOrder***
+
+
+
+**Criteria for method *insertOrder*:**
+
+
+- Validity of Order object
+
+
+
+**Predicates for method insertOrder:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of Order object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertOrder**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertOrder**
+
+
+
+| Validity of Order object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | Order o1 = {1, 1.0, 1, null, EOrderStatus.ISSUED};<br />insertOrder(o1);<br /><br />-> true | testInsertOrder() |
+| NULL                    | Invalid       | insertOrder(null);<br /><br />-> false| testInsertNullOrder() |
+
+
+
+### **Class *DataManger* - method *insertCustomer***
+
+
+
+**Criteria for method *insertCustomer*:**
+
+
+- Validity of Customer object
+
+
+
+**Predicates for method insertCustomer:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of Customer object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertCustomer**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertCustomer**
+
+
+
+| Validity of Customer object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | Customer c1 = {1, "c1", null};<br />insertCustomer(c1);<br /><br />-> true | testInsertCustomer() |
+| NULL                    | Invalid       | insertCustomer(null);<br /><br />-> false| testInsertNullCustomer() |
+
+
+
+### **Class *DataManger* - method *insertLoyaltyCard***
+
+
+
+**Criteria for method *insertLoyaltyCard*:**
+
+
+- Validity of LoyaltyCard object
+
+
+
+**Predicates for method insertLoyaltyCard:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of LoyaltyCard object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertLoyaltyCard**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertLoyaltyCard**
+
+
+
+| Validity of LoyaltyCard object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | LoyaltyCard lc1 = {"c1", 1, null};<br />insertLoyaltyCard(lc1);<br /><br />-> true | testInsertLoyaltyCard() |
+| NULL                    | Invalid       | insertLoyaltyCard(null);<br /><br />-> false| testInsertNullLoyaltyCard() |  
+
+
+
+### **Class *DataManger* - method *insertSale***
+
+
+
+**Criteria for method *insertSale*:**
+
+
+- Validity of Sale object
+
+
+
+**Predicates for method insertSale:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of Sale object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertSale**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertSale**
+
+
+
+| Validity of Sale object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | Sale s1 = {1, 0.1, null};<br />insertSale(s1);<br /><br />-> true | testInsertSale() |
+| NULL                    | Invalid       | insertSale(null);<br /><br />-> false| testInsertNullSale() |
+
+
+
+### **Class *DataManger* - method *insertReturn***
+
+
+
+**Criteria for method *insertReturn*:**
+
+
+- Validity of Return object
+
+
+
+**Predicates for method insertReturn:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of Return object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertReturn**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertReturn**
+
+
+
+| Validity of Return object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | CReturn r1 = {1, null};<br />insertReturn(r1);<br /><br />-> true | testInsertReturn() |
+| NULL                    | Invalid       | insertReturn(null);<br /><br />-> false| testInsertNullReturn() |
+
+
+
+### **Class *DataManger* - method *insertDummyCredit***
+
+
+
+**Criteria for method *insertDummyCredit*:**
+
+
+- Validity of DummyCredit object
+
+
+
+**Predicates for method insertDummyCredit:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of DummyCredit object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertDummyCredit**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertDummyCredit**
+
+
+
+| Validity of DummyCredit object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | DummyCredit dc1 = {1, 1.0};<br />insertDummyCredit(dc1);<br /><br />-> true | testInsertDummyCredit() |
+| NULL                    | Invalid       | insertDummyCredit(null);<br /><br />-> false | testInsertNullDummyCredit() |
+
+
+
+### **Class *DataManger* - method *insertDummyDebit***
+
+
+
+**Criteria for method *insertDummyDebit*:**
+
+
+- Validity of DummyDebit object
+
+
+
+**Predicates for method insertDummyDebit:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of DummyDebit object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertDummyDebit**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertDummyDebit**
+
+
+
+| Validity of DummyDebit object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | DummyDebit dd1 = {1, 1.0};<br />insertDummyDebit(dd1);<br /><br />-> true | testInsertDummyDebit() |
+| NULL                    | Invalid       | insertDummyDebit(null);<br /><br />->  false | testInsertNullDummyDebit() |
+
+
+
+### **Class *DataManger* - method *insertBalanceTransaction***
+
+
+
+**Criteria for method *insertBalanceTransaction*:**
+
+
+- Validity of BalanceTransaction object
+
+
+
+**Predicates for method insertBalanceTransaction:**
+
+| Criterion                | Predicate |
+| ------------------------ | --------- |
+| Validity of BalanceTransaction object  | Valid     |
+|                          | NULL      |
+
+
+
+
+**Boundaries for method insertBalanceTransaction**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+|           |                 |
+
+
+
+**Combination of predicates for method insertBalanceTransaction**
+
+
+
+| Validity of BalanceTransaction object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
+| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
+| Valid                   |  Valid        | BalanceTransaction bt1 = {1, 1.0};<br />insertBalanceTransaction(bt1);<br /><br />-> true | testInsertBalanceTransaction() |
+| NULL                    | Invalid       | insertBalanceTransaction(null);<br /><br />-> false | testNullInsertBalanceTransaction() |
+
 
 
 # White Box Unit Tests
@@ -494,10 +859,10 @@ Version:
 
 
 | Unit name | JUnit test case |
-|--|--|
+|-----------|-----------------|
 | CreditCardSystem | WBCreditCardSystem |
-|||
-||||
+| | |
+| | |
 
 ### Code coverage report
 

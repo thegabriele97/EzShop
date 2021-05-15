@@ -36,7 +36,7 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     }
 
     public void setDescription(String descr){
-        if(descr.isEmpty() || descr.isBlank() || descr == null) return;
+        if(descr.isEmpty() || descr == null) return;
         this.description = descr;
         Update();
     }

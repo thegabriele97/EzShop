@@ -13,7 +13,7 @@ public class DataManagerTest {
     @Before
     @After
     public void cleanDatabase() {
-        
+
         for (User u : DataManager.getInstance().getUsers()) {
             DataManager.getInstance().deleteUser(u);
         }
@@ -61,7 +61,7 @@ public class DataManagerTest {
         for (BalanceTransaction u : DataManager.getInstance().getBalanceTransactions()) {
             DataManager.getInstance().deleteBalanceTransaction(u);
         }
-        
+
     }
 
     @Test
@@ -317,4 +317,124 @@ public class DataManagerTest {
         assertFalse(DataManager.getInstance().getBalanceTransactions().contains(u));
     }
 
+    @Test
+    public void testInsertUser() {
+        User u1 = new User(1, "u1", "a", "Administrator");
+        assertTrue("User inserted successfully", DataManager.getInstance().insertUser(u1));
+    }
+
+    @Test
+    public void testInsertNullUser() {
+        assertFalse("User null, false expected", DataManager.getInstance().insertUser(null));
+    }
+
+    @Test
+    public void testInsertProductType() {
+        ProductType p1 = new ProductType(1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1");
+        assertTrue("ProductType inserted successfully", DataManager.getInstance().insertProductType(p1));
+    }
+
+    @Test
+    public void testInsertNullProductType() {
+        assertFalse("ProductType null, false expected", DataManager.getInstance().insertProductType(null));
+    }
+
+    @Test
+    public void testInsertPosition() {
+        Position p1 = new Position(1, "a", 1, null);
+        assertTrue("Position inserted successfully", DataManager.getInstance().insertPosition(p1));
+    }
+
+    @Test
+    public void testInsertNullPosition() {
+        assertFalse("Position null, false expected", DataManager.getInstance().insertPosition(null));
+    }
+
+    @Test
+    public void testInsertOrder() {
+        Order o1 = new Order(1, 1.0, 1, new ProductType(1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1"), EOrderStatus.ISSUED);
+        assertTrue("Order inserted successfully", DataManager.getInstance().insertOrder(o1));
+    }
+
+    @Test
+    public void testInsertNullOrder() {
+        assertFalse("Order null, false expected", DataManager.getInstance().insertOrder(null));
+    }
+
+    @Test
+    public void testInsertCustomer() {
+        Customer c1 = new Customer(1, "c1", null);
+        assertTrue("Customer inserted successfully", DataManager.getInstance().insertCustomer(c1));
+    }
+
+    @Test
+    public void testInsertNullCustomer() {
+        assertFalse("Customer null, false expected", DataManager.getInstance().insertCustomer(null));
+    }
+
+    @Test
+    public void testInsertLoyaltyCard() {
+        LoyaltyCard lc1 = new LoyaltyCard("0001", 1, null);
+        assertTrue("LoyaltyCard inserted successfully", DataManager.getInstance().insertLoyaltyCard(lc1));
+    }
+
+    @Test
+    public void testInsertNullLoyaltyCard() {
+        assertFalse("LoyaltyCard null, false expected", DataManager.getInstance().insertLoyaltyCard(null));
+    }
+
+    @Test
+    public void testInsertSale() {
+        Sale s1 = new Sale(1, 0.1, null);
+        assertTrue("Sale inserted successfully", DataManager.getInstance().insertSale(s1));
+    }
+
+    @Test
+    public void testInsertNullSale() {
+        assertFalse("Sale null, false expected", DataManager.getInstance().insertSale(null));
+    }
+
+    @Test
+    public void testInsertReturn() {
+        CReturn r1 = new CReturn(1, null);
+        assertTrue("Return inserted successfully", DataManager.getInstance().insertReturn(r1));
+    }
+
+    @Test
+    public void testInsertNullReturn() {
+        assertFalse("Return null, false expected", DataManager.getInstance().insertReturn(null));
+    }
+
+    @Test
+    public void testInsertDummyCredit() {
+        DummyCredit dc1 = new DummyCredit(1, 1.0);
+        assertTrue("DummyCredit inserted successfully", DataManager.getInstance().insertDummyCredit(dc1));
+    }
+
+    @Test
+    public void testInsertNullDummyCredit() {
+        assertFalse("DummyCredit null, false expected", DataManager.getInstance().insertDummyCredit(null));
+    }
+
+    @Test
+    public void testInsertDummyDebit() {
+        DummyDebit dd1 = new DummyDebit(1, 1.0);
+        assertTrue("DummyDebit inserted successfully", DataManager.getInstance().insertDummyDebit(dd1));
+    }
+
+    @Test
+    public void testInsertNullDummyDebit() {
+        assertFalse("DummyDebit null, false expected", DataManager.getInstance().insertDummyDebit(null));
+    }
+
+    @Test
+    public void testInsertBalanceTransaction() {
+        CreditTransaction bt1 = new CreditTransaction(1, new Sale(1, 0.1, null));
+        assertTrue("BalanceTransaction inserted successfully", DataManager.getInstance().insertBalanceTransaction(bt1));
+    }
+
+    @Test
+    public void testNullInsertBalanceTransaction() {
+        assertFalse("BalanceTransaction null, false expected", DataManager.getInstance().insertDummyDebit(null));
+    }
 }

@@ -495,7 +495,7 @@ Version:
 
 | Unit name | JUnit test case |
 |--|--|
-|||
+| CreditCardSystem | WBCreditCardSystem |
 |||
 ||||
 
@@ -510,11 +510,9 @@ Version:
     <Identify significant loops in the units and reports the test cases
     developed to cover zero, one or multiple iterations >
 
-|Unit name | Loop rows | Number of iterations | JUnit test case |
-|---|---|---|---|
-|||||
-|||||
-||||||
-
-
+| Unit name        | Loop rows | Number of iterations | JUnit test case                              |
+|------------------|-----------|----------------------|----------------------------------------------|
+| CreditCardSystem | 37 .. 43  | 0                    | testValidNumberWithCorrectInput0Loops()      |
+| -                | -         | 1                    | testValidNumberWithCorrectInput1Loops()      |
+| -                | -         | >= 2                 | testValidNumberWithCorrectInputALotOfLoops() |
 

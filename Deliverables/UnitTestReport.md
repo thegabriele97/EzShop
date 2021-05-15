@@ -62,6 +62,8 @@ Version:
 | Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingUser()|
 | NULL                   | -                        | Invalid         | User u = null<br>DataManager.getInstance().deleteUser(u)<br>-> false|testDeleteNullUser()|
 
+### **Class DataManager - method deleteProductType()**
+
 **Criteria for method deleteProductType():**
 	
  - Validity of ProductType object
@@ -94,6 +96,7 @@ Version:
 | Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingProductType()|
 | NULL                   | -                        | Invalid         | ProductType u = null<br>DataManager.getInstance().deleteProductType(u)<br>-> false|testDeleteNullProductType()|
 
+### **Class DataManager - method deletePosition()**
 
 **Criteria for method deletePosition():**
 	
@@ -127,6 +130,8 @@ Version:
 | Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingPosition()|
 | NULL                   | -                        | Invalid         | Position u = null<br>DataManager.getInstance().deletePosition(u)<br>-> false|testDeleteNullPosition()|
 
+### **Class DataManager - method deleteOrder()**
+
 **Criteria for method deleteOrder():**
 	
  - Validity of Order object
@@ -159,6 +164,7 @@ Version:
 | Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingOrder()|
 | NULL                   | -                        | Invalid         | Order u = null<br>DataManager.getInstance().deleteOrder(u)<br>-> false|testDeleteNullOrder()|
 
+### **Class DataManager - method deleteCustomer()**
 
 **Criteria for method deleteCustomer():**
 	
@@ -191,6 +197,8 @@ Version:
 | Valid                  | YES                      | Invalid         | Customer u = (1, ...)<br>DataManager.getInstance().deleteCustomer(u)<br>-> false |testDeleteExistingCustomer()|
 | Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingCustomer()|
 | NULL                   | -                        | Invalid         | Customer u = null<br>DataManager.getInstance().deleteCustomer(u)<br>-> false|testDeleteNullCustomer()|
+
+### **Class DataManager - method deleteLoyaltyCard()**
 
 
 **Criteria for method deleteLoyaltyCard():**
@@ -225,6 +233,7 @@ Version:
 | Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingLoyaltyCard()|
 | NULL                   | -                        | Invalid         | LoyaltyCard u = null<br>DataManager.getInstance().deleteLoyaltyCard(u)<br>-> false|testDeleteNullLoyaltyCard()|
 
+### **Class DataManager - method deleteSale()**
 
 
 **Criteria for method deleteSale():**
@@ -259,6 +268,7 @@ Version:
 | Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingSale()|
 | NULL                   | -                        | Invalid         | Sale u = null<br>DataManager.getInstance().deleteSale(u)<br>-> false|testDeleteNullSale()|
 
+### **Class DataManager - method deleteReturn()**
 
 **Criteria for method deleteReturn():**
 	
@@ -292,6 +302,7 @@ Version:
 | Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingReturn()|
 | NULL                   | -                        | Invalid         | Return u = null<br>DataManager.getInstance().deleteReturn(u)<br>-> false|testDeleteNullReturn()|
 
+### **Class DataManager - method deleteDummyCredit()**
 
 **Criteria for method deleteDummyCredit():**
 	
@@ -326,6 +337,7 @@ Version:
 | NULL                   | -                        | Invalid         | DummyCredit u = null<br>DataManager.getInstance().deleteDummyCredit(u)<br>-> false|testDeleteNullDummyCredit()|
 
 
+### **Class DataManager - method deleteDummyDebit()**
 
 **Criteria for method deleteDummyDebit():**
 	
@@ -360,6 +372,7 @@ Version:
 | NULL                   | -                        | Invalid         | DummyDebit u = null<br>DataManager.getInstance().deleteDummyDebit(u)<br>-> false|testDeleteNullDummyDebit()|
 
 
+### **Class DataManager - method deleteBalanceTransaction()**
 
 **Criteria for method deleteBalanceTransaction():**
 	
@@ -394,6 +407,48 @@ Version:
 | NULL                   | -                        | Invalid         | BalanceTransaction u = null<br>DataManager.getInstance().deleteBalanceTransaction(u)<br>-> false|testDeleteNullBalanceTransaction()|
 
 
+### **Class CreditCardSystem - method isValidNumber()**
+
+**Criteria for method deleteBalanceTransaction():**
+	
+ - Existence of CreditCard string object
+ - Emtpiness of CreditCard string
+ - Contains characters too
+ - Contains only numbers
+
+
+**Predicates for method deleteBalanceTransaction():**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Existence of CreditCard string object | Valid |
+| - | NULL |
+| Emptiness of CreditCard string | Yes |
+| - | No |
+| Contains characters too | Yes |
+| - | No |
+| Contains Only numbers | 000000000 |
+| - | 99999999 |
+| - | \<valid number\> |
+| - | NO |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+| Contains only numbers | 000000, 9999999, \<valid number\>  |
+
+
+**Combination of predicates**:
+
+| Existence of CreditCard string object | Emptiness of CreditCard string | Contains characters too | Contains Only numbers | Valid / Invalid | Description of the test case                       | JUnit test case |
+|---------------------------------------|--------------------------------|-------------------------|-----------------------|-----------------|----------------------------------------------------|-----------------|
+| Valid                                 | NO                             | YES                     | NO                    | Invalid         | isValidNumber("123s23xa223") -> false          |                 |
+| Valid                                 | NO                             | NO                      | 999999999             | Invalid         | isValidNumber("9999999") -> false              |                 |
+| Valid                                 | NO                             | NO                      | 000000000             | Valid           | isValidNumber("0000000") -> true // valid for  |                 |
+| Valid                                 | NO                             | NO                      | <\valid number\>      | Valid           | isValidNumber(<number>) -> true                |                 |
+| Valid                                 | YES                            | -                       | -                     | Invalid         | isValidNumber("") -> false                     |                 |
+| NULL                                  | -                              | -                       | -                     | Invalid         | isValidNumber(null) -> false                   |                 |
 
 # White Box Unit Tests
 

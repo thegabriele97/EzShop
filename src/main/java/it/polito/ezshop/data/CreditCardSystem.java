@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.*;
 import static it.polito.ezshop.data.EZShop.*;
 
-class CreditCardSystem {
+public class CreditCardSystem {
     
     private static CreditCardSystem instance;
 
@@ -18,7 +18,7 @@ class CreditCardSystem {
         
     }
 
-    static CreditCardSystem getInstance() {
+    static public CreditCardSystem getInstance() {
         
         if (instance == null) {
             instance = new CreditCardSystem();
@@ -27,8 +27,10 @@ class CreditCardSystem {
         return instance;
     }
 
-    boolean isValidNumber(String creditCard) {
-        
+    public boolean isValidNumber(String creditCard) {
+
+        if (creditCard == null || creditCard.isEmpty() || !creditCard.chars().allMatch(ch -> ch >= '0' && ch <= '9')) return false;
+
         int sum = 0;
         boolean skip = false;
 
@@ -43,7 +45,7 @@ class CreditCardSystem {
         return ((sum * 9) % 10) == Integer.parseInt(creditCard.substring(creditCard.length() - 1));
     }
 
-    boolean isRegistered(String creditCard) {
+    public boolean isRegistered(String creditCard) {
 
         if (creditCard == null || creditCard.isEmpty() || !isValidNumber(creditCard)) return false;
 
@@ -63,7 +65,7 @@ class CreditCardSystem {
 
     }
 
-    boolean hasEnoughBalance(String creditCard, double toRemove) {
+    public boolean hasEnoughBalance(String creditCard, double toRemove) {
         
         if (creditCard == null || creditCard.isEmpty() || !isValidNumber(creditCard) || !isRegistered(creditCard)) return false;
 
@@ -85,7 +87,7 @@ class CreditCardSystem {
 
     }
 
-    boolean updateBalance(String creditCard, double toRemove) {
+    public boolean updateBalance(String creditCard, double toRemove) {
         
         if (creditCard == null || creditCard.isEmpty() || !hasEnoughBalance(creditCard, toRemove) || !isRegistered(creditCard)) return false;
 

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import it.polito.ezshop.data.CreditCardSystem;
 import org.junit.*;
 
-public class CreditCardSystemTest {
+public class BBCreditCardSystemTest {
     
     @Test
     public void testValidCreditCardWithCharacters() {

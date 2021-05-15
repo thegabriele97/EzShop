@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.*;
 
-public class DataManagerTest {
+public class BBDataManagerTest {
 
     @Before
     @After

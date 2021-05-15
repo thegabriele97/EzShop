@@ -30,10 +30,6 @@ public class BBDataManagerTest {
             DataManager.getInstance().deletePosition(u);
         }
 
-        for (Position u : DataManager.getInstance().getPositions()) {
-            DataManager.getInstance().deletePosition(u);
-        }
-
         for (Order u : DataManager.getInstance().getOrders()) {
             DataManager.getInstance().deleteOrder(u);
         }

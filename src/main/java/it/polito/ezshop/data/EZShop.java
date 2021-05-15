@@ -18,7 +18,43 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public void reset() {
-        // TODO: to be implemented
+        
+        for (it.polito.ezshop.model.User u : DataManager.getInstance().getUsers()) {
+            DataManager.getInstance().deleteUser(u);
+        }
+
+        for (it.polito.ezshop.model.ProductType u : DataManager.getInstance().getProductTypes()) {
+            DataManager.getInstance().deleteProductType(u);
+        }
+
+        for (Position u : DataManager.getInstance().getPositions()) {
+            DataManager.getInstance().deletePosition(u);
+        }
+
+        for (it.polito.ezshop.model.Order u : DataManager.getInstance().getOrders()) {
+            DataManager.getInstance().deleteOrder(u);
+        }
+
+        for (Sale u : DataManager.getInstance().getSales()) {
+            DataManager.getInstance().deleteSale(u);
+        }
+
+        for (CReturn u : DataManager.getInstance().getReturns()) {
+            DataManager.getInstance().deleteReturn(u);
+        }
+
+        for (DummyCredit u : DataManager.getInstance().getDummyCredits()) {
+            DataManager.getInstance().deleteDummyCredit(u);
+        }
+
+        for (DummyDebit u : DataManager.getInstance().getDummyDebits()) {
+            DataManager.getInstance().deleteDummyDebit(u);
+        }
+
+        for (BalanceTransaction u : DataManager.getInstance().getBalanceTransactions()) {
+            DataManager.getInstance().deleteBalanceTransaction(u);
+        }
+
     }
 
     @Override

@@ -1256,12 +1256,17 @@ Version:
 
 | Validity of the String parameter | Length of the String |  Value of every char of the String parameter | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                           |-------               |-------                                       |-------          |-------                       |-------          |
-| Valid                            | [12, 14]             | ['0'(48), '9'(57)]                           | Valid           | isValidBarcode('000000000000') -> true<br/>isValidBarcode('00000000000000') -> true<br/>isValidBarcode('999999999993') -> true<br/>isValidBarcode('99999999999997') -> true | testIsValidBarcode() |
+| Valid                            | [12, 14]             | ['0'(48), '9'(57)]                           | Valid           | isValidBarcode("000000000000") -> true<br/>isValidBarcode("00000000000000") -> true<br/>isValidBarcode("999999999993") -> true<br/>isValidBarcode("99999999999997") -> true | testIsValidBarcode() |
 | NULL                            | *          | *                         | Invalid           | isValidBarcode(null) -> false | testIsValidNullBarcode() |
-| *                            | [0,12) | *                         | Invalid           | isValidBarcode('00000000000') -> false | testIsValidShorterBarcode() |
-| *                            | (14, maxint) | *                         | Invalid           | isValidBarcode('000000000000000') -> false | testIsValidLongerBarcode() |
-| *                            | * | [0, 48) | Invalid           | isValidBarcode('000000000000/') -> false | testIsValidBarcodeWithNotNumericChar() |
-| *                            | * | (57, 127] | Invalid           | isValidBarcode('000000000000:') -> false | testIsValidBarcodeWithNotNumericChar() |
+| *                            | [0,12) | *                         | Invalid           | isValidBarcode("00000000000") -> false | testIsValidShorterBarcode() |
+| *                            | (14, maxint) | *                         | Invalid           | isValidBarcode("000000000000000") -> false | testIsValidLongerBarcode() |
+| *                            | * | [0, 48) | Invalid           | isValidBarcode("000000000000/") -> false | testIsValidBarcodeWithNotNumericChar() |
+| *                            | * | (57, 127] | Invalid           | isValidBarcode("000000000000:") -> false | testIsValidBarcodeWithNotNumericChar() |
+
+
+
+
+
 # White Box Unit Tests
 
 ### Test cases definition

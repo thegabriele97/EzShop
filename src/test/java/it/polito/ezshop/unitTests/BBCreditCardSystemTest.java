@@ -116,7 +116,7 @@ public class BBCreditCardSystemTest {
 
     @Test
     public void testHasBalanceWNegativeInfinityToRemove(){
-        assertFalse(CreditCardSystem.getInstance().hasEnoughBalance("9254347527611304", Double.POSITIVE_INFINITY));
+        assertFalse(CreditCardSystem.getInstance().hasEnoughBalance("9254347527611304", Double.NEGATIVE_INFINITY));
     }
 
     //updateBalance()

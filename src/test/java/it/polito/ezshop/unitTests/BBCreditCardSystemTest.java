@@ -121,6 +121,49 @@ public class BBCreditCardSystemTest {
 
     //updateBalance()
 
-    
+    @Test
+    public void testUpdateBalanceWValidCreditCard(){
+        assertTrue(CreditCardSystem.getInstance().updateBalance("9254347527611304", 10.0));
+    }
+
+    @Test
+    public void testUpdateBalanceWInvalidCreditCard(){
+        assertFalse(CreditCardSystem.getInstance().updateBalance("sas", 10.0));
+    }
+
+    @Test
+    public void testUpdateBalanceWUnregisteredCreditCard(){
+        assertFalse(CreditCardSystem.getInstance().updateBalance("123456789015", 10.0));
+    }
+
+    @Test
+    public void testUpdateBalanceWNotEnoughBalance(){
+        assertFalse(CreditCardSystem.getInstance().updateBalance("9254347527611304", 100.0));
+    }
+
+    @Test
+    public void testUpdateBalanceWNegativeToRemove(){
+        assertTrue(CreditCardSystem.getInstance().updateBalance("9254347527611304", -10.0)); 
+    }
+
+    @Test
+    public void testUpdateBalanceWZeroToRemove(){
+        assertTrue(CreditCardSystem.getInstance().updateBalance("9254347527611304", 0.0));
+    }
+
+    @Test
+    public void testUpdateBalanceWNaNToRemove(){
+        assertFalse(CreditCardSystem.getInstance().updateBalance("9254347527611304", Double.NaN));
+    }
+
+    @Test
+    public void testUpdateBalanceWPositiveInfinityToRemove(){
+        assertFalse(CreditCardSystem.getInstance().updateBalance("9254347527611304", Double.POSITIVE_INFINITY));
+    }
+
+    @Test
+    public void testUpdateBalanceWNegativeInfinityToRemove(){
+        assertFalse(CreditCardSystem.getInstance().updateBalance("9254347527611304", Double.NEGATIVE_INFINITY));
+    }
 
 }

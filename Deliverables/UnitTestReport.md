@@ -1279,7 +1279,7 @@ Version:
 | Unit name | JUnit test case |
 |-----------|-----------------|
 | CreditCardSystem | WBCreditCardSystem |
-| | |
+| User | UserTest |
 | | |
 
 ### Code coverage report

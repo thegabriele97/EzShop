@@ -97,7 +97,6 @@ public class BBCreditCardSystemTest {
     @Test
     public void testHasBalanceWNegativeToRemove(){
         assertTrue(CreditCardSystem.getInstance().hasEnoughBalance("9254347527611304", -10.0)); 
-        //Ma è ok che sia true? (no controlli sul toRemove)
     }
 
     @Test

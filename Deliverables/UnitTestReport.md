@@ -417,7 +417,7 @@ Version:
 
 
 - Validity of User object
-
+- Existence of User Object
 
 
 **Predicates for method insertUser:**
@@ -425,8 +425,9 @@ Version:
 | Criterion                | Predicate |
 | ------------------------ | --------- |
 | Validity of User object  | Valid     |
-|                          | NULL      |
-
+| -                        | NULL      |
+|Existence of User Object | Yes |
+| - | No |
 
 
 
@@ -441,11 +442,11 @@ Version:
 **Combination of predicates for method insertUser**
 
 
-
-| Validity of User object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
-| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
-| Valid                   |  Valid        | User u1 = {1, "u1", "a", "Administrator"};<br />insertUser(u1);<br /><br />->  true | testInsertUser() |
-| NULL                    | Invalid       | insertUser(null);<br /><br />-> false | testInsertNullUser() |
+| Validity of User Object | Existence of User Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | Yes                      | Invalid         | User u1 = {1, "u1", "a", "Administrator"};<br />insertUser(u1);<br />insertUser(u1);<br /><br />-> false |testInsertExistingUser()|
+| Valid                  | No                       | Valid           | User u1 = {1, "u1", "a", "Administrator"};<br />insertUser(u1);<br /><br />->  true | testInsertUser() |
+| NULL                   | -                        | Invalid         | insertUser(null);<br /><br />-> false | testInsertNullUser() |
 
 
 
@@ -457,15 +458,17 @@ Version:
 
 
 - Validity of ProductType object
-
+- Existence of ProductType Object
 
 
 **Predicates for method insertProductType:**
 
-| Criterion                | Predicate |
-| ------------------------ | --------- |
-| Validity of ProductType object  | Valid     |
-|                          | NULL      |
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of ProductType object | Valid |
+| - | NULL |
+| Existence of ProductType Object | Yes |
+| - | No |
 
 
 
@@ -481,12 +484,11 @@ Version:
 **Combination of predicates for method insertProductType**
 
 
-
-| Validity of ProductType object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
-| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
-| Valid                   |  Valid        | ProductType p1 = {1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1"};<br />insertProductType(p1);<br /><br />-> true | testInsertProductType() |
-| NULL                    | Invalid       | insertProductType(null);<br /><br />->  false | testInsertNullProductType() |
-
+| Validity of ProductType Object | Existence of ProductType Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | Yes                      | Invalid         | ProductType p1 = {1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1"};<br />insertProductType(p1);<br />insertProductType(p1);<br /><br />-> false | testInsertExistingProductType() |
+| Valid                  | No                       | Valid           | ProductType p1 = {1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1"};<br />insertProductType(p1);<br /><br />-> true | testInsertProductType() |
+| NULL                   | -                        | Invalid         | insertProductType(null);<br /><br />->  false | testInsertNullProductType() |
 
 
 ### **Class *DataManger* - method *insertPosition***
@@ -497,15 +499,18 @@ Version:
 
 
 - Validity of Position object
-
+- Existence of Position Object
 
 
 **Predicates for method insertPosition:**
 
-| Criterion                | Predicate |
-| ------------------------ | --------- |
-| Validity of Position object  | Valid     |
-|                          | NULL      |
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of Position object | Valid |
+| - | NULL |
+| Existence of Position Object | Yes |
+| - | No |
+
 
 
 
@@ -520,13 +525,11 @@ Version:
 
 **Combination of predicates for method insertPosition**
 
-
-
-| Validity of Position object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
-| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
-| Valid                   |  Valid        | Position p1 = {1, "a", 1, null};<br />insertPosition(p1);<br /><br />-> true | testInsertPosition() |
-| NULL                    | Invalid       | insertPosition(null);<br /><br />->  false | testInsertNullPosition() |
-
+| Validity of Position Object | Existence of Position Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | Yes                   | Invalid         | Position p1 = {1, "a", 1, null};<br />insertPosition(p1);<br />insertPosition(p1);<br /><br />-> false | testInsertExistingPosition() |
+| Valid                  | No                    | Valid           | Position p1 = {1, "a", 1, null};<br />insertPosition(p1);<br /><br />-> true | testInsertPosition() |
+| NULL                   | -                        | Invalid         | insertPosition(null);<br /><br />->  false | testInsertNullPosition() |
 
 
 ### **Class *DataManger* - method *insertOrder***
@@ -537,15 +540,17 @@ Version:
 
 
 - Validity of Order object
-
+- Existence of Order Object
 
 
 **Predicates for method insertOrder:**
 
-| Criterion                | Predicate |
-| ------------------------ | --------- |
-| Validity of Order object  | Valid     |
-|                          | NULL      |
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of Order object | Valid |
+| - | NULL |
+| Existence of Order Object | Yes |
+| - | No |
 
 
 
@@ -560,13 +565,11 @@ Version:
 
 **Combination of predicates for method insertOrder**
 
-
-
-| Validity of Order object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
-| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
-| Valid                   |  Valid        | Order o1 = {1, 1.0, 1, null, EOrderStatus.ISSUED};<br />insertOrder(o1);<br /><br />-> true | testInsertOrder() |
-| NULL                    | Invalid       | insertOrder(null);<br /><br />-> false| testInsertNullOrder() |
-
+| Validity of Order Object | Existence of Order Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | Yes                      | Invalid         | Order o1 = {1, 1.0, 1, null, EOrderStatus.ISSUED};<br />insertOrder(o1);<br />insertOrder(o1);<br /><br />-> false | testInsertExistingOrder() |
+| Valid                  | No                       | Valid           | Order o1 = {1, 1.0, 1, null, EOrderStatus.ISSUED};<br />insertOrder(o1);<br /><br />-> true | testInsertOrder() |
+| NULL                   | -                        | Invalid         | insertOrder(null);<br /><br />-> false| testInsertNullOrder() |
 
 
 ### **Class *DataManger* - method *insertCustomer***
@@ -577,17 +580,17 @@ Version:
 
 
 - Validity of Customer object
-
+- Existence of Customer Object
 
 
 **Predicates for method insertCustomer:**
 
-| Criterion                | Predicate |
-| ------------------------ | --------- |
-| Validity of Customer object  | Valid     |
-|                          | NULL      |
-
-
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of Customer object | Valid |
+| - | NULL |
+| Existence of Customer Object | Yes |
+| - | No |
 
 
 **Boundaries for method insertCustomer**:
@@ -600,13 +603,11 @@ Version:
 
 **Combination of predicates for method insertCustomer**
 
-
-
-| Validity of Customer object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
-| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
-| Valid                   |  Valid        | Customer c1 = {1, "c1", null};<br />insertCustomer(c1);<br /><br />-> true | testInsertCustomer() |
-| NULL                    | Invalid       | insertCustomer(null);<br /><br />-> false| testInsertNullCustomer() |
-
+| Validity of Customer Object | Existence of Customer Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | Yes                      | Invalid         | Customer c1 = {1, "c1", null};<br />insertCustomer(c1);<br />insertCustomer(c1);<br /><br />-> false | testInsertExistingCustomer() |
+| Valid                  | No                       | Valid           | Customer c1 = {1, "c1", null};<br />insertCustomer(c1);<br /><br />-> true | testInsertCustomer() |
+| NULL                   | -                        | Invalid         | insertCustomer(null);<br /><br />-> false| testInsertNullCustomer() |
 
 
 ### **Class *DataManger* - method *insertLoyaltyCard***
@@ -617,16 +618,17 @@ Version:
 
 
 - Validity of LoyaltyCard object
-
+- Existence of LoyaltyCard Object
 
 
 **Predicates for method insertLoyaltyCard:**
 
-| Criterion                | Predicate |
-| ------------------------ | --------- |
-| Validity of LoyaltyCard object  | Valid     |
-|                          | NULL      |
-
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of LoyaltyCard object | Valid |
+| - | NULL |
+| Existence of LoyaltyCard Object | Yes |
+| - | No |
 
 
 
@@ -640,13 +642,11 @@ Version:
 
 **Combination of predicates for method insertLoyaltyCard**
 
-
-
-| Validity of LoyaltyCard object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
-| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
-| Valid                   |  Valid        | LoyaltyCard lc1 = {"c1", 1, null};<br />insertLoyaltyCard(lc1);<br /><br />-> true | testInsertLoyaltyCard() |
-| NULL                    | Invalid       | insertLoyaltyCard(null);<br /><br />-> false| testInsertNullLoyaltyCard() |  
-
+| Validity of LoyaltyCard Object | Existence of LoyaltyCard Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | Yes                      | Invalid         | LoyaltyCard lc1 = {"c1", 1, null};<br />insertLoyaltyCard(lc1);<br />insertLoyaltyCard(lc1);<br /><br />-> false | testInsertExistingLoyaltyCard() |
+| Valid                  | No                       | Valid           | LoyaltyCard lc1 = {"c1", 1, null};<br />insertLoyaltyCard(lc1);<br /><br />-> true | testInsertLoyaltyCard() |
+| NULL                   | -                        | Invalid         | insertLoyaltyCard(null);<br /><br />-> false| testInsertNullLoyaltyCard() |
 
 
 ### **Class *DataManger* - method *insertSale***
@@ -657,15 +657,18 @@ Version:
 
 
 - Validity of Sale object
+- Existence of Sale Object
 
 
 
 **Predicates for method insertSale:**
 
-| Criterion                | Predicate |
-| ------------------------ | --------- |
-| Validity of Sale object  | Valid     |
-|                          | NULL      |
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of Sale object | Valid |
+| - | NULL |
+| Existence of Sale Object | Yes |
+| - | No |
 
 
 
@@ -680,13 +683,11 @@ Version:
 
 **Combination of predicates for method insertSale**
 
-
-
-| Validity of Sale object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
-| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
-| Valid                   |  Valid        | Sale s1 = {1, 0.1, null};<br />insertSale(s1);<br /><br />-> true | testInsertSale() |
-| NULL                    | Invalid       | insertSale(null);<br /><br />-> false| testInsertNullSale() |
-
+| Validity of Sale Object | Existence of Sale Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | Yes                      | Invalid         | Sale s1 = {1, 0.1, null};<br />insertSale(s1);<br /><br />-> false | testInsertExistingSale() |
+| Valid                  | No                       | Valid           | Sale s1 = {1, 0.1, null};<br />insertSale(s1);<br /><br />-> true | testInsertSale() |
+| NULL                   | -                        | Invalid         | insertSale(null);<br /><br />-> false| testInsertNullSale() |
 
 
 ### **Class *DataManger* - method *insertReturn***
@@ -697,16 +698,17 @@ Version:
 
 
 - Validity of Return object
-
+- Existence of Return Object
 
 
 **Predicates for method insertReturn:**
 
-| Criterion                | Predicate |
-| ------------------------ | --------- |
-| Validity of Return object  | Valid     |
-|                          | NULL      |
-
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of Return object | Valid |
+| - | NULL |
+| Existence of Return Object | Yes |
+| - | No |
 
 
 
@@ -720,13 +722,11 @@ Version:
 
 **Combination of predicates for method insertReturn**
 
-
-
-| Validity of Return object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
-| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
-| Valid                   |  Valid        | CReturn r1 = {1, null};<br />insertReturn(r1);<br /><br />-> true | testInsertReturn() |
-| NULL                    | Invalid       | insertReturn(null);<br /><br />-> false| testInsertNullReturn() |
-
+| Validity of Return Object | Existence of Return Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | Yes                      | Invalid         | CReturn r1 = {1, null};<br />insertReturn(r1);<br />insertReturn(r1);<br /><br />-> false | testInsertExistingReturn() |
+| Valid                  | No                       | Valid           | CReturn r1 = {1, null};<br />insertReturn(r1);<br /><br />-> true | testInsertReturn() |
+| NULL                   | -                        | Invalid         | insertReturn(null);<br /><br />-> false| testInsertNullReturn() |
 
 
 ### **Class *DataManger* - method *insertDummyCredit***
@@ -737,17 +737,17 @@ Version:
 
 
 - Validity of DummyCredit object
-
+- Existence of DummyCredit Object
 
 
 **Predicates for method insertDummyCredit:**
 
-| Criterion                | Predicate |
-| ------------------------ | --------- |
-| Validity of DummyCredit object  | Valid     |
-|                          | NULL      |
-
-
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of DummyCredit object | Valid |
+| - | NULL |
+| Existence of DummyCredit Object | Yes |
+| - | No |
 
 
 **Boundaries for method insertDummyCredit**:
@@ -767,6 +767,11 @@ Version:
 | Valid                   |  Valid        | DummyCredit dc1 = {1, 1.0};<br />insertDummyCredit(dc1);<br /><br />-> true | testInsertDummyCredit() |
 | NULL                    | Invalid       | insertDummyCredit(null);<br /><br />-> false | testInsertNullDummyCredit() |
 
+| Validity of DummyCredit Object | Existence of DummyCredit Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | Yes                      | Invalid         | DummyCredit dc1 = {1, 1.0};<br />insertDummyCredit(dc1);<br />insertDummyCredit(dc1);<br /><br />-> false | testInsertExistingDummyCredit() |
+| Valid                  | No                       | Valid           | DummyCredit dc1 = {1, 1.0};<br />insertDummyCredit(dc1);<br /><br />-> true | testInsertDummyCredit() |
+| NULL                   | -                        | Invalid         | insertDummyCredit(null);<br /><br />-> false | testInsertNullDummyCredit() |
 
 
 ### **Class *DataManger* - method *insertDummyDebit***
@@ -777,17 +782,17 @@ Version:
 
 
 - Validity of DummyDebit object
-
+- Existence of DummyDebit Object
 
 
 **Predicates for method insertDummyDebit:**
 
-| Criterion                | Predicate |
-| ------------------------ | --------- |
-| Validity of DummyDebit object  | Valid     |
-|                          | NULL      |
-
-
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of DummyDebit object | Valid |
+| - | NULL |
+| Existence of DummyDebit Object | Yes |
+| - | No |
 
 
 **Boundaries for method insertDummyDebit**:
@@ -800,12 +805,11 @@ Version:
 
 **Combination of predicates for method insertDummyDebit**
 
-
-
-| Validity of DummyDebit object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
-| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
-| Valid                   |  Valid        | DummyDebit dd1 = {1, 1.0};<br />insertDummyDebit(dd1);<br /><br />-> true | testInsertDummyDebit() |
-| NULL                    | Invalid       | insertDummyDebit(null);<br /><br />->  false | testInsertNullDummyDebit() |
+| Validity of DummyDebit Object | Existence of DummyDebit Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | YES                      | Invalid         | DummyDebit dd1 = {1, 1.0};<br />insertDummyDebit(dd1);<br />insertDummyDebit(dd1);<br /><br />-> false | testInsertExistingDummyDebit() |
+| Valid                  | NO                       | Valid           | DummyDebit dd1 = {1, 1.0};<br />insertDummyDebit(dd1);<br /><br />-> true | testInsertDummyDebit() |
+| NULL                   | -                        | Invalid         | insertDummyDebit(null);<br /><br />->  false | testInsertNullDummyDebit() |
 
 
 
@@ -817,17 +821,17 @@ Version:
 
 
 - Validity of BalanceTransaction object
-
+- Existence of BalanceTransaction Object
 
 
 **Predicates for method insertBalanceTransaction:**
 
-| Criterion                | Predicate |
-| ------------------------ | --------- |
-| Validity of BalanceTransaction object  | Valid     |
-|                          | NULL      |
-
-
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of BalanceTransaction object | Valid |
+| - | NULL |
+| Existence of BalanceTransaction Object | Yes |
+| - | No |
 
 
 **Boundaries for method insertBalanceTransaction**:
@@ -840,12 +844,11 @@ Version:
 
 **Combination of predicates for method insertBalanceTransaction**
 
-
-
-| Validity of BalanceTransaction object | Valid/Invalid | Description of the test case: example of input and output    | JUnit test case |
-| ----------------------- | ------------- | ------------------------------------------------------------ | --------------- |
-| Valid                   |  Valid        | BalanceTransaction bt1 = {1, 1.0};<br />insertBalanceTransaction(bt1);<br /><br />-> true | testInsertBalanceTransaction() |
-| NULL                    | Invalid       | insertBalanceTransaction(null);<br /><br />-> false | testNullInsertBalanceTransaction() |
+| Validity of BalanceTransaction Object | Existence of BalanceTransaction Object | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                 |-------                   |-------          |-------                       |-------|
+| Valid                  | YES                      | Invalid         | BalanceTransaction bt1 = {1, 1.0};<br />insertBalanceTransaction(bt1);<br />insertBalanceTransaction(bt1);<br /><br />-> false | testInsertExistingBalanceTransaction() |
+| Valid                  | NO                       | Valid           | BalanceTransaction bt1 = {1, 1.0};<br />insertBalanceTransaction(bt1);<br /><br />-> true | testInsertBalanceTransaction() |
+| NULL                   | -                        | Invalid         | insertBalanceTransaction(null);<br /><br />-> false | testNullInsertBalanceTransaction() |
 
 
 

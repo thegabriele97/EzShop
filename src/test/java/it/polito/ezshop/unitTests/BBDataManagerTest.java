@@ -314,6 +314,13 @@ public class BBDataManagerTest {
     }
 
     @Test
+    public void testInsertExistingUser() {
+        User u1 = new User(1, "u1", "a", "Administrator");
+        DataManager.getInstance().insertUser(u1);
+        assertFalse("User inserted successfully", DataManager.getInstance().insertUser(u1));
+    }
+
+    @Test
     public void testInsertUser() {
         User u1 = new User(1, "u1", "a", "Administrator");
         assertTrue("User inserted successfully", DataManager.getInstance().insertUser(u1));
@@ -322,6 +329,13 @@ public class BBDataManagerTest {
     @Test
     public void testInsertNullUser() {
         assertFalse("User null, false expected", DataManager.getInstance().insertUser(null));
+    }
+
+    @Test
+    public void testInsertExistingProductType() {
+        ProductType p1 = new ProductType(1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p1);
+        assertFalse("ProductType inserted successfully", DataManager.getInstance().insertProductType(p1));
     }
 
     @Test
@@ -336,6 +350,13 @@ public class BBDataManagerTest {
     }
 
     @Test
+    public void testInsertExistingPosition() {
+        Position p1 = new Position(1, "a", 1, null);
+        DataManager.getInstance().insertPosition(p1);
+        assertFalse("Position inserted successfully", DataManager.getInstance().insertPosition(p1));
+    }
+
+    @Test
     public void testInsertPosition() {
         Position p1 = new Position(1, "a", 1, null);
         assertTrue("Position inserted successfully", DataManager.getInstance().insertPosition(p1));
@@ -344,6 +365,13 @@ public class BBDataManagerTest {
     @Test
     public void testInsertNullPosition() {
         assertFalse("Position null, false expected", DataManager.getInstance().insertPosition(null));
+    }
+
+    @Test
+    public void testInsertExistingOrder() {
+        Order o1 = new Order(1, 1.0, 1, new ProductType(1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1"), EOrderStatus.ISSUED);
+        DataManager.getInstance().insertOrder(o1);
+        assertFalse("Order inserted successfully", DataManager.getInstance().insertOrder(o1));
     }
 
     @Test
@@ -358,6 +386,13 @@ public class BBDataManagerTest {
     }
 
     @Test
+    public void testInsertExistingCustomer() {
+        Customer c1 = new Customer(1, "c1", null);
+        DataManager.getInstance().insertCustomer(c1);
+        assertFalse("Customer inserted successfully", DataManager.getInstance().insertCustomer(c1));
+    }
+
+    @Test
     public void testInsertCustomer() {
         Customer c1 = new Customer(1, "c1", null);
         assertTrue("Customer inserted successfully", DataManager.getInstance().insertCustomer(c1));
@@ -366,6 +401,13 @@ public class BBDataManagerTest {
     @Test
     public void testInsertNullCustomer() {
         assertFalse("Customer null, false expected", DataManager.getInstance().insertCustomer(null));
+    }
+
+    @Test
+    public void testInsertExistingLoyaltyCard() {
+        LoyaltyCard lc1 = new LoyaltyCard("0001", 1, null);
+        DataManager.getInstance().insertLoyaltyCard(lc1);
+        assertFalse("LoyaltyCard inserted successfully", DataManager.getInstance().insertLoyaltyCard(lc1));
     }
 
     @Test
@@ -380,6 +422,13 @@ public class BBDataManagerTest {
     }
 
     @Test
+    public void testInsertExistingSale() {
+        Sale s1 = new Sale(1, 0.1, null);
+        DataManager.getInstance().insertSale(s1);
+        assertFalse("Sale inserted successfully", DataManager.getInstance().insertSale(s1));
+    }
+
+    @Test
     public void testInsertSale() {
         Sale s1 = new Sale(1, 0.1, null);
         assertTrue("Sale inserted successfully", DataManager.getInstance().insertSale(s1));
@@ -388,6 +437,13 @@ public class BBDataManagerTest {
     @Test
     public void testInsertNullSale() {
         assertFalse("Sale null, false expected", DataManager.getInstance().insertSale(null));
+    }
+
+    @Test
+    public void testInsertExistingReturn() {
+        CReturn r1 = new CReturn(1, null);
+        DataManager.getInstance().insertReturn(r1);
+        assertFalse("Return inserted successfully", DataManager.getInstance().insertReturn(r1));
     }
 
     @Test
@@ -402,6 +458,13 @@ public class BBDataManagerTest {
     }
 
     @Test
+    public void testInsertExistingDummyCredit() {
+        DummyCredit dc1 = new DummyCredit(1, 1.0);
+        DataManager.getInstance().insertDummyCredit(dc1);
+        assertFalse("DummyCredit inserted successfully", DataManager.getInstance().insertDummyCredit(dc1));
+    }
+
+    @Test
     public void testInsertDummyCredit() {
         DummyCredit dc1 = new DummyCredit(1, 1.0);
         assertTrue("DummyCredit inserted successfully", DataManager.getInstance().insertDummyCredit(dc1));
@@ -413,6 +476,13 @@ public class BBDataManagerTest {
     }
 
     @Test
+    public void testInsertExistingDummyDebit() {
+        DummyDebit dd1 = new DummyDebit(1, 1.0);
+        DataManager.getInstance().insertDummyDebit(dd1);
+        assertFalse("DummyDebit inserted successfully", DataManager.getInstance().insertDummyDebit(dd1));
+    }
+
+    @Test
     public void testInsertDummyDebit() {
         DummyDebit dd1 = new DummyDebit(1, 1.0);
         assertTrue("DummyDebit inserted successfully", DataManager.getInstance().insertDummyDebit(dd1));
@@ -421,6 +491,13 @@ public class BBDataManagerTest {
     @Test
     public void testInsertNullDummyDebit() {
         assertFalse("DummyDebit null, false expected", DataManager.getInstance().insertDummyDebit(null));
+    }
+
+    @Test
+    public void testInsertExistingBalanceTransaction() {
+        CreditTransaction bt1 = new CreditTransaction(1, new Sale(1, 0.1, null));
+        DataManager.getInstance().insertBalanceTransaction(bt1);
+        assertFalse("BalanceTransaction inserted successfully", DataManager.getInstance().insertBalanceTransaction(bt1));
     }
 
     @Test

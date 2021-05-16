@@ -1167,7 +1167,6 @@ Version:
 
 **Boundaries**:
 
-<<<<<<< HEAD
 | Criteria | Boundary values |
 | -------- | --------------- |
 |          |                 |

@@ -67,7 +67,7 @@ public class CreditCardSystem {
 
     public boolean hasEnoughBalance(String creditCard, double toRemove) {
         
-        if (!isRegistered(creditCard)) return false;
+        if (!isRegistered(creditCard) || Double.isNaN(toRemove) || Double.isInfinite(toRemove)) return false;
 
         try (Stream<String> stream = Files.lines(Paths.get("src/main/java/it/polito/ezshop/utils/CreditCards.txt"))) {
 

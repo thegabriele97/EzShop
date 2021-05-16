@@ -2,8 +2,6 @@ package it.polito.ezshop.unitTests;
 
 import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.model.*;
-import java.util.*;
-import static java.util.stream.Collectors.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;

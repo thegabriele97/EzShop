@@ -754,4 +754,282 @@ public class BBDataManagerTest {
     public void testEmptyGetFirstBalanceTransaction(){
         assertThrows(IndexOutOfBoundsException.class, () -> DataManager.getInstance().getBalanceTransactions().get(0));
     }
+    
+    
+    ////Updates
+    //updateUser()
+
+    @Test
+    public void testUpdateNotExistingUser() {
+        User u = new User(1, "we", "mbare", "Administrator");
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateUser(u));
+    }
+
+    @Test
+    public void testUpdateNullUser() {
+        assertFalse("User null, false expected", DataManager.getInstance().updateUser(null));
+    }
+
+    @Test
+    public void testUpdateExistingUser() {
+
+        User u = new User(1, "we", "mbare", "Administrator");
+        if (!DataManager.getInstance().insertUser(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.getId() + " : " + u.getUsername() + "; true expected", DataManager.getInstance().updateUser(u));
+        assertFalse(DataManager.getInstance().getUsers().contains(u));
+    }
+    
+    //updateProductType()
+
+    @Test
+    public void testUpdateNotExistingProductType() {
+        it.polito.ezshop.model.ProductType u = new it.polito.ezshop.model.ProductType(1, "1231231231232", "", 0.0, 1, 0.0, "", "");
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateProductType(u));
+    }
+
+    @Test
+    public void testUpdateNullProductType() {
+        assertFalse("Item null, false expected", DataManager.getInstance().updateProductType(null));
+    }
+
+    @Test
+    public void testUpdateExistingProductType() {
+
+        it.polito.ezshop.model.ProductType u = new it.polito.ezshop.model.ProductType(1, "1231231231232", "", 0.0, 1, 0.0, "", "");
+        if (!DataManager.getInstance().insertProductType(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.getId() + "; true expected", DataManager.getInstance().updateProductType(u));
+        assertFalse(DataManager.getInstance().getProductTypes().contains(u));
+    }
+
+    //updatePosition()
+
+    @Test
+    public void testUpdateNotExistingPosition() {
+        Position u = new Position(3, "a", 2, null);
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updatePosition(u));
+    }
+
+    @Test
+    public void testUpdateNullPosition() {
+        assertFalse("Item null, false expected", DataManager.getInstance().updatePosition(null));
+    }
+
+    @Test
+    public void testUpdateExistingPosition() {
+
+        Position u = new Position(3, "a", 2, null);
+        if (!DataManager.getInstance().insertPosition(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.toString() + "; true expected", DataManager.getInstance().updatePosition(u));
+        assertFalse(DataManager.getInstance().getPositions().contains(u));
+    }
+
+    //updateOrder()
+
+    @Test
+    public void testUpdateNotExistingOrder() {
+        it.polito.ezshop.model.Order u = new it.polito.ezshop.model.Order(1, 1.0, 1, new ProductType(1, "1231231232", "", 0.1, 1, 0.0, "", null), EOrderStatus.ISSUED);
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateOrder(u));
+    }
+
+    @Test
+    public void testUpdateNullOrder() {
+        assertFalse("Item null, false expected", DataManager.getInstance().updateOrder(null));
+    }
+
+    @Test
+    public void testUpdateExistingOrder() {
+
+        it.polito.ezshop.model.Order u = new it.polito.ezshop.model.Order(1, 1.0, 1, new ProductType(1, "1231231232", "", 0.1, 1, 0.0, "", null), EOrderStatus.ISSUED);
+        if (!DataManager.getInstance().insertOrder(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.getOrderId() + "; true expected", DataManager.getInstance().updateOrder(u));
+        assertFalse(DataManager.getInstance().getOrders().contains(u));
+    }
+
+    //updateCustomer()
+
+    @Test
+    public void testUpdateNotExistingCustomer() {
+        it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "", null);
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateCustomer(u));
+    }
+
+    @Test
+    public void testUpdateNullCustomer() {
+        assertFalse("Item null, false expected", DataManager.getInstance().updateCustomer(null));
+    }
+
+    @Test
+    public void testUpdateExistingCustomer() {
+
+        it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "", null);
+        if (!DataManager.getInstance().insertCustomer(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.getId() + "; true expected", DataManager.getInstance().updateCustomer(u));
+        assertFalse(DataManager.getInstance().getCustomers().contains(u));
+    }
+
+    //updateLoyaltyCard()
+
+    @Test
+    public void testUpdateNotExistingLoyaltyCard() {
+        LoyaltyCard u = new LoyaltyCard("0001", 0, null);
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateLoyaltyCard(u));
+    }
+
+    @Test
+    public void testUpdateNullLoyaltyCard() {
+        assertFalse("Item null, false expected", DataManager.getInstance().updateLoyaltyCard(null));
+    }
+
+    @Test
+    public void testUpdateExistingLoyaltyCard() {
+
+        LoyaltyCard u = new LoyaltyCard("0001", 0, null);
+        if (!DataManager.getInstance().insertLoyaltyCard(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.getID() + "; true expected", DataManager.getInstance().updateLoyaltyCard(u));
+        assertFalse(DataManager.getInstance().getLoyaltyCards().contains(u));
+    }
+
+    //updateSale()
+
+    @Test
+    public void testUpdateNotExistingSale() {
+        it.polito.ezshop.model.Sale u = new it.polito.ezshop.model.Sale(1, 0.0, null);
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateSale(u));
+    }
+
+    @Test
+    public void testUpdateNullSale() {
+        assertFalse("Item null, false expected", DataManager.getInstance().updateSale(null));
+    }
+
+    @Test
+    public void testUpdateExistingSale() {
+
+        it.polito.ezshop.model.Sale u = new it.polito.ezshop.model.Sale(1, 0.0, null);
+        if (!DataManager.getInstance().insertSale(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.getTicketNumber() + "; true expected", DataManager.getInstance().updateSale(u));
+        assertFalse(DataManager.getInstance().getSales().contains(u));
+    }
+
+    //updateReturn()
+
+    @Test
+    public void testUpdateNotExistingReturn() {
+        CReturn u = new CReturn(1, null);
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateReturn(u));
+    }
+
+    @Test
+    public void testUpdateNullReturn() {
+        assertFalse("Item null, false expected", DataManager.getInstance().updateReturn(null));
+    }
+
+    @Test
+    public void testUpdateExistingReturn() {
+
+        CReturn u = new CReturn(1, null);
+        if (!DataManager.getInstance().insertReturn(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.getReturnid() + "; true expected", DataManager.getInstance().updateReturn(u));
+        assertFalse(DataManager.getInstance().getReturns().contains(u));
+    }
+
+    //updateDummyCredit()
+
+    @Test
+    public void testUpdateNotExistingDummyCredit() {
+        DummyCredit u = new DummyCredit(1, 23.9);
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateDummyCredit(u));
+    }
+
+    @Test
+    public void testUpdateNullDummyCredit() {
+        assertFalse("Item null, false expected", DataManager.getInstance().updateDummyCredit(null));
+    }
+
+    @Test
+    public void testUpdateExistingDummyCredit() {
+
+        DummyCredit u = new DummyCredit(1, 23.9);
+        if (!DataManager.getInstance().insertDummyCredit(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.getId() + "; true expected", DataManager.getInstance().updateDummyCredit(u));
+        assertFalse(DataManager.getInstance().getDummyCredits().contains(u));
+    }
+
+    //updateDummyDebit()
+
+    @Test
+    public void testUpdateNotExistingDummyDebit() {
+        DummyDebit u = new DummyDebit(1, 23.9);
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateDummyDebit(u));
+    }
+
+    @Test
+    public void testUpdateNullDummyDebit() {
+        assertFalse("Item null, false expected", DataManager.getInstance().updateDummyDebit(null));
+    }
+
+    @Test
+    public void testUpdateExistingDummyDebit() {
+
+        DummyDebit u = new DummyDebit(1, 23.9);
+        if (!DataManager.getInstance().insertDummyDebit(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.getId() + "; true expected", DataManager.getInstance().updateDummyDebit(u));
+        assertFalse(DataManager.getInstance().getDummyDebits().contains(u));
+    }
+
+    //updateBalanceTransaction()
+
+    @Test
+    public void testUpdateNotExistingBalanceTransaction() {
+        BalanceTransaction u = new CreditTransaction(1, new DummyCredit(2, 3.0));
+        assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateBalanceTransaction(u));
+    }
+
+    @Test
+    public void testUpdateNullBalanceTransaction() {
+        assertFalse("Item null, false expected", DataManager.getInstance().updateBalanceTransaction(null));
+    }
+
+    @Test
+    public void testUpdateExistingBalanceTransaction() {
+
+        BalanceTransaction u = new CreditTransaction(1, new DummyCredit(2, 3.0));
+        if (!DataManager.getInstance().insertBalanceTransaction(u)) {
+            throw new RuntimeException();
+        }
+
+        assertTrue("Databased contains " + u.getBalanceId() + "; true expected", DataManager.getInstance().updateBalanceTransaction(u));
+        assertFalse(DataManager.getInstance().getBalanceTransactions().contains(u));
+    }
+
 }

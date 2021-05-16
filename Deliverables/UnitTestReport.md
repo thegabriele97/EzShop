@@ -58,8 +58,8 @@ Version:
 
 | Validity of User Object | Existence of User Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | User u = (1, "we", "mbare", "Administrator")<br>DataManager.getInstance().deleteUser(u)<br>-> false |testDeleteExistingUser()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingUser()|
+| Valid                  | YES                      | Valid         | User u = (1, "we", "mbare", "Administrator")<br>DataManager.getInstance().deleteUser(u)<br>-> true |testDeleteExistingUser()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingUser()|
 | NULL                   | -                        | Invalid         | User u = null<br>DataManager.getInstance().deleteUser(u)<br>-> false|testDeleteNullUser()|
 
 ### **Class DataManager - method deleteProductType()**
@@ -92,8 +92,8 @@ Version:
 
 | Validity of ProductType Object | Existence of ProductType Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | ProductType u = (1, ...)<br>DataManager.getInstance().deleteProductType(u)<br>-> false |testDeleteExistingProductType()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingProductType()|
+| Valid                  | YES                      | Valid         | ProductType u = (1, ...)<br>DataManager.getInstance().deleteProductType(u)<br>-> true |testDeleteExistingProductType()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingProductType()|
 | NULL                   | -                        | Invalid         | ProductType u = null<br>DataManager.getInstance().deleteProductType(u)<br>-> false|testDeleteNullProductType()|
 
 ### **Class DataManager - method deletePosition()**
@@ -126,8 +126,8 @@ Version:
 
 | Validity of Position Object | Existence of Position Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | Position u = (1, ...)<br>DataManager.getInstance().deletePosition(u)<br>-> false |testDeleteExistingPosition()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingPosition()|
+| Valid                  | YES                      | Valid         | Position u = (1, ...)<br>DataManager.getInstance().deletePosition(u)<br>-> true |testDeleteExistingPosition()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingPosition()|
 | NULL                   | -                        | Invalid         | Position u = null<br>DataManager.getInstance().deletePosition(u)<br>-> false|testDeleteNullPosition()|
 
 ### **Class DataManager - method deleteOrder()**
@@ -160,8 +160,8 @@ Version:
 
 | Validity of Order Object | Existence of Order Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | Order u = (1, ...)<br>DataManager.getInstance().deleteOrder(u)<br>-> false |testDeleteExistingOrder()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingOrder()|
+| Valid                  | YES                      | Valid         | Order u = (1, ...)<br>DataManager.getInstance().deleteOrder(u)<br>-> true |testDeleteExistingOrder()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingOrder()|
 | NULL                   | -                        | Invalid         | Order u = null<br>DataManager.getInstance().deleteOrder(u)<br>-> false|testDeleteNullOrder()|
 
 ### **Class DataManager - method deleteCustomer()**
@@ -194,8 +194,8 @@ Version:
 
 | Validity of Customer Object | Existence of Customer Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | Customer u = (1, ...)<br>DataManager.getInstance().deleteCustomer(u)<br>-> false |testDeleteExistingCustomer()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingCustomer()|
+| Valid                  | YES                      | Valid         | Customer u = (1, ...)<br>DataManager.getInstance().deleteCustomer(u)<br>-> true |testDeleteExistingCustomer()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingCustomer()|
 | NULL                   | -                        | Invalid         | Customer u = null<br>DataManager.getInstance().deleteCustomer(u)<br>-> false|testDeleteNullCustomer()|
 
 ### **Class DataManager - method deleteLoyaltyCard()**
@@ -229,8 +229,8 @@ Version:
 
 | Validity of LoyaltyCard Object | Existence of LoyaltyCard Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | LoyaltyCard u = (1, ...)<br>DataManager.getInstance().deleteLoyaltyCard(u)<br>-> false |testDeleteExistingLoyaltyCard()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingLoyaltyCard()|
+| Valid                  | YES                      | Valid         | LoyaltyCard u = (1, ...)<br>DataManager.getInstance().deleteLoyaltyCard(u)<br>-> true |testDeleteExistingLoyaltyCard()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingLoyaltyCard()|
 | NULL                   | -                        | Invalid         | LoyaltyCard u = null<br>DataManager.getInstance().deleteLoyaltyCard(u)<br>-> false|testDeleteNullLoyaltyCard()|
 
 ### **Class DataManager - method deleteSale()**
@@ -264,8 +264,8 @@ Version:
 
 | Validity of Sale Object | Existence of Sale Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | Sale u = (1, ...)<br>DataManager.getInstance().deleteSale(u)<br>-> false |testDeleteExistingSale()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingSale()|
+| Valid                  | YES                      | Valid         | Sale u = (1, ...)<br>DataManager.getInstance().deleteSale(u)<br>-> true |testDeleteExistingSale()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingSale()|
 | NULL                   | -                        | Invalid         | Sale u = null<br>DataManager.getInstance().deleteSale(u)<br>-> false|testDeleteNullSale()|
 
 ### **Class DataManager - method deleteReturn()**
@@ -298,8 +298,8 @@ Version:
 
 | Validity of Return Object | Existence of Return Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | Return u = (1, ...)<br>DataManager.getInstance().deleteReturn(u)<br>-> false |testDeleteExistingReturn()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingReturn()|
+| Valid                  | YES                      | Valid         | Return u = (1, ...)<br>DataManager.getInstance().deleteReturn(u)<br>-> true |testDeleteExistingReturn()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingReturn()|
 | NULL                   | -                        | Invalid         | Return u = null<br>DataManager.getInstance().deleteReturn(u)<br>-> false|testDeleteNullReturn()|
 
 ### **Class DataManager - method deleteDummyCredit()**
@@ -332,8 +332,8 @@ Version:
 
 | Validity of DummyCredit Object | Existence of DummyCredit Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | DummyCredit u = (1, ...)<br>DataManager.getInstance().deleteDummyCredit(u)<br>-> false |testDeleteExistingDummyCredit()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingDummyCredit()|
+| Valid                  | YES                      | Valid         | DummyCredit u = (1, ...)<br>DataManager.getInstance().deleteDummyCredit(u)<br>-> true |testDeleteExistingDummyCredit()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingDummyCredit()|
 | NULL                   | -                        | Invalid         | DummyCredit u = null<br>DataManager.getInstance().deleteDummyCredit(u)<br>-> false|testDeleteNullDummyCredit()|
 
 
@@ -367,8 +367,8 @@ Version:
 
 | Validity of DummyDebit Object | Existence of DummyDebit Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | DummyDebit u = (1, ...)<br>DataManager.getInstance().deleteDummyDebit(u)<br>-> false |testDeleteExistingDummyDebit()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingDummyDebit()|
+| Valid                  | YES                      | Valid         | DummyDebit u = (1, ...)<br>DataManager.getInstance().deleteDummyDebit(u)<br>-> true |testDeleteExistingDummyDebit()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingDummyDebit()|
 | NULL                   | -                        | Invalid         | DummyDebit u = null<br>DataManager.getInstance().deleteDummyDebit(u)<br>-> false|testDeleteNullDummyDebit()|
 
 
@@ -402,8 +402,8 @@ Version:
 
 | Validity of BalanceTransaction Object | Existence of BalanceTransaction Object | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                 |-------                   |-------          |-------                       |-------|
-| Valid                  | YES                      | Invalid         | BalanceTransaction u = (1, ...)<br>DataManager.getInstance().deleteBalanceTransaction(u)<br>-> false |testDeleteExistingBalanceTransaction()|
-| Valid                  | NO                       | Valid           | ---- -> true |testDeleteNotExistingBalanceTransaction()|
+| Valid                  | YES                      | Valid         | BalanceTransaction u = (1, ...)<br>DataManager.getInstance().deleteBalanceTransaction(u)<br>-> true |testDeleteExistingBalanceTransaction()|
+| Valid                  | NO                       | Invalid           | ---- -> false |testDeleteNotExistingBalanceTransaction()|
 | NULL                   | -                        | Invalid         | BalanceTransaction u = null<br>DataManager.getInstance().deleteBalanceTransaction(u)<br>-> false|testDeleteNullBalanceTransaction()|
  
 

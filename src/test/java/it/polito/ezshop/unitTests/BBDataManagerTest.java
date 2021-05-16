@@ -349,7 +349,7 @@ public class BBDataManagerTest {
     public void testInsertExistingUser() {
         User u1 = new User(1, "u1", "a", "Administrator");
         DataManager.getInstance().insertUser(u1);
-        assertFalse("User inserted successfully", DataManager.getInstance().insertUser(u1));
+        assertFalse("User already exists, false expected", DataManager.getInstance().insertUser(u1));
     }
 
     @Test
@@ -369,7 +369,7 @@ public class BBDataManagerTest {
     public void testInsertExistingProductType() {
         ProductType p1 = new ProductType(1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1");
         DataManager.getInstance().insertProductType(p1);
-        assertFalse("ProductType inserted successfully", DataManager.getInstance().insertProductType(p1));
+        assertFalse("ProductType already exists, false expected", DataManager.getInstance().insertProductType(p1));
     }
 
     @Test
@@ -389,7 +389,7 @@ public class BBDataManagerTest {
     public void testInsertExistingPosition() {
         Position p1 = new Position(1, "a", 1, null);
         DataManager.getInstance().insertPosition(p1);
-        assertFalse("Position inserted successfully", DataManager.getInstance().insertPosition(p1));
+        assertFalse("Position already exists, false expected", DataManager.getInstance().insertPosition(p1));
     }
 
     @Test
@@ -409,7 +409,7 @@ public class BBDataManagerTest {
     public void testInsertExistingOrder() {
         Order o1 = new Order(1, 1.0, 1, new ProductType(1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1"), EOrderStatus.ISSUED);
         DataManager.getInstance().insertOrder(o1);
-        assertFalse("Order inserted successfully", DataManager.getInstance().insertOrder(o1));
+        assertFalse("Order already exists, false expected", DataManager.getInstance().insertOrder(o1));
     }
 
     @Test
@@ -429,7 +429,7 @@ public class BBDataManagerTest {
     public void testInsertExistingCustomer() {
         Customer c1 = new Customer(1, "c1", null);
         DataManager.getInstance().insertCustomer(c1);
-        assertFalse("Customer inserted successfully", DataManager.getInstance().insertCustomer(c1));
+        assertFalse("Customer already exists, false expected", DataManager.getInstance().insertCustomer(c1));
     }
 
     @Test
@@ -449,7 +449,7 @@ public class BBDataManagerTest {
     public void testInsertExistingLoyaltyCard() {
         LoyaltyCard lc1 = new LoyaltyCard("0001", 1, null);
         DataManager.getInstance().insertLoyaltyCard(lc1);
-        assertFalse("LoyaltyCard inserted successfully", DataManager.getInstance().insertLoyaltyCard(lc1));
+        assertFalse("LoyaltyCard already exists, false expected", DataManager.getInstance().insertLoyaltyCard(lc1));
     }
 
     @Test
@@ -469,7 +469,7 @@ public class BBDataManagerTest {
     public void testInsertExistingSale() {
         Sale s1 = new Sale(1, 0.1, null);
         DataManager.getInstance().insertSale(s1);
-        assertFalse("Sale inserted successfully", DataManager.getInstance().insertSale(s1));
+        assertFalse("Sale already exists, false expected", DataManager.getInstance().insertSale(s1));
     }
 
     @Test
@@ -489,7 +489,7 @@ public class BBDataManagerTest {
     public void testInsertExistingReturn() {
         CReturn r1 = new CReturn(1, null);
         DataManager.getInstance().insertReturn(r1);
-        assertFalse("Return inserted successfully", DataManager.getInstance().insertReturn(r1));
+        assertFalse("Return already exists, false expected", DataManager.getInstance().insertReturn(r1));
     }
 
     @Test
@@ -509,7 +509,7 @@ public class BBDataManagerTest {
     public void testInsertExistingDummyCredit() {
         DummyCredit dc1 = new DummyCredit(1, 1.0);
         DataManager.getInstance().insertDummyCredit(dc1);
-        assertFalse("DummyCredit inserted successfully", DataManager.getInstance().insertDummyCredit(dc1));
+        assertFalse("DummyCredit already exists, false expected", DataManager.getInstance().insertDummyCredit(dc1));
     }
 
     @Test
@@ -529,7 +529,7 @@ public class BBDataManagerTest {
     public void testInsertExistingDummyDebit() {
         DummyDebit dd1 = new DummyDebit(1, 1.0);
         DataManager.getInstance().insertDummyDebit(dd1);
-        assertFalse("DummyDebit inserted successfully", DataManager.getInstance().insertDummyDebit(dd1));
+        assertFalse("DummyDebit already exists, false expected", DataManager.getInstance().insertDummyDebit(dd1));
     }
 
     @Test
@@ -549,7 +549,7 @@ public class BBDataManagerTest {
     public void testInsertExistingBalanceTransaction() {
         CreditTransaction bt1 = new CreditTransaction(1, new Sale(1, 0.1, null));
         DataManager.getInstance().insertBalanceTransaction(bt1);
-        assertFalse("BalanceTransaction inserted successfully", DataManager.getInstance().insertBalanceTransaction(bt1));
+        assertFalse("BalanceTransaction already exists, false expected", DataManager.getInstance().insertBalanceTransaction(bt1));
     }
 
     @Test

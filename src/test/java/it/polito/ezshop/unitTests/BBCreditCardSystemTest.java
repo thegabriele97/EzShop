@@ -12,22 +12,32 @@ public class BBCreditCardSystemTest {
 
     @Test
     public void testValidCreditCardWithCharacters() {
-        assertFalse(CreditCardSystem.getInstance().isValidNumber("123s23xa223"));
+        assertFalse(CreditCardSystem.getInstance().isValidNumber("123s23xa2233635"));
     }
 
     @Test
     public void testValidCreditCardWithAll9s() {
-        assertFalse(CreditCardSystem.getInstance().isValidNumber("99999999999"));
+        assertFalse(CreditCardSystem.getInstance().isValidNumber("99999999999999"));
     }
 
     @Test
     public void testValidCreditCardWithAll0s() {
-        assertTrue(CreditCardSystem.getInstance().isValidNumber("000000000000"));
+        assertTrue(CreditCardSystem.getInstance().isValidNumber("000000000000000"));
     }
 
     @Test
     public void testValidCreditCardWithValidNumber() {
-        assertTrue(CreditCardSystem.getInstance().isValidNumber("123456789015"));
+        assertTrue(CreditCardSystem.getInstance().isValidNumber("5569755825672968"));
+    }
+
+    @Test
+    public void testValidCreditCardWithShortString() {
+        assertFalse(CreditCardSystem.getInstance().isValidNumber("142"));
+    }
+
+    @Test
+    public void testValidCreditCardWithLongString() {
+        assertFalse(CreditCardSystem.getInstance().isValidNumber("1432545245185529354022"));
     }
 
     @Test
@@ -49,7 +59,7 @@ public class BBCreditCardSystemTest {
 
     @Test
     public void testCardRegisteredWValidCreditCardNotRegistered() {
-        assertFalse(CreditCardSystem.getInstance().isRegistered("123456789015"));
+        assertFalse(CreditCardSystem.getInstance().isRegistered("5569755825672968"));
     }
 
     @Test
@@ -86,7 +96,7 @@ public class BBCreditCardSystemTest {
 
     @Test
     public void testHasBalanceWUnregisteredCreditCard(){
-        assertFalse(CreditCardSystem.getInstance().hasEnoughBalance("123456789015", 10.0));
+        assertFalse(CreditCardSystem.getInstance().hasEnoughBalance("5569755825672968", 10.0));
     }
 
     @Test
@@ -133,7 +143,7 @@ public class BBCreditCardSystemTest {
 
     @Test
     public void testUpdateBalanceWUnregisteredCreditCard(){
-        assertFalse(CreditCardSystem.getInstance().updateBalance("123456789015", 10.0));
+        assertFalse(CreditCardSystem.getInstance().updateBalance("5569755825672968", 10.0));
     }
 
     @Test

@@ -12,7 +12,6 @@ public class Position implements Serializable{
 	private ProductType product;
 	
 	
-
 	public Position(Integer aisleID, String rackID, Integer levelID, ProductType product) {
 		this.setAisleID(aisleID);
 		this.setRackID(rackID);
@@ -25,12 +24,11 @@ public class Position implements Serializable{
 	}
 
 	public void setAisleID(Integer aisleID) {
-		if(aisleID>0) {
-			this.aisleID = aisleID;
-			DataManager.getInstance().updatePosition(this);
-		}
-		else
-			return;
+
+		if (aisleID == null || aisleID <= 0) throw new IllegalArgumentException();
+
+		this.aisleID = aisleID;
+		DataManager.getInstance().updatePosition(this);
 	}
 
 	public String getRackID() {
@@ -38,6 +36,9 @@ public class Position implements Serializable{
 	}
 
 	public void setRackID(String rackID) {
+
+		if (rackID == null || rackID.isEmpty()) throw new IllegalArgumentException();
+
 		this.rackID = rackID;
 		DataManager.getInstance().updatePosition(this);
 	}
@@ -47,14 +48,11 @@ public class Position implements Serializable{
 	}
 
 	public void setLevelID(Integer levelID) {
-		//if(levelID>0) {
-			this.levelID = levelID;
-			DataManager.getInstance().updatePosition(this);
-		/*}
-			
-		else
-			return;*/
-	
+		
+		if (levelID == null || levelID <= 0) throw new IllegalArgumentException();
+		
+		this.levelID = levelID;
+		DataManager.getInstance().updatePosition(this);
 	}
 
 	public ProductType getAssignedProduct() {
@@ -66,8 +64,7 @@ public class Position implements Serializable{
 		DataManager.getInstance().updatePosition(this);
 	}
 
-
-	public String toStringP() {
+	public String toStringExtended() {
 		return "Position of product"+ product.getId()+"[aisleID=" + getAisleID() + ", rackID=" + getRackID() + ", levelID=" + getLevelID() + "]";
 	}
 	

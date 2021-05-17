@@ -30,7 +30,7 @@ public class CreditCardSystem {
     public boolean isValidNumber(String creditCard) {
 
         if (creditCard == null || creditCard.isEmpty() || !creditCard.chars().allMatch(ch -> ch >= '0' && ch <= '9')) return false;
-        if (creditCard.length() <13 || creditCard.length()>16) return false;
+        // if (creditCard.length() <13 || creditCard.length()>16) return false; TODO: check not requested, maybe?
 
         int sum = 0;
         boolean skip = false;

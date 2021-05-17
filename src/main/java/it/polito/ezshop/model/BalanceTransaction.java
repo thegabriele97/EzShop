@@ -19,8 +19,8 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
         setBalanceId(balanceId);
         setValue(value);
 
-        this.date = LocalDate.now();
-        this.type = (this instanceof CreditTransaction) ? "CREDIT" : "DEBIT";
+        setDate(LocalDate.now());
+        setType((this instanceof CreditTransaction) ? "CREDIT" : "DEBIT");
     }
 
     @Override
@@ -30,13 +30,15 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
 
     @Override
     public void setBalanceId(int balanceId){
-        if(balanceId <= 0) return;
+        if (balanceId <= 0) throw new IllegalArgumentException();
+
         this.balanceId = balanceId;
         Update();
     }
 
     public void setDescription(String descr){
-        if(descr.isEmpty() || descr == null) return;
+        if(descr == null || descr.isEmpty()) throw new IllegalArgumentException();
+
         this.description = descr;
         Update();
     }
@@ -50,7 +52,8 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     }
 
     public void setValue(double value){
-        if(value == 0) return;
+        if(value < 0) throw new IllegalArgumentException();
+
         this.value = value;
         Update();
     }
@@ -62,7 +65,8 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
 
     @Override
     public void setDate(LocalDate date){
-        if(date == null) return;
+        if(date == null) throw new IllegalArgumentException();
+
         this.date = date;
         Update();
     }
@@ -74,8 +78,13 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
 
     @Override
     public void setMoney(double money) {
-       setValue(money);
-       Update();
+
+        if (money < 0.0 || Double.isNaN(money) || Double.isInfinite(money)) {
+            throw new IllegalArgumentException();  
+        }
+
+        setValue(money);
+        Update();
     }
 
     @Override
@@ -86,7 +95,10 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     // Why this method exists?
     @Override
     public void setType(String type) {
-        if (type == null || (!type.equals("CREDIT") && !type.equals("DEBIT"))) return;
+        if (type == null || (!type.equals("CREDIT") && !type.equals("DEBIT"))) {
+            throw new IllegalArgumentException();
+        }
+        
         this.type = type;
         Update();
     }

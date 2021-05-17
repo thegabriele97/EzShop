@@ -75,22 +75,22 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 
 
 	public void setDiscountRate(Double discountRate) {
-		if(discountRate>=0.0) {
-			this.discountRate = discountRate;
-			DataManager.getInstance().updateProductType(this);
-		}
-		else
-			return;
+		
+		if (discountRate < 0.0 || discountRate > 1.0 || Double.isNaN(discountRate) || Double.isInfinite(discountRate)) {
+            throw new IllegalArgumentException();  
+        }
+
+		this.discountRate = discountRate;
+		DataManager.getInstance().updateProductType(this);
 	}
 
 	@Override
 	public void setQuantity(Integer quantity) {
-		if(quantity >= 0) {
-			this.quantity = quantity;
-			DataManager.getInstance().updateProductType(this);
-		}
-		else
-			return;
+		
+		if (quantity < 0) throw new IllegalArgumentException();
+		
+		this.quantity = quantity;
+		DataManager.getInstance().updateProductType(this);
 	}
 
 
@@ -116,7 +116,7 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 			String[] pieces = location.split("-");
 
 			if (pieces.length != 3) {
-				return;
+				throw new IllegalArgumentException();
 			}
 
 			Position p = new Position(Integer.valueOf(pieces[0]),pieces[1],Integer.valueOf(pieces[2]), null);
@@ -139,7 +139,7 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 	public void setProductDescription(String productDescription) {
 		
 		if (productDescription == null || productDescription.isEmpty()) {
-            return;
+            throw new IllegalArgumentException();
         }
 
 		this.description=productDescription;
@@ -149,6 +149,9 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 
 	@Override
 	public void setBarCode(String barCode) {
+
+		if (!EZShop.isValidBarcode(barCode)) throw new IllegalArgumentException();
+
 		this.barcode=barCode;
 		DataManager.getInstance().updateProductType(this);
 
@@ -156,14 +159,19 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 
 	@Override
 	public void setPricePerUnit(Double pricePerUnit) {
-		this.selfPrice=pricePerUnit;
+
+		if (pricePerUnit <= 0 || Double.isNaN(pricePerUnit) || Double.isInfinite(pricePerUnit)) {
+            throw new IllegalArgumentException();  
+        }
+
+		this.selfPrice = pricePerUnit;
 		DataManager.getInstance().updateProductType(this);
 
 	}
 
 	@Override
 	public void setId(Integer id) {
-		if (id <= 0) return;
+		if (id <= 0) throw new IllegalArgumentException();
 		this.productId=id;
 		DataManager.getInstance().updateProductType(this);
 
@@ -178,16 +186,6 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 
 		return true;
 	}
-
-    @Override
-    public int hashCode() {
-        return this.getId();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return this.getId() == ((ProductType)obj).getId();
-    }
 
 	public boolean assingToPosition(Position pos) {
 
@@ -208,4 +206,15 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 	public Position getAssignedPosition() {
 		return this.position;
 	}
+
+	@Override
+    public int hashCode() {
+        return this.getId();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.getId() == ((ProductType)obj).getId();
+    }
+
 }

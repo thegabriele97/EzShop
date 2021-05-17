@@ -28,7 +28,7 @@ public class CReturn extends ProductList implements Serializable, IDebit {
     }
 
     public void setReturnId(Integer returnId){
-        if (returnId < 1) return;
+        if (returnId < 1) throw new IllegalArgumentException();
         this.returnId = returnId;
     }
     
@@ -41,17 +41,18 @@ public class CReturn extends ProductList implements Serializable, IDebit {
     }
 
     public void setSaleTransaction(Sale saleTransaction){
-        if (saleTransaction == null) return;
+        if (saleTransaction == null) throw new IllegalArgumentException();
         this.saleTransaction = saleTransaction;
     }
 
-    public Integer getBalanceId() {return this.balanceId;}
+    public Integer getBalanceId() {
+        return this.balanceId;
+    }
     
     public void setBalanceId(Integer balanceId) {
-        if (balanceId < 1) return;
+        if (balanceId < 1) throw new IllegalArgumentException();
         this.balanceId = balanceId;
     }
-
 
     @Override
     public Double getTotalValue() {
@@ -65,6 +66,16 @@ public class CReturn extends ProductList implements Serializable, IDebit {
         value *= (1-saleTransaction.getDiscountRate());
 
         return getRightDoublePrecision(value);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getReturnId();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.getReturnId().equals(((CReturn)obj).getReturnId());
     }
 
 }

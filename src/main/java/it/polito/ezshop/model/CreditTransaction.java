@@ -12,6 +12,9 @@ public class CreditTransaction extends BalanceTransaction {
     }
 
     public void setRelatedCreditOperation(ICredit credit){
+
+        if (credit == null) throw new IllegalArgumentException();
+
         this.relatedCreditOperation = credit;
         this.setValue(credit.getTotalValue());
         DataManager.getInstance().updateBalanceTransaction(this);

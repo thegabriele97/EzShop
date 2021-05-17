@@ -22,9 +22,11 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 		return this.name;
 	}
 
-
 	@Override
 	public void setCustomerName(String customerName) {
+
+		if (customerName == null || customerName.isEmpty()) throw new IllegalArgumentException();
+
 		this.name=customerName;
 		DataManager.getInstance().updateCustomer(this);
 	}
@@ -46,7 +48,9 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 			return;
 		}
 		
-		if (customerCard.length() != 10 || !customerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9')) return;
+		if (customerCard.length() != 10 || !customerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9')) {
+			throw new IllegalArgumentException();
+		}
 
 		Optional<LoyaltyCard> card = DataManager.getInstance()
             .getLoyaltyCards()
@@ -54,7 +58,9 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
             .filter(c -> c.getID().equals(customerCard))
             .findFirst();
 
-		if (!(card.isPresent()) || card.get().getCustomer() != null) return;
+		if (!(card.isPresent()) || (card.get().getCustomer() != null && !card.get().getCustomer().equals(this))) {
+			throw new IllegalArgumentException();
+		}
 
 		if (this.loyaltyCard != null) {
 			this.loyaltyCard.addCustomer(null);
@@ -75,7 +81,8 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 
 	@Override
 	public void setId(Integer id) {
-		if (id <= 0) return;
+		if (id <= 0) throw new IllegalArgumentException();
+
 		this.ID=id;
 		DataManager.getInstance().updateCustomer(this);
 	}
@@ -88,7 +95,7 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 	@Override
 	public void setPoints(Integer points) {
 		
-		if (loyaltyCard == null) return;
+		if (loyaltyCard == null) throw new IllegalArgumentException();
 
 		if (points < 0 && loyaltyCard.getPoints() < points) {
 			return;

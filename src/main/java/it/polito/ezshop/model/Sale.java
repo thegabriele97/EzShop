@@ -42,7 +42,7 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setTicketNumber(Integer ticketNumber) {
-        if (ticketNumber < 1) return;
+        if (ticketNumber < 1) throw new IllegalArgumentException();
         this.ticketNumber = ticketNumber;
         Update();
     }
@@ -80,7 +80,7 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
                 @Override
                 public void setAmount(int amount) {
-                    if (amount < 0) return;
+                    if (amount < 0) throw new IllegalArgumentException();
                     products.replace(p, amount);
 
                     addProduct(p, amount, true);
@@ -112,6 +112,9 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setEntries(List<TicketEntry> entries) {
+
+        if (entries == null) throw new IllegalArgumentException();
+
         entries.stream()
             .collect(Collectors
                 .toMap(t -> DataManager
@@ -129,7 +132,10 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setDiscountRate(double discountRate) {
-        if (discountRate < 0.0 || discountRate > 1.0) return;
+        if (discountRate < 0.0 || discountRate > 1.0 || Double.isNaN(discountRate) || Double.isInfinite(discountRate)) {
+            throw new IllegalArgumentException();  
+        } 
+
         this.discountRate = discountRate;
         Update();
     }
@@ -150,7 +156,7 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setPrice(double price) {
-        if (price < 0.0) return;
+        if (price < 0.0) throw new IllegalArgumentException();
         this.price = price;
         Update();
     }
@@ -160,11 +166,19 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
     }
 
     public void addReturnTransaction(CReturn returnT){
+
+        if (returnT == null) throw new IllegalArgumentException();
+
         this.returnTransaction.add(returnT);
         Update();
     }
 
     public void applyDiscountRateToProductGroup(ProductType product, double discountRate){
+
+        if (discountRate < 0.0 || discountRate > 1.0 || Double.isNaN(discountRate) || Double.isInfinite(discountRate)) {
+            throw new IllegalArgumentException();  
+        }
+
         this.productsDiscountRate.replace(product, discountRate);
         Update();
     }
@@ -194,6 +208,16 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     private void Update() {
         DataManager.getInstance().updateSale(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getTicketNumber();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.getTicketNumber() == ((Sale)obj).getTicketNumber();
     }
 
 

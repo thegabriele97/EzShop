@@ -17,7 +17,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
     public Order(Integer orderId, Double pricePerUnit, Integer quantity, ProductType product, EOrderStatus status) {
         setOrderId(orderId);
         setPricePerUnit(pricePerUnit);
-        setQuantity(this.quantity);
+        setQuantity(quantity);
         this.product = product;
         this.status = status;
         setProductCode(product.getBarCode());
@@ -30,7 +30,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setBalanceId(Integer balanceId) {
-        if(balanceId < 1) return;
+        if(balanceId < 1) throw new IllegalArgumentException();
         this.balanceId = balanceId;
     }
 
@@ -40,9 +40,9 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
     }
 
     @Override
-    public void setProductCode(String productCode) {
-        if (!EZShop.isValidBarcode(productCode)) return;
-        this.productCode = productCode;
+    public void setProductCode(String code) {
+        if (!EZShop.isValidBarcode(code)) throw new IllegalArgumentException();
+        this.productCode = code;
     }
 
     @Override
@@ -52,7 +52,11 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setPricePerUnit(double pricePerUnit) {
-        if (pricePerUnit < 0.0) return;
+        
+        if (pricePerUnit < 0.0 || Double.isNaN(pricePerUnit) || Double.isInfinite(pricePerUnit)) {
+            throw new IllegalArgumentException();  
+        }
+
         this.pricePerUnit = pricePerUnit;
     }
 
@@ -63,7 +67,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setQuantity(int quantity) {
-        if (quantity < 0) return;
+        if (quantity <= 0) throw new IllegalArgumentException();
         this.quantity = quantity;
     }
 
@@ -74,7 +78,10 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setStatus(String status) {
-        if (!(status.toUpperCase().equals("ISSUED") || status.toUpperCase().equals("PAYED") || status.toUpperCase().equals("COMPLETED"))) return;
+        if (!(status.toUpperCase().equals("ISSUED") || status.toUpperCase().equals("PAYED") || status.toUpperCase().equals("COMPLETED"))) {
+            throw new IllegalArgumentException();
+        }
+
         this.status = EOrderStatus.valueOf(status.toUpperCase());
     }
 
@@ -85,7 +92,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setOrderId(Integer orderId) {
-        if (orderId < 1) return;
+        if (orderId < 1) throw new IllegalArgumentException();
         this.orderId = orderId;
     }
 
@@ -105,4 +112,15 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
     public Double getTotalValue() {
         return (this.quantity * this.pricePerUnit);
     }
+
+    @Override
+    public int hashCode() {
+        return this.getOrderId();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.getOrderId().equals(((Order)obj).getOrderId());
+    }
+
 }

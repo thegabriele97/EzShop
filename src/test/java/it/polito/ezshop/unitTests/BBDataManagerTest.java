@@ -92,7 +92,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testDeleteNotExistingProductType() {
-        it.polito.ezshop.model.ProductType u = new it.polito.ezshop.model.ProductType(1, "1231231231232", "", 0.0, 1, 0.0, "", "");
+        it.polito.ezshop.model.ProductType u = new it.polito.ezshop.model.ProductType(1, "1231231231232", "Dark Souls, only love reactions", 1.0, 1, 0.0, "", "");
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().deleteProductType(u));
     }
 
@@ -104,7 +104,7 @@ public class BBDataManagerTest {
     @Test
     public void testDeleteExistingProductType() {
 
-        it.polito.ezshop.model.ProductType u = new it.polito.ezshop.model.ProductType(1, "1231231231232", "", 0.0, 1, 0.0, "", "");
+        it.polito.ezshop.model.ProductType u = new it.polito.ezshop.model.ProductType(1, "1231231231232", "homo erectus", 1.0, 1, 0.0, "", "2-a-2");
         if (!DataManager.getInstance().insertProductType(u)) {
             throw new RuntimeException();
         }
@@ -142,7 +142,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testDeleteNotExistingOrder() {
-        it.polito.ezshop.model.Order u = new it.polito.ezshop.model.Order(1, 1.0, 1, new ProductType(1, "1231231232", "", 0.1, 1, 0.0, "", null), EOrderStatus.ISSUED);
+        it.polito.ezshop.model.Order u = new it.polito.ezshop.model.Order(1, 1.0, 1, new ProductType(1, "1231231231232", "austrolopiteco", 0.1, 1, 0.0, "", null), EOrderStatus.ISSUED);
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().deleteOrder(u));
     }
 
@@ -154,7 +154,7 @@ public class BBDataManagerTest {
     @Test
     public void testDeleteExistingOrder() {
 
-        it.polito.ezshop.model.Order u = new it.polito.ezshop.model.Order(1, 1.0, 1, new ProductType(1, "1231231232", "", 0.1, 1, 0.0, "", null), EOrderStatus.ISSUED);
+        it.polito.ezshop.model.Order u = new it.polito.ezshop.model.Order(1, 1.0, 1, new ProductType(1, "1231231231232", "homo poco sapiens", 0.1, 1, 0.0, "", null), EOrderStatus.ISSUED);
         if (!DataManager.getInstance().insertOrder(u)) {
             throw new RuntimeException();
         }
@@ -167,7 +167,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testDeleteNotExistingCustomer() {
-        it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "", null);
+        it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "pippiniellu", null);
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().deleteCustomer(u));
     }
 
@@ -179,7 +179,7 @@ public class BBDataManagerTest {
     @Test
     public void testDeleteExistingCustomer() {
 
-        it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "", null);
+        it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "Salvatore D'aquì", null);
         if (!DataManager.getInstance().insertCustomer(u)) {
             throw new RuntimeException();
         }
@@ -192,7 +192,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testDeleteNotExistingLoyaltyCard() {
-        LoyaltyCard u = new LoyaltyCard("0001", 0, null);
+        LoyaltyCard u = new LoyaltyCard("0000000001", 0, null);
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().deleteLoyaltyCard(u));
     }
 
@@ -204,7 +204,7 @@ public class BBDataManagerTest {
     @Test
     public void testDeleteExistingLoyaltyCard() {
 
-        LoyaltyCard u = new LoyaltyCard("0001", 0, null);
+        LoyaltyCard u = new LoyaltyCard("0000000001", 0, null);
         if (!DataManager.getInstance().insertLoyaltyCard(u)) {
             throw new RuntimeException();
         }
@@ -242,7 +242,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testDeleteNotExistingReturn() {
-        CReturn u = new CReturn(1, null);
+        CReturn u = new CReturn(1, new Sale(1, 0.23, null));
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().deleteReturn(u));
     }
 
@@ -254,7 +254,7 @@ public class BBDataManagerTest {
     @Test
     public void testDeleteExistingReturn() {
 
-        CReturn u = new CReturn(1, null);
+        CReturn u = new CReturn(1, new Sale(1, 0.0, null));
         if (!DataManager.getInstance().insertReturn(u)) {
             throw new RuntimeException();
         }
@@ -444,14 +444,14 @@ public class BBDataManagerTest {
 
     @Test
     public void testInsertExistingLoyaltyCard() {
-        LoyaltyCard lc1 = new LoyaltyCard("0001", 1, null);
+        LoyaltyCard lc1 = new LoyaltyCard("1000000000", 0, null);
         DataManager.getInstance().insertLoyaltyCard(lc1);
         assertFalse("LoyaltyCard already exists, false expected", DataManager.getInstance().insertLoyaltyCard(lc1));
     }
 
     @Test
     public void testInsertLoyaltyCard() {
-        LoyaltyCard lc1 = new LoyaltyCard("0001", 1, null);
+        LoyaltyCard lc1 = new LoyaltyCard("0000000001", 1, null);
         assertTrue("LoyaltyCard inserted successfully", DataManager.getInstance().insertLoyaltyCard(lc1));
     }
 
@@ -484,14 +484,14 @@ public class BBDataManagerTest {
 
     @Test
     public void testInsertExistingReturn() {
-        CReturn r1 = new CReturn(1, null);
+        CReturn r1 = new CReturn(1, new Sale(1, 0.0, null));
         DataManager.getInstance().insertReturn(r1);
         assertFalse("Return already exists, false expected", DataManager.getInstance().insertReturn(r1));
     }
 
     @Test
     public void testInsertReturn() {
-        CReturn r1 = new CReturn(1, null);
+        CReturn r1 = new CReturn(1, new Sale(1, 0.0, null));
         assertTrue("Return inserted successfully", DataManager.getInstance().insertReturn(r1));
     }
 
@@ -585,7 +585,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testFilledGetProductTypes(){
-        ProductType pt = new ProductType(1, "sasseresos", "fancy thing", 12.0, 7, 0.25, "nothingtosay", null);
+        ProductType pt = new ProductType(1, "1231231231232", "fancy thing", 12.0, 7, 0.25, "nothingtosay", null);
         DataManager.getInstance().insertProductType(pt);
         assertTrue("ProductType present, true expected", DataManager.getInstance().getProductTypes().contains(pt));
     }
@@ -641,7 +641,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testFilledGetLoyaltyCards(){
-        LoyaltyCard lt = new LoyaltyCard("0001", 1, null);
+        LoyaltyCard lt = new LoyaltyCard("0000000010", 0, null);
         DataManager.getInstance().insertLoyaltyCard(lt);
         assertTrue("LoyaltyCard present, true expected", DataManager.getInstance().getLoyaltyCards().contains(lt));
     }
@@ -655,7 +655,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testFilledGetReturns(){
-        CReturn ret = new CReturn(1, null);
+        CReturn ret = new CReturn(1, new Sale(1, 0.0, null));
         DataManager.getInstance().insertReturn(ret);
         assertTrue("Return present, true expected", DataManager.getInstance().getReturns().contains(ret));
     }
@@ -683,7 +683,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testFilledGetDummyDebits(){
-        DummyDebit dd = new DummyDebit(1, -1.0);
+        DummyDebit dd = new DummyDebit(1, 1.0);
         DataManager.getInstance().insertDummyDebit(dd);
         assertTrue("DummyDebit present, true expected", DataManager.getInstance().getDummyDebits().contains(dd));
     }
@@ -735,7 +735,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testUpdateNotExistingProductType() {
-        it.polito.ezshop.model.ProductType u = new it.polito.ezshop.model.ProductType(1, "1231231231232", "", 0.0, 1, 0.0, "", "");
+        it.polito.ezshop.model.ProductType u = new it.polito.ezshop.model.ProductType(1, "1231231231232", "des", 1.25, 1, 0.0, null, "1-a-1");
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateProductType(u));
     }
 
@@ -746,17 +746,17 @@ public class BBDataManagerTest {
 
     @Test
     public void testUpdateExistingProductType() {
-
-        it.polito.ezshop.model.ProductType u = new it.polito.ezshop.model.ProductType(1, "1231231231232", "", 0.0, 1, 0.0, "", "");
+        
+        it.polito.ezshop.model.ProductType u = new it.polito.ezshop.model.ProductType(1, "1231231231232", "description", 1.0, 1, 0.0, "", "");
         if (!DataManager.getInstance().insertProductType(u)) {
             throw new RuntimeException();
         }
         
-        u.setBarCode("111");
+        u.setBarCode("0000000000000");
         assertTrue("Databased contains " + u.getId() + "; true expected", DataManager.getInstance().updateProductType(u));
         int i = DataManager.getInstance().getProductTypes().indexOf(u);
         ProductType prod = DataManager.getInstance().getProductTypes().get(i);
-        assertEquals(prod.getBarCode(),"111");
+        assertEquals(prod.getBarCode(),"0000000000000");
         
     }
 
@@ -793,7 +793,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testUpdateNotExistingOrder() {
-        it.polito.ezshop.model.Order u = new it.polito.ezshop.model.Order(1, 1.0, 1, new ProductType(1, "1231231232", "", 0.1, 1, 0.0, "", null), EOrderStatus.ISSUED);
+        it.polito.ezshop.model.Order u = new it.polito.ezshop.model.Order(1, 1.0, 1, new ProductType(1, "1231231231232", "this is a description, as you can see", 0.1, 1, 0.0, "", null), EOrderStatus.ISSUED);
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateOrder(u));
     }
 
@@ -805,23 +805,23 @@ public class BBDataManagerTest {
     @Test
     public void testUpdateExistingOrder() {
 
-        it.polito.ezshop.model.Order u = new it.polito.ezshop.model.Order(1, 1.0, 1, new ProductType(1, "1231231232", "", 0.1, 1, 0.0, "", null), EOrderStatus.ISSUED);
+        it.polito.ezshop.model.Order u = new it.polito.ezshop.model.Order(1, 1.0, 1, new ProductType(1, "1231231231232", "this is a description, as you can see", 0.1, 1, 0.0, "", null), EOrderStatus.ISSUED);
         if (!DataManager.getInstance().insertOrder(u)) {
             throw new RuntimeException();
         }
 
-        u.setQuantity(0);
+        u.setQuantity(4);
         assertTrue("Databased contains " + u.getOrderId() + "; true expected", DataManager.getInstance().updateOrder(u));
         int i = DataManager.getInstance().getOrders().indexOf(u);
         Order ord = DataManager.getInstance().getOrders().get(i);
-        assertEquals(ord.getQuantity(),0);
+        assertEquals(ord.getQuantity(), 4);
     }
 
     //updateCustomer()
 
     @Test
     public void testUpdateNotExistingCustomer() {
-        it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "", null);
+        it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "antonino", null);
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateCustomer(u));
     }
 
@@ -833,7 +833,7 @@ public class BBDataManagerTest {
     @Test
     public void testUpdateExistingCustomer() {
 
-        it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "", null);
+        it.polito.ezshop.model.Customer u = new it.polito.ezshop.model.Customer(1, "canavacciuolo", null);
         if (!DataManager.getInstance().insertCustomer(u)) {
             throw new RuntimeException();
         }
@@ -849,7 +849,7 @@ public class BBDataManagerTest {
 
     @Test 
     public void testUpdateNotExistingLoyaltyCard() {
-        LoyaltyCard u = new LoyaltyCard("0001", 0, null);
+        LoyaltyCard u = new LoyaltyCard("0000000001", 0, null);
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateLoyaltyCard(u));
     }
 
@@ -861,7 +861,7 @@ public class BBDataManagerTest {
     @Test
     public void testUpdateExistingLoyaltyCard() {
 
-        LoyaltyCard u = new LoyaltyCard("0001", 0, null);
+        LoyaltyCard u = new LoyaltyCard("0000000001", 0, null);
         if (!DataManager.getInstance().insertLoyaltyCard(u)) {
             throw new RuntimeException();
         }
@@ -904,7 +904,7 @@ public class BBDataManagerTest {
 
     @Test
     public void testUpdateNotExistingReturn() {
-        CReturn u = new CReturn(1, null);
+        CReturn u = new CReturn(1, new Sale(1, 0.0, null));
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateReturn(u));
     }
 
@@ -916,7 +916,7 @@ public class BBDataManagerTest {
     @Test
     public void testUpdateExistingReturn() {
 
-        CReturn u = new CReturn(1, null);
+        CReturn u = new CReturn(1, new Sale(1, 0.0, null));
         if (!DataManager.getInstance().insertReturn(u)) {
             throw new RuntimeException();
         }

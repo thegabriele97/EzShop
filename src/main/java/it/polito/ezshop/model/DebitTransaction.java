@@ -14,6 +14,9 @@ public class DebitTransaction extends BalanceTransaction {
     }
 
     public void setRelatedDebitOperation(IDebit debit){
+
+        if (debit == null) throw new IllegalArgumentException();
+
         this.relatedDebitOperation = debit;
         this.setValue(debit.getTotalValue());
         DataManager.getInstance().updateBalanceTransaction(this);

@@ -398,13 +398,12 @@ public class EZShop implements EZShopInterface {
             prod.get().setLocation("");
 
             DataManager.getInstance().updateProductType(prod.get());
-            //CONTROLLARE:perchè aggiorniamo una posizione già esistente?
             DataManager.getInstance().updatePosition(oldpos);
 
             return true;
         }
 
-        if (!(newPos.matches("[0-9]+-[a-zA-Z]+-[0-9]+"))) {
+        if (!(newPos.matches("[1-9]+-[a-zA-Z]+-[1-9]+"))) {
             throw new InvalidLocationException();
         }
 

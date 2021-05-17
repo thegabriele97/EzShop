@@ -13,12 +13,16 @@ public class LoyaltyCard implements Serializable {
 		this.addCustomer(customer);
 	}
 	
-	
 	public String getID() {
 		return ID;
 	}
 
 	public void setID(String iD) {
+
+		if (iD == null || iD.isEmpty() || iD.length() != 10 || !iD.chars().allMatch(ch -> ch >= '0' && ch <= '9')) {
+            throw new IllegalArgumentException();
+        }
+
 		this.ID = iD;
 	}
 

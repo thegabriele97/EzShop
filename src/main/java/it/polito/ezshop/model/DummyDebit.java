@@ -16,10 +16,13 @@ public class DummyDebit implements Serializable, IDebit {
     }
 
     public void setValue(Double value){
-        if(checkValue(value)){   
-            this.value = value;
-            DataManager.getInstance().updateDummyDebit(this);
+
+        if (value <= 0.0 || Double.isNaN(value) || Double.isInfinite(value)) {
+            throw new IllegalArgumentException();  
         }
+
+        this.value = value;
+        DataManager.getInstance().updateDummyDebit(this);
     }
 
     public Double getValue(){
@@ -32,10 +35,6 @@ public class DummyDebit implements Serializable, IDebit {
 
     public int getId() {
         return this.id;
-    }
-
-    private boolean checkValue(Double value){
-        return value > 0;
     }
 
     @Override

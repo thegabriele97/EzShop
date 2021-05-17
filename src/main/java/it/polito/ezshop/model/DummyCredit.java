@@ -17,10 +17,12 @@ public class DummyCredit implements Serializable, ICredit {
     }
 
     public void setValue(double value){
-        if(checkValue(value)){   
-            this.value = value;
-            DataManager.getInstance().updateDummyCredit(this);
+        if (value < 0.0 || Double.isNaN(value) || Double.isInfinite(value)) {
+            throw new IllegalArgumentException();  
         }
+
+        this.value = value;
+        DataManager.getInstance().updateDummyCredit(this);
     }
 
     public double getValue(){
@@ -33,10 +35,6 @@ public class DummyCredit implements Serializable, ICredit {
 
     public int getId() {
         return this.id;
-    }
-
-    private boolean checkValue(double value) {
-        return value >= 0;
     }
 
     @Override

@@ -944,14 +944,14 @@ Version:
 | Valid                       | NO                           | Invalid         | ---- -> false                                                | testUpdateNotExistingPosition() |
 | NULL                        | -                            | Invalid         | Position u = null<br>DataManager.getInstance().updatePosition(u)<br>-> false | testUpdateNullPosition()        |
 
-### **Class DataManager - method deleteOrder()**
+### **Class DataManager - method updateOrder()**
 
-**Criteria for method deleteOrder():**
+**Criteria for method updateOrder():**
 
 - Validity of Order object
 - Existence of Order Object
 
-**Predicates for method deleteOrder():**
+**Predicates for method updateOrder():**
 
 | Criteria                  | Predicate |
 | ------------------------- | --------- |
@@ -973,19 +973,19 @@ Version:
 
 | Validity of Order Object | Existence of Order Object | Valid / Invalid | Description of the test case                                 | JUnit test case              |
 | ------------------------ | ------------------------- | --------------- | ------------------------------------------------------------ | ---------------------------- |
-| Valid                    | YES                       | Valid           | Order u = (1, ...)<br>DataManager.getInstance().deleteOrder(u)<br>-> true | testDeleteExistingOrder()    |
-| Valid                    | NO                        | Invalid         | ---- -> false                                                | testDeleteNotExistingOrder() |
-| NULL                     | -                         | Invalid         | Order u = null<br>DataManager.getInstance().deleteOrder(u)<br>-> false | testDeleteNullOrder()        |
+| Valid                    | YES                       | Valid           | Order u = (1, ...)<br>DataManager.getInstance().updateOrder(u)<br>-> true | testUpdateExistingOrder()    |
+| Valid                    | NO                        | Invalid         | ---- -> false                                                | testUpdateNotExistingOrder() |
+| NULL                     | -                         | Invalid         | Order u = null<br>DataManager.getInstance().updateOrder(u)<br>-> false | testUpdateNullOrder()        |
 
-### **Class DataManager - method deleteCustomer()**
+### **Class DataManager - method updateCustomer()**
 
-**Criteria for method deleteCustomer():**
+**Criteria for method updateCustomer():**
 
 - Validity of Customer object
 - Existence of Customer Object
 
 
-**Predicates for method deleteCustomer():**
+**Predicates for method updateCustomer():**
 
 | Criteria                     | Predicate |
 | ---------------------------- | --------- |
@@ -1006,19 +1006,19 @@ Version:
 
 | Validity of Customer Object | Existence of Customer Object | Valid / Invalid | Description of the test case                                 | JUnit test case                 |
 | --------------------------- | ---------------------------- | --------------- | ------------------------------------------------------------ | ------------------------------- |
-| Valid                       | YES                          | Valid           | Customer u = (1, ...)<br>DataManager.getInstance().deleteCustomer(u)<br>-> true | testDeleteExistingCustomer()    |
-| Valid                       | NO                           | Invalid         | ---- -> false                                                | testDeleteNotExistingCustomer() |
-| NULL                        | -                            | Invalid         | Customer u = null<br>DataManager.getInstance().deleteCustomer(u)<br>-> false | testDeleteNullCustomer()        |
+| Valid                       | YES                          | Valid           | Customer u = (1, ...)<br>DataManager.getInstance().updateCustomer(u)<br>-> true | testUpdateExistingCustomer()    |
+| Valid                       | NO                           | Invalid         | ---- -> false                                                | testUpdateNotExistingCustomer() |
+| NULL                        | -                            | Invalid         | Customer u = null<br>DataManager.getInstance().updateCustomer(u)<br>-> false | testUpdateNullCustomer()        |
 
-### **Class DataManager - method deleteLoyaltyCard()**
+### **Class DataManager - method updateLoyaltyCard()**
 
-**Criteria for method deleteLoyaltyCard():**
+**Criteria for method updateLoyaltyCard():**
 
 - Validity of LoyaltyCard object
 - Existence of LoyaltyCard Object
 
 
-**Predicates for method deleteLoyaltyCard():**
+**Predicates for method updateLoyaltyCard():**
 
 | Criteria                        | Predicate |
 | ------------------------------- | --------- |
@@ -1040,20 +1040,20 @@ Version:
 
 | Validity of LoyaltyCard Object | Existence of LoyaltyCard Object | Valid / Invalid | Description of the test case                                 | JUnit test case                    |
 | ------------------------------ | ------------------------------- | --------------- | ------------------------------------------------------------ | ---------------------------------- |
-| Valid                          | YES                             | Valid           | LoyaltyCard u = (1, ...)<br>DataManager.getInstance().deleteLoyaltyCard(u)<br>-> true | testDeleteExistingLoyaltyCard()    |
-| Valid                          | NO                              | Invalid         | ---- -> false                                                | testDeleteNotExistingLoyaltyCard() |
-| NULL                           | -                               | Invalid         | LoyaltyCard u = null<br>DataManager.getInstance().deleteLoyaltyCard(u)<br>-> false | testDeleteNullLoyaltyCard()        |
+| Valid                          | YES                             | Valid           | LoyaltyCard u = (1, ...)<br>DataManager.getInstance().updateLoyaltyCard(u)<br>-> true | testUpdateExistingLoyaltyCard()    |
+| Valid                          | NO                              | Invalid         | ---- -> false                                                | testUpdateNotExistingLoyaltyCard() |
+| NULL                           | -                               | Invalid         | LoyaltyCard u = null<br>DataManager.getInstance().updateLoyaltyCard(u)<br>-> false | testUpdateNullLoyaltyCard()        |
 
-### **Class DataManager - method deleteSale()**
+### **Class DataManager - method updateSale()**
 
 
-**Criteria for method deleteSale():**
+**Criteria for method updateSale():**
 
 - Validity of Sale object
 - Existence of Sale Object
 
 
-**Predicates for method deleteSale():**
+**Predicates for method updateSale():**
 
 | Criteria                 | Predicate |
 | ------------------------ | --------- |
@@ -1075,19 +1075,19 @@ Version:
 
 | Validity of Sale Object | Existence of Sale Object | Valid / Invalid | Description of the test case                                 | JUnit test case             |
 | ----------------------- | ------------------------ | --------------- | ------------------------------------------------------------ | --------------------------- |
-| Valid                   | YES                      | Valid           | Sale u = (1, ...)<br>DataManager.getInstance().deleteSale(u)<br>-> true | testDeleteExistingSale()    |
-| Valid                   | NO                       | Invalid         | ---- -> false                                                | testDeleteNotExistingSale() |
-| NULL                    | -                        | Invalid         | Sale u = null<br>DataManager.getInstance().deleteSale(u)<br>-> false | testDeleteNullSale()        |
+| Valid                   | YES                      | Valid           | Sale u = (1, ...)<br>DataManager.getInstance().updateSale(u)<br>-> true | testUpdateExistingSale()    |
+| Valid                   | NO                       | Invalid         | ---- -> false                                                | testUpdateNotExistingSale() |
+| NULL                    | -                        | Invalid         | Sale u = null<br>DataManager.getInstance().updateSale(u)<br>-> false | testUpdateNullSale()        |
 
-### **Class DataManager - method deleteReturn()**
+### **Class DataManager - method updateReturn()**
 
-**Criteria for method deleteReturn():**
+**Criteria for method updateReturn():**
 
 - Validity of Return object
 - Existence of Return Object
 
 
-**Predicates for method deleteReturn():**
+**Predicates for method updateReturn():**
 
 | Criteria                   | Predicate |
 | -------------------------- | --------- |
@@ -1109,19 +1109,19 @@ Version:
 
 | Validity of Return Object | Existence of Return Object | Valid / Invalid | Description of the test case                                 | JUnit test case               |
 | ------------------------- | -------------------------- | --------------- | ------------------------------------------------------------ | ----------------------------- |
-| Valid                     | YES                        | Valid           | Return u = (1, ...)<br>DataManager.getInstance().deleteReturn(u)<br>-> true | testDeleteExistingReturn()    |
-| Valid                     | NO                         | Invalid         | ---- -> false                                                | testDeleteNotExistingReturn() |
-| NULL                      | -                          | Invalid         | Return u = null<br>DataManager.getInstance().deleteReturn(u)<br>-> false | testDeleteNullReturn()        |
+| Valid                     | YES                        | Valid           | Return u = (1, ...)<br>DataManager.getInstance().updateReturn(u)<br>-> true | testUpdateExistingReturn()    |
+| Valid                     | NO                         | Invalid         | ---- -> false                                                | testUpdateNotExistingReturn() |
+| NULL                      | -                          | Invalid         | Return u = null<br>DataManager.getInstance().updateReturn(u)<br>-> false | testUpdateNullReturn()        |
 
-### **Class DataManager - method deleteDummyCredit()**
+### **Class DataManager - method updateDummyCredit()**
 
-**Criteria for method deleteDummyCredit():**
+**Criteria for method updateDummyCredit():**
 
 - Validity of DummyCredit object
 - Existence of DummyCredit Object
 
 
-**Predicates for method deleteDummyCredit():**
+**Predicates for method updateDummyCredit():**
 
 | Criteria                        | Predicate |
 | ------------------------------- | --------- |
@@ -1143,20 +1143,20 @@ Version:
 
 | Validity of DummyCredit Object | Existence of DummyCredit Object | Valid / Invalid | Description of the test case                                 | JUnit test case                    |
 | ------------------------------ | ------------------------------- | --------------- | ------------------------------------------------------------ | ---------------------------------- |
-| Valid                          | YES                             | Valid           | DummyCredit u = (1, ...)<br>DataManager.getInstance().deleteDummyCredit(u)<br>-> true | testDeleteExistingDummyCredit()    |
-| Valid                          | NO                              | Invalid         | ---- -> false                                                | testDeleteNotExistingDummyCredit() |
-| NULL                           | -                               | Invalid         | DummyCredit u = null<br>DataManager.getInstance().deleteDummyCredit(u)<br>-> false | testDeleteNullDummyCredit()        |
+| Valid                          | YES                             | Valid           | DummyCredit u = (1, ...)<br>DataManager.getInstance().updateDummyCredit(u)<br>-> true | testUpdateExistingDummyCredit()    |
+| Valid                          | NO                              | Invalid         | ---- -> false                                                | testUpdateNotExistingDummyCredit() |
+| NULL                           | -                               | Invalid         | DummyCredit u = null<br>DataManager.getInstance().updateDummyCredit(u)<br>-> false | testUpdateNullDummyCredit()        |
 
 
-### **Class DataManager - method deleteDummyDebit()**
+### **Class DataManager - method updateDummyDebit()**
 
-**Criteria for method deleteDummyDebit():**
+**Criteria for method updateDummyDebit():**
 
 - Validity of DummyDebit object
 - Existence of DummyDebit Object
 
 
-**Predicates for method deleteDummyDebit():**
+**Predicates for method updateDummyDebit():**
 
 | Criteria                       | Predicate |
 | ------------------------------ | --------- |
@@ -1178,20 +1178,20 @@ Version:
 
 | Validity of DummyDebit Object | Existence of DummyDebit Object | Valid / Invalid | Description of the test case                                 | JUnit test case                   |
 | ----------------------------- | ------------------------------ | --------------- | ------------------------------------------------------------ | --------------------------------- |
-| Valid                         | YES                            | Valid           | DummyDebit u = (1, ...)<br>DataManager.getInstance().deleteDummyDebit(u)<br>-> true | testDeleteExistingDummyDebit()    |
-| Valid                         | NO                             | Invalid         | ---- -> false                                                | testDeleteNotExistingDummyDebit() |
-| NULL                          | -                              | Invalid         | DummyDebit u = null<br>DataManager.getInstance().deleteDummyDebit(u)<br>-> false | testDeleteNullDummyDebit()        |
+| Valid                         | YES                            | Valid           | DummyDebit u = (1, ...)<br>DataManager.getInstance().updateDummyDebit(u)<br>-> true | testUpdateExistingDummyDebit()    |
+| Valid                         | NO                             | Invalid         | ---- -> false                                                | testUpdateNotExistingDummyDebit() |
+| NULL                          | -                              | Invalid         | DummyDebit u = null<br>DataManager.getInstance().updateDummyDebit(u)<br>-> false | testUpdateNullDummyDebit()        |
 
 
-### **Class DataManager - method deleteBalanceTransaction()**
+### **Class DataManager - method updateBalanceTransaction()**
 
-**Criteria for method deleteBalanceTransaction():**
+**Criteria for method updateBalanceTransaction():**
 
 - Validity of BalanceTransaction object
 - Existence of BalanceTransaction Object
 
 
-**Predicates for method deleteBalanceTransaction():**
+**Predicates for method updateBalanceTransaction():**
 
 | Criteria                               | Predicate |
 | -------------------------------------- | --------- |
@@ -1213,9 +1213,9 @@ Version:
 
 | Validity of BalanceTransaction Object | Existence of BalanceTransaction Object | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
 | ------------------------------------- | -------------------------------------- | --------------- | ------------------------------------------------------------ | ----------------------------------------- |
-| Valid                                 | YES                                    | Valid           | BalanceTransaction u = (1, ...)<br>DataManager.getInstance().deleteBalanceTransaction(u)<br>-> true | testDeleteExistingBalanceTransaction()    |
-| Valid                                 | NO                                     | Invalid         | ---- -> false                                                | testDeleteNotExistingBalanceTransaction() |
-| NULL                                  | -                                      | Invalid         | BalanceTransaction u = null<br>DataManager.getInstance().deleteBalanceTransaction(u)<br>-> false | testDeleteNullBalanceTransaction()        |
+| Valid                                 | YES                                    | Valid           | BalanceTransaction u = (1, ...)<br>DataManager.getInstance().updateBalanceTransaction(u)<br>-> true | testUpdateExistingBalanceTransaction()    |
+| Valid                                 | NO                                     | Invalid         | ---- -> false                                                | testUpdateNotExistingBalanceTransaction() |
+| NULL                                  | -                                      | Invalid         | BalanceTransaction u = null<br>DataManager.getInstance().updateBalanceTransaction(u)<br>-> false | testUpdateNullBalanceTransaction()        |
 
 
 

@@ -781,8 +781,12 @@ public class BBDataManagerTest {
             throw new RuntimeException();
         }
 
+        u.setAisleID(6);
         assertTrue("Databased contains " + u.toString() + "; true expected", DataManager.getInstance().updatePosition(u));
-        
+        int i = DataManager.getInstance().getPositions().indexOf(u);
+        Position pos = DataManager.getInstance().getPositions().get(i);
+        Integer j =  6;
+        assertEquals(pos.getAisleID(),j);
     }
 
     //updateOrder()
@@ -806,8 +810,11 @@ public class BBDataManagerTest {
             throw new RuntimeException();
         }
 
+        u.setQuantity(0);
         assertTrue("Databased contains " + u.getOrderId() + "; true expected", DataManager.getInstance().updateOrder(u));
-        ;
+        int i = DataManager.getInstance().getOrders().indexOf(u);
+        Order ord = DataManager.getInstance().getOrders().get(i);
+        assertEquals(ord.getQuantity(),0);
     }
 
     //updateCustomer()
@@ -831,13 +838,16 @@ public class BBDataManagerTest {
             throw new RuntimeException();
         }
 
+        u.setCustomerName("gianni");
         assertTrue("Databased contains " + u.getId() + "; true expected", DataManager.getInstance().updateCustomer(u));
-        
+        int i = DataManager.getInstance().getCustomers().indexOf(u);
+        Customer cust = DataManager.getInstance().getCustomers().get(i);
+        assertEquals(cust.getCustomerName(),"gianni");
     }
 
     //updateLoyaltyCard()
 
-    @Test
+    @Test 
     public void testUpdateNotExistingLoyaltyCard() {
         LoyaltyCard u = new LoyaltyCard("0001", 0, null);
         assertFalse("Item doesn't exist, false expected", DataManager.getInstance().updateLoyaltyCard(u));
@@ -881,8 +891,12 @@ public class BBDataManagerTest {
             throw new RuntimeException();
         }
 
+        u.setAsCommitted();
         assertTrue("Databased contains " + u.getTicketNumber() + "; true expected", DataManager.getInstance().updateSale(u));
-  
+   
+        int i = DataManager.getInstance().getSales().indexOf(u);
+        Sale sale = DataManager.getInstance().getSales().get(i);
+        assertEquals(sale.isCommitted(),true);
        
     }
 
@@ -906,9 +920,13 @@ public class BBDataManagerTest {
         if (!DataManager.getInstance().insertReturn(u)) {
             throw new RuntimeException();
         }
-
+        
+        u.setAsCommitted();
         assertTrue("Databased contains " + u.getReturnid() + "; true expected", DataManager.getInstance().updateReturn(u));
-       
+     
+        int i = DataManager.getInstance().getReturns().indexOf(u);
+        CReturn cret = DataManager.getInstance().getReturns().get(i);
+        assertEquals(cret.isCommitted(),true);
     }
 
     //updateDummyCredit()
@@ -932,7 +950,12 @@ public class BBDataManagerTest {
             throw new RuntimeException();
         }
 
+        u.setValue(2.3);
         assertTrue("Databased contains " + u.getId() + "; true expected", DataManager.getInstance().updateDummyCredit(u));
+     
+        int i = DataManager.getInstance().getDummyCredits().indexOf(u);
+        DummyCredit dc = DataManager.getInstance().getDummyCredits().get(i);
+        assertEquals(dc.getValue(),0,2.3);
     }
 
     //updateDummyDebit()
@@ -956,8 +979,12 @@ public class BBDataManagerTest {
             throw new RuntimeException();
         }
 
+        u.setValue(2.3);
         assertTrue("Databased contains " + u.getId() + "; true expected", DataManager.getInstance().updateDummyDebit(u));
-       
+     
+        int i = DataManager.getInstance().getDummyDebits().indexOf(u);
+        DummyDebit dd = DataManager.getInstance().getDummyDebits().get(i);
+        assertEquals(dd.getValue(),0,2.3);
     }
 
     //updateBalanceTransaction()
@@ -980,9 +1007,11 @@ public class BBDataManagerTest {
         if (!DataManager.getInstance().insertBalanceTransaction(u)) {
             throw new RuntimeException();
         }
-
+        u.setDescription("prova");
         assertTrue("Databased contains " + u.getBalanceId() + "; true expected", DataManager.getInstance().updateBalanceTransaction(u));
-      
+        int i = DataManager.getInstance().getBalanceTransactions().indexOf(u);
+        BalanceTransaction bt = DataManager.getInstance().getBalanceTransactions().get(i);
+        assertEquals(bt.getDescription(),"prova");
     }
 
 }

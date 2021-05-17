@@ -23,13 +23,13 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
     private double price;
 
     public Sale(Integer ticketNumber, Double discountRate, LoyaltyCard loyaltyCard) {
-        this.ticketNumber = ticketNumber;
-        this.discountRate = discountRate;
-        this.loyaltyCard = loyaltyCard;
+        this.setTicketNumber(ticketNumber);
+        this.setDiscountRate(discountRate);
+        this.attachLoyaltyCard(loyaltyCard);
         this.committed = false;
         this.productsDiscountRate = new HashMap<>();
         this.returnTransaction = new ArrayList<>();
-        this.price = 0.0;
+        this.setPrice(0.0);
 
         this.date = LocalDate.now();
     }
@@ -42,6 +42,7 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setTicketNumber(Integer ticketNumber) {
+        if (ticketNumber < 1) return;
         this.ticketNumber = ticketNumber;
         Update();
     }
@@ -128,6 +129,7 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setDiscountRate(double discountRate) {
+        if (discountRate < 0.0 || discountRate > 1.0) return;
         this.discountRate = discountRate;
         Update();
     }
@@ -148,6 +150,7 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setPrice(double price) {
+        if (price < 0.0) return;
         this.price = price;
         Update();
     }

@@ -259,7 +259,7 @@ public class BBDataManagerTest {
             throw new RuntimeException();
         }
 
-        assertTrue("Databased contains " + u.getReturnid() + "; true expected", DataManager.getInstance().deleteReturn(u));
+        assertTrue("Databased contains " + u.getReturnId() + "; true expected", DataManager.getInstance().deleteReturn(u));
         assertFalse(DataManager.getInstance().getReturns().contains(u));
     }
 
@@ -922,7 +922,7 @@ public class BBDataManagerTest {
         }
         
         u.setAsCommitted();
-        assertTrue("Databased contains " + u.getReturnid() + "; true expected", DataManager.getInstance().updateReturn(u));
+        assertTrue("Databased contains " + u.getReturnId() + "; true expected", DataManager.getInstance().updateReturn(u));
      
         int i = DataManager.getInstance().getReturns().indexOf(u);
         CReturn cret = DataManager.getInstance().getReturns().get(i);

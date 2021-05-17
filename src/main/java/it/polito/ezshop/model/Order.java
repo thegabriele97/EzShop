@@ -15,12 +15,12 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
     private String productCode;
 
     public Order(Integer orderId, Double pricePerUnit, Integer quantity, ProductType product, EOrderStatus status) {
-        this.orderId = orderId;
-        this.pricePerUnit = pricePerUnit;
-        this.quantity = quantity;
+        setOrderId(orderId);
+        setPricePerUnit(pricePerUnit);
+        setQuantity(this.quantity);
         this.product = product;
         this.status = status;
-        this.productCode = product.getBarCode();
+        setProductCode(product.getBarCode());
     }
 
     @Override
@@ -30,6 +30,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setBalanceId(Integer balanceId) {
+        if(balanceId < 1) return;
         this.balanceId = balanceId;
     }
 
@@ -51,6 +52,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setPricePerUnit(double pricePerUnit) {
+        if (pricePerUnit < 0.0) return;
         this.pricePerUnit = pricePerUnit;
     }
 
@@ -61,6 +63,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setQuantity(int quantity) {
+        if (quantity < 0) return;
         this.quantity = quantity;
     }
 
@@ -71,6 +74,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setStatus(String status) {
+        if (!(status.toUpperCase().equals("ISSUED") || status.toUpperCase().equals("PAYED") || status.toUpperCase().equals("COMPLETED"))) return;
         this.status = EOrderStatus.valueOf(status.toUpperCase());
     }
 
@@ -81,6 +85,7 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setOrderId(Integer orderId) {
+        if (orderId < 1) return;
         this.orderId = orderId;
     }
 

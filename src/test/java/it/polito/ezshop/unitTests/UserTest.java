@@ -40,8 +40,9 @@ public class UserTest {
 
     @Test
     public void testSetAndGetInvalidId() {
-        User u = new User(-1, "we", "mbare", "Administrator");
-        assertEquals(new Integer(0), u.getId());
+        User u = new User(1, "we", "mbare", "Administrator");
+        u.setId(-1);
+        assertEquals(new Integer(1), u.getId());
     }
 
     @Test

@@ -1,6 +1,5 @@
 package it.polito.ezshop.data;
 
-import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.exceptions.*;
 import it.polito.ezshop.model.*;
 
@@ -1152,7 +1151,7 @@ public class EZShop implements EZShopInterface {
         OptionalInt maxId = DataManager.getInstance()
                 .getReturns()
                 .stream()
-                .mapToInt(CReturn::getReturnid)
+                .mapToInt(CReturn::getReturnId)
                 .max();
         
         Optional<Sale> sale = DataManager.getInstance()
@@ -1206,7 +1205,7 @@ public class EZShop implements EZShopInterface {
         Optional<CReturn> Creturn = DataManager.getInstance()
                 .getReturns()
                 .stream()
-                .filter(r -> r.getReturnid() == returnId)
+                .filter(r -> r.getReturnId() == returnId)
                 .findFirst();
     	 
         Sale sale = Creturn.get().getSaleTransaction();
@@ -1244,7 +1243,7 @@ public class EZShop implements EZShopInterface {
         Optional<CReturn> Creturn = DataManager.getInstance()
                 .getReturns()
                 .stream()
-                .filter(r -> r.getReturnid() == returnId)
+                .filter(r -> r.getReturnId() == returnId)
                 .findFirst();
     	 
 
@@ -1269,7 +1268,7 @@ public class EZShop implements EZShopInterface {
         Optional<CReturn> Creturn = DataManager.getInstance()
                 .getReturns()
                 .stream()
-                .filter(r -> r.getReturnid() == returnId)
+                .filter(r -> r.getReturnId() == returnId)
  	            .findFirst();
         
 
@@ -1369,7 +1368,7 @@ public class EZShop implements EZShopInterface {
           Optional<CReturn> Creturn = DataManager.getInstance()
                   .getReturns()
                   .stream()
-                  .filter(r -> r.getReturnid() == returnId)
+                  .filter(r -> r.getReturnId() == returnId)
                   .findFirst();
       	 
 
@@ -1410,7 +1409,7 @@ public class EZShop implements EZShopInterface {
          Optional<CReturn> Creturn = DataManager.getInstance()
                  .getReturns()
                  .stream()
-                 .filter(r -> r.getReturnid() == returnId)
+                 .filter(r -> r.getReturnId() == returnId)
                  .findFirst();
      	 
 

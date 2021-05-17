@@ -12,10 +12,10 @@ public class CReturn extends ProductList implements Serializable, IDebit {
     private Integer balanceId;
     
     public CReturn(Integer returnId, Sale saleTransaction) {
-        this.returnId = returnId;
-        this.saleTransaction = saleTransaction;
+        setReturnId(returnId);
+        setSaleTransaction(saleTransaction);
         this.committed = false;
-        
+
         //saleTransaction.addReturnTransaction(this); TODO: is it necessary?
     }
     
@@ -23,8 +23,13 @@ public class CReturn extends ProductList implements Serializable, IDebit {
         this.committed = true;
     }
     
-    public Integer getReturnid(){
+    public Integer getReturnId(){
         return this.returnId;
+    }
+
+    public void setReturnId(Integer returnId){
+        if (returnId < 1) return;
+        this.returnId = returnId;
     }
     
     public boolean isCommitted(){
@@ -34,8 +39,16 @@ public class CReturn extends ProductList implements Serializable, IDebit {
     public Sale getSaleTransaction() {
         return saleTransaction;
     }
+
+    public void setSaleTransaction(Sale saleTransaction){
+        if (saleTransaction == null) return;
+        this.saleTransaction = saleTransaction;
+    }
+
+    public Integer getBalanceId() {return this.balanceId;}
     
     public void setBalanceId(Integer balanceId) {
+        if (balanceId < 1) return;
         this.balanceId = balanceId;
     }
 

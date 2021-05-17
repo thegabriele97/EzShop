@@ -39,14 +39,14 @@ public class User implements Serializable, it.polito.ezshop.data.User {
 
     @Override
     public void setId(Integer id) {
-        if (id <= 0) return;
+        if (id <= 0) throw new IllegalArgumentException();
         this.id = id;
         DataManager.getInstance().updateUser(this);
     }
 
     @Override
     public void setPassword(String password) {
-        if (password == null || password.isEmpty()) return;
+        if (password == null || password.isEmpty()) throw new IllegalArgumentException();
         this.password = password;
         DataManager.getInstance().updateUser(this);
     }
@@ -54,7 +54,7 @@ public class User implements Serializable, it.polito.ezshop.data.User {
     @Override
     public void setRole(String role) {
         if (!(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
-            return;
+            throw new IllegalArgumentException();
         }
 
         this.role = role;
@@ -63,7 +63,7 @@ public class User implements Serializable, it.polito.ezshop.data.User {
 
     @Override
     public void setUsername(String username) {
-        if (username == null || username.isEmpty()) return;
+        if (username == null || username.isEmpty()) throw new IllegalArgumentException();
         this.username = username;
         DataManager.getInstance().updateUser(this);
     }

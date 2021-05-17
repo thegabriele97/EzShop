@@ -8,8 +8,6 @@ import org.junit.*;
 import it.polito.ezshop.data.CreditCardSystem;
 
 public class WBCreditCardSystem {
-    
-    //isValidNumber()
 
     @Test
     public void testValidNumberWithNull() {
@@ -17,25 +15,13 @@ public class WBCreditCardSystem {
     }
 
     @Test
-    public void testValidNumberWithCorrectInput0Loops() {
-        assertFalse(CreditCardSystem.getInstance().isValidNumber("1"));
+    public void testValidNumberWithCorrectInput13Loops() {
+        assertTrue(CreditCardSystem.getInstance().isValidNumber("1234567890318"));
     }
 
     @Test
-    public void testValidNumberWithCorrectInput1Loops() {
-        assertTrue(CreditCardSystem.getInstance().isValidNumber("18"));
-    }
-
-    @Test
-    public void testValidNumberWithCorrectInputALotOfLoops() {
+    public void testValidNumberWithCorrectInput16Loops() {
         assertTrue(CreditCardSystem.getInstance().isValidNumber("9254347527611304"));
-    }
-
-    //isRegistered()
-
-    @Test
-    public void testIsRegisteredWithNullInput() {
-        assertFalse(CreditCardSystem.getInstance().isRegistered(null));
     }
 
 

@@ -1772,7 +1772,6 @@ Version:
 
 | Unit name        | Loop rows | Number of iterations | JUnit test case                              |
 |------------------|-----------|----------------------|----------------------------------------------|
-| CreditCardSystem | 37 .. 43  | 0                    | testValidNumberWithCorrectInput0Loops()      |
-| -                | -         | 1                    | testValidNumberWithCorrectInput1Loops()      |
-| -                | -         | >= 2                 | testValidNumberWithCorrectInputALotOfLoops() |
+| CreditCardSystem | 38 .. 44  | 13                    | testValidNumberWithCorrectInput13Loops()      |
+| -                | -         | 16                    | testValidNumberWithCorrectInput16Loops()      |
 

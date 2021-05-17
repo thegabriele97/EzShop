@@ -1295,16 +1295,111 @@ Version:
 
 
 
-**Combination of predicates for method isValidBarcode**
+**Combination of predicates for method isValidNumber**
 
 | Validity of the String parameter | Length of the String |  Value of every char of the String parameter | Valid / Invalid | Description of the test case | JUnit test case |
 |-------                           |-------               |-------                                       |-------          |-------                       |-------          |
-| Valid                            | [12, 14]             | ['0'(48), '9'(57)]                           | Valid           | isValidBarcode("000000000000") -> true<br/>isValidBarcode("00000000000000") -> true<br/>isValidBarcode("999999999993") -> true<br/>isValidBarcode("99999999999997") -> true | testIsValidBarcode() |
-| NULL                            | *          | *                         | Invalid           | isValidBarcode(null) -> false | testIsValidNullBarcode() |
-| *                            | [0,12) | *                         | Invalid           | isValidBarcode("00000000000") -> false | testIsValidShorterBarcode() |
-| *                            | (14, maxint) | *                         | Invalid           | isValidBarcode("000000000000000") -> false | testIsValidLongerBarcode() |
-| *                            | * | [0, 48) | Invalid           | isValidBarcode("000000000000/") -> false | testIsValidBarcodeWithNotNumericChar() |
-| *                            | * | (57, 127] | Invalid           | isValidBarcode("000000000000:") -> false | testIsValidBarcodeWithNotNumericChar() |
+| Valid                            | [13, 16]             | ['0'(48), '9'(57)]                           | Valid           | isValidNumber("000000000000000") -> true<br/> isValidNumber("5569755825672968") -> true | testValidCreditCardWithAll0s()<br/>  testValidCreditCardWithValidNumber()|
+| NULL                            | *          | *                         | Invalid           | isValidNumber(null) -> false | testValidCreditCardWithNullString() |
+| *                            | [0,13) | *                         | Invalid           | isValidNumber("") -> false <br/> isValidNumber("142") -> false| testValidCreditCardWithShortString() <br/>  testValidCreditCardWithEmptyString() |
+| *                            | (16, maxint) | *                         | Invalid           | isValidNumber("1432545245185529354022") -> false | testValidCreditCardWithLongString() |
+| *                            | * | [0, 48) | Invalid           | isValidNumber("123/23//2233635") -> false | testValidCreditCardWithCharacters() |
+| *                            | * | (57, 127] | Invalid           | isValidNumber("123:23::2233635") -> false | testValidCreditCardWithCharacters() |
+
+### **Class *CrediCardSystem* - method *isRegistered***
+
+
+**Criteria for method *isRegistered*:**
+
+
+- Validity of the String parameter
+- Length of the String parameter
+- Value of every char of the String parameter 
+
+
+**Predicates for method isRegistered:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of the String parameter | Valid |
+| - | NULL |
+| Length of the String | [13, 16] |
+| - | [0,12) |
+| - | (16, maxint) |
+| Value of every char of the String parameter | ['0'(48), '9'(57)] |
+| - | [0, 48) |
+| - | (57, 127] |
+
+**Boundaries for method isRegistered**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+| Length of the String | 12, 13, 16, 17                |
+| Value of every char of the String parameter | '/'(47), '0'(48), '9'(57), ':'(58) |
+
+
+
+**Combination of predicates for method isRegistered**
+
+| Validity of the String parameter | Length of the String |  Value of every char of the String parameter | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                           |-------               |-------                                       |-------          |-------                       |-------          |
+| Valid                            | [13, 16]             | ['0'(48), '9'(57)]                           | Valid           | isRegistered("9254347527611304") -> true | testCardRegisteredWValidCreditCard()|
+| NULL                            | *          | *                         | Invalid           | isRegistered(null) -> false | testCardRegisteredWNullString() |
+| *                            | [0,13) | *                         | Invalid           | isRegistered("") -> false | testCardRegisteredWEmptyString() <br/>  testValidCreditCardWithEmptyString() |
+| *                            | * | [0, 48) | Invalid           | isRegistered("123/23//2233635") -> false | testValidCreditCardWithCharacters() |
+| *                            | * | (57, 127] | Invalid           | isRegistered("123:23::2233635") -> false | testValidCreditCardWithCharacters() |
+
+
+### **Class *CrediCardSystem* - method *hasEnoughBalance***
+
+
+**Criteria for method *hasEnoughBalance*:**
+
+
+- Validity of the String parameter
+- Length of the String parameter
+- Value of every char of the String parameter 
+- Validity of the double parameter
+
+
+**Predicates for method hasEnoughBalance:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of the String parameter | Valid |
+| - | NULL |
+| Length of the String | [13, 16] |
+| - | [0,12) |
+| - | (16, maxint) |
+| Value of every char of the String parameter | ['0'(48), '9'(57)] |
+| - | [0, 48) |
+| - | (57, 127] |
+| Validity of the double parameter | Valid |
+| - | NaN |
+| - | POSITIVE_INFINITY |
+| - | NEGATIVE_INFINITY |
+
+**Boundaries for method hasEnoughBalance**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+| Length of the String | 12, 13, 16, 17                |
+| Value of every char of the String parameter | '/'(47), '0'(48), '9'(57), ':'(58) |
+
+
+
+**Combination of predicates for method hasEnoughBalance**
+
+| Validity of the String parameter | Length of the String |  Value of every char of the String parameter | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                           |-------               |-------                                       |-------          |-------                       |-------          |
+| Valid                            | [13, 16]             | ['0'(48), '9'(57)]                           | Valid           | hasEnoughBalance("9254347527611304", 10.0) -> true | testCardRegisteredWValidCreditCard()|
+| NULL                            | *          | *                         | Invalid           | hasEnoughBalance(null, 10.0) -> false | testHasBalanceWInvalidCreditCard() |
+| *                            | [0,13) | *                         | Invalid           | hasEnoughBalance("") -> false | testHasBalanceWInvalidCreditCard()  |
+| *                            | * | [0, 48) | Invalid           | hasEnoughBalance("123/23//2233635", 10.0) -> false | testHasBalanceWInvalidCreditCard() |
+| *                            | * | (57, 127] | Invalid           | hasEnoughBalance("123:23::2233635", 10.0) -> false | testHasBalanceWInvalidCreditCard() |
+| *                            | * | NaN | Invalid           | hasEnoughBalance("9254347527611304", Double.NaN) -> false | testHasBalanceWNaNToRemove() |
+| *                            | * | POSITIVE_INFINITY | Invalid           | hasEnoughBalance("9254347527611304", Double.POSITIVE_INFINITY) -> false | testHasBalanceWPositiveInfinityToRemove() |
+| *                            | * | NEGATIVE_INFINITY | Invalid           | hasEnoughBalance("9254347527611304", Double.NEGATIVE_INFINITY) -> false | testHasBalanceWNegativeInfinityToRemove() |
 
 
 

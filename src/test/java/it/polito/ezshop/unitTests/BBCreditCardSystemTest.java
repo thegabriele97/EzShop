@@ -12,7 +12,8 @@ public class BBCreditCardSystemTest {
 
     @Test
     public void testValidCreditCardWithCharacters() {
-        assertFalse(CreditCardSystem.getInstance().isValidNumber("123s23xa2233635"));
+        assertFalse(CreditCardSystem.getInstance().isValidNumber("123/23//2233635"));
+        assertFalse(CreditCardSystem.getInstance().isValidNumber("123:23::2233635"));
     }
 
     @Test
@@ -69,7 +70,8 @@ public class BBCreditCardSystemTest {
 
     @Test
     public void testCardRegisteredWithCharacters() {
-        assertFalse(CreditCardSystem.getInstance().isRegistered("123s23xa223"));
+        assertFalse(CreditCardSystem.getInstance().isRegistered("123/23//2233635"));
+        assertFalse(CreditCardSystem.getInstance().isRegistered("123:23::2233635"));
     }
 
     @Test
@@ -91,7 +93,11 @@ public class BBCreditCardSystemTest {
 
     @Test
     public void testHasBalanceWInvalidCreditCard(){
-        assertFalse(CreditCardSystem.getInstance().hasEnoughBalance("sas", 10.0));
+        assertFalse(CreditCardSystem.getInstance().hasEnoughBalance("123:23::2233635", 10.0));
+        assertFalse(CreditCardSystem.getInstance().hasEnoughBalance("123/23//2233635", 10.0));
+        assertFalse(CreditCardSystem.getInstance().hasEnoughBalance("", 10.0));
+        assertFalse(CreditCardSystem.getInstance().hasEnoughBalance(null, 10.0));
+        assertFalse(CreditCardSystem.getInstance().hasEnoughBalance("14753871549149136508156051", 10.0));
     }
 
     @Test

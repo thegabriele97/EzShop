@@ -144,7 +144,11 @@ public class BBCreditCardSystemTest {
 
     @Test
     public void testUpdateBalanceWInvalidCreditCard(){
-        assertFalse(CreditCardSystem.getInstance().updateBalance("sas", 10.0));
+        assertFalse(CreditCardSystem.getInstance().updateBalance("123:23::2233635", 10.0));
+        assertFalse(CreditCardSystem.getInstance().updateBalance("123/23//2233635", 10.0));
+        assertFalse(CreditCardSystem.getInstance().updateBalance("", 10.0));
+        assertFalse(CreditCardSystem.getInstance().updateBalance(null, 10.0));
+        assertFalse(CreditCardSystem.getInstance().updateBalance("14753871549149136508156051", 10.0));
     }
 
     @Test

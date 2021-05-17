@@ -1315,6 +1315,7 @@ Version:
 - Validity of the String parameter
 - Length of the String parameter
 - Value of every char of the String parameter 
+- The string is registered in the db
 
 
 **Predicates for method isRegistered:**
@@ -1329,6 +1330,9 @@ Version:
 | Value of every char of the String parameter | ['0'(48), '9'(57)] |
 | - | [0, 48) |
 | - | (57, 127] |
+| Presence of the String parameter in the db | Registered |
+| - | Unregistered |
+
 
 **Boundaries for method isRegistered**:
 
@@ -1341,13 +1345,14 @@ Version:
 
 **Combination of predicates for method isRegistered**
 
-| Validity of the String parameter | Length of the String |  Value of every char of the String parameter | Valid / Invalid | Description of the test case | JUnit test case |
-|-------                           |-------               |-------                                       |-------          |-------                       |-------          |
-| Valid                            | [13, 16]             | ['0'(48), '9'(57)]                           | Valid           | isRegistered("9254347527611304") -> true | testCardRegisteredWValidCreditCard()|
-| NULL                            | *          | *                         | Invalid           | isRegistered(null) -> false | testCardRegisteredWNullString() |
-| *                            | [0,13) | *                         | Invalid           | isRegistered("") -> false | testCardRegisteredWEmptyString() <br/>  testValidCreditCardWithEmptyString() |
-| *                            | * | [0, 48) | Invalid           | isRegistered("123/23//2233635") -> false | testValidCreditCardWithCharacters() |
-| *                            | * | (57, 127] | Invalid           | isRegistered("123:23::2233635") -> false | testValidCreditCardWithCharacters() |
+| Validity of the String parameter | Length of the String |  Value of every char of the String parameter | Presence of the String parameter in the db | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                           |-------               |-------                                       |-------          |-------                       |-------  |-------        |
+| Valid                            | [13, 16]             | ['0'(48), '9'(57)]            |Registered               | Valid           | isRegistered("9254347527611304") -> true | testCardRegisteredWValidCreditCard()|
+| NULL                            | *          | *              | *           | Invalid           | isRegistered(null) -> false | testCardRegisteredWNullString() |
+| *                            | [0,13) | *               | *          | Invalid           | isRegistered("") -> false | testCardRegisteredWEmptyString() <br/>  testValidCreditCardWithEmptyString() |
+| *                            | * | [0, 48) | * | Invalid           | isRegistered("123/23//2233635") -> false | testValidCreditCardWithCharacters() |
+| *                            | * | (57, 127] | * | Invalid           | isRegistered("123:23::2233635") -> false | testValidCreditCardWithCharacters() |
+| *                            | * | * | Unregistered | Invalid           | isRegistered("5569755825672968") -> false | testCardRegisteredWValidCreditCardNotRegistered() |
 
 
 ### **Class *CrediCardSystem* - method *hasEnoughBalance***
@@ -1359,6 +1364,7 @@ Version:
 - Validity of the String parameter
 - Length of the String parameter
 - Value of every char of the String parameter 
+- The string is registered in the db
 - Validity of the double parameter
 
 
@@ -1378,6 +1384,8 @@ Version:
 | - | NaN |
 | - | POSITIVE_INFINITY |
 | - | NEGATIVE_INFINITY |
+| Presence of the String parameter in the db | Registered |
+| - | Unregistered |
 
 **Boundaries for method hasEnoughBalance**:
 
@@ -1390,16 +1398,72 @@ Version:
 
 **Combination of predicates for method hasEnoughBalance**
 
-| Validity of the String parameter | Length of the String |  Value of every char of the String parameter | Valid / Invalid | Description of the test case | JUnit test case |
-|-------                           |-------               |-------                                       |-------          |-------                       |-------          |
-| Valid                            | [13, 16]             | ['0'(48), '9'(57)]                           | Valid           | hasEnoughBalance("9254347527611304", 10.0) -> true | testCardRegisteredWValidCreditCard()|
-| NULL                            | *          | *                         | Invalid           | hasEnoughBalance(null, 10.0) -> false | testHasBalanceWInvalidCreditCard() |
-| *                            | [0,13) | *                         | Invalid           | hasEnoughBalance("") -> false | testHasBalanceWInvalidCreditCard()  |
-| *                            | * | [0, 48) | Invalid           | hasEnoughBalance("123/23//2233635", 10.0) -> false | testHasBalanceWInvalidCreditCard() |
-| *                            | * | (57, 127] | Invalid           | hasEnoughBalance("123:23::2233635", 10.0) -> false | testHasBalanceWInvalidCreditCard() |
-| *                            | * | NaN | Invalid           | hasEnoughBalance("9254347527611304", Double.NaN) -> false | testHasBalanceWNaNToRemove() |
-| *                            | * | POSITIVE_INFINITY | Invalid           | hasEnoughBalance("9254347527611304", Double.POSITIVE_INFINITY) -> false | testHasBalanceWPositiveInfinityToRemove() |
-| *                            | * | NEGATIVE_INFINITY | Invalid           | hasEnoughBalance("9254347527611304", Double.NEGATIVE_INFINITY) -> false | testHasBalanceWNegativeInfinityToRemove() |
+| Validity of the String parameter | Length of the String |  Value of every char of the String parameter | Presence of the String parameter in the db | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                           |-------               |-------                                       |-------          |-------                       |-------  |-------        |
+| Valid                            | [13, 16]             | ['0'(48), '9'(57)]                          | Registered | Valid           | hasEnoughBalance("9254347527611304", 10.0) -> true<br/> hasEnoughBalance("9254347527611304", -10.0)<br/> hasEnoughBalance("9254347527611304", 0.0) | testHasEnoughBalanceWValidCreditCard()<br/> testHasBalanceWNegativeToRemove()<br/> testHasBalanceWZeroToRemove() |
+| NULL                            | *          | *                   | *      | Invalid           | hasEnoughBalance(null, 10.0) -> false | testHasBalanceWInvalidCreditCard() |
+| *                            | [0,13) | *                | *         | Invalid           | hasEnoughBalance("") -> false | testHasBalanceWInvalidCreditCard()  |
+| *                            | * | [0, 48) | * | Invalid           | hasEnoughBalance("123/23//2233635", 10.0) -> false | testHasBalanceWInvalidCreditCard() |
+| *                            | * | (57, 127] | * | Invalid           | hasEnoughBalance("123:23::2233635", 10.0) -> false | testHasBalanceWInvalidCreditCard() |
+| *                            | * | * | Unregistered | Invalid           | hasEnoughBalance("5569755825672968") -> false | testHasBalanceWUnregisteredCreditCard() |
+| *                            | * | NaN | * | Invalid           | hasEnoughBalance("9254347527611304", Double.NaN) -> false | testHasBalanceWNaNToRemove() |
+| *                            | * | POSITIVE_INFINITY | * |  Invalid           | hasEnoughBalance("9254347527611304", Double.POSITIVE_INFINITY) -> false | testHasBalanceWPositiveInfinityToRemove() |
+| *                            | * | NEGATIVE_INFINITY | * | Invalid           | hasEnoughBalance("9254347527611304", Double.NEGATIVE_INFINITY) -> false | testHasBalanceWNegativeInfinityToRemove() |
+
+### **Class *CrediCardSystem* - method *updateBalance***
+
+
+**Criteria for method *updateBalance*:**
+
+
+- Validity of the String parameter
+- Length of the String parameter
+- Value of every char of the String parameter 
+- The string is registered in the db
+- Validity of the double parameter
+
+
+**Predicates for method updateBalance:**
+
+| Criteria | Predicate |
+| -------- | --------- |
+| Validity of the String parameter | Valid |
+| - | NULL |
+| Length of the String | [13, 16] |
+| - | [0,12) |
+| - | (16, maxint) |
+| Value of every char of the String parameter | ['0'(48), '9'(57)] |
+| - | [0, 48) |
+| - | (57, 127] |
+| Validity of the double parameter | Valid |
+| - | NaN |
+| - | POSITIVE_INFINITY |
+| - | NEGATIVE_INFINITY |
+| Presence of the String parameter in the db | Registered |
+| - | Unregistered |
+
+**Boundaries for method updateBalance**:
+
+| Criterion | Boundary values |
+| --------- | --------------- |
+| Length of the String | 12, 13, 16, 17                |
+| Value of every char of the String parameter | '/'(47), '0'(48), '9'(57), ':'(58) |
+
+
+
+**Combination of predicates for method updateBalance**
+
+| Validity of the String parameter | Length of the String |  Value of every char of the String parameter | Presence of the String parameter in the db | Valid / Invalid | Description of the test case | JUnit test case |
+|-------                           |-------               |-------                                       |-------          |-------                       |-------  |-------        |
+| Valid                            | [13, 16]             | ['0'(48), '9'(57)]                          | Registered | Valid           | updateBalance("9254347527611304", 10.0) -> true<br/> updateBalance("9254347527611304", -10.0)<br/> updateBalance("9254347527611304", 0.0) | testUpdateBalanceWValidCreditCard()<br/> testUpdateBalanceWNegativeToRemove()<br/> testUpdateBalanceWZeroToRemove() |
+| NULL                            | *          | *                   | *      | Invalid           | updateBalance(null, 10.0) -> false | testUpdateBalanceWInvalidCreditCard() |
+| *                            | [0,13) | *                | *         | Invalid           | updateBalance("") -> false | testUpdateBalanceWInvalidCreditCard()  |
+| *                            | * | [0, 48) | * | Invalid           | updateBalance("123/23//2233635", 10.0) -> false | testUpdateBalanceWInvalidCreditCard() |
+| *                            | * | (57, 127] | * | Invalid           | updateBalance("123:23::2233635", 10.0) -> false | testUpdateBalanceWInvalidCreditCard() |
+| *                            | * | * | Unregistered | Invalid           | updateBalance("5569755825672968") -> false | testUpdateBalanceWUnregisteredCreditCard() |
+| *                            | * | NaN | * | Invalid           | updateBalance("9254347527611304", Double.NaN) -> false | testUpdateBalanceWNaNToRemove() |
+| *                            | * | POSITIVE_INFINITY | * |  Invalid           | updateBalance("9254347527611304", Double.POSITIVE_INFINITY) -> false | testUpdateBalanceWPositiveInfinityToRemove() |
+| *                            | * | NEGATIVE_INFINITY | * | Invalid           | updateBalance("9254347527611304", Double.NEGATIVE_INFINITY) -> false | testUpdateBalanceWNegativeInfinityToRemove() |
 
 
 

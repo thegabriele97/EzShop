@@ -1217,6 +1217,281 @@ Version:
 | Valid                                 | NO                                     | Invalid         | ---- -> false                                                | testUpdateNotExistingBalanceTransaction() |
 | NULL                                  | -                                      | Invalid         | BalanceTransaction u = null<br>DataManager.getInstance().updateBalanceTransaction(u)<br>-> false | testUpdateNullBalanceTransaction()        |
 
+### **Class DataManager - method getUsers()**
+
+**Criteria for method getUsers():**
+
+- Presence of added elements in users list
+
+
+**Predicates for method getUsers():**
+
+| Criteria                               | Predicate |
+| -------------------------------------- | --------- |
+| Presence of added elements in users list     | Valid     |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+
+
+**Combination of predicates**:
+
+
+| Presence of added elements in users list | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
+| ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| NO                                 | Valid           | DataManager.getInstance().getUsers().size() == 0 --> true | testEmptyGetUsers()    |
+| YES                                  | Valid         | User user = new User(1, "Gianni", "14adfea356e*", "Cashier")<br>DataManager.getInstance().insertUser(user) <br> DataManager.getInstance().getUsers().contains(user) -> true | testFilledGetUsers()        |
+
+### **Class DataManager - method getProductTypes()**
+
+**Criteria for method getProductTypes():**
+
+- Presence of added elements in users list
+
+
+**Predicates for method getProductTypes():**
+
+| Criteria                               | Predicate |
+| -------------------------------------- | --------- |
+| Presence of added elements in users list     | Valid     |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+
+
+**Combination of predicates**:
+
+
+| Presence of added elements in users list | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
+| ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| NO                                 | Valid           | DataManager.getInstance().getProductTypes().size() == 0 --> true | testEmptyGetProductTypes()    |
+| YES                                     | Valid         | ProductType pt = new ProductType(1, "sasseresos", "fancy thing", 12.0, 7, 0.25, "nothingtosay", null)<br/>DataManager.getInstance().insertProductType(pt)<br/> DataManager.getInstance().getProductTypes().contains(pt) -> true | testFilledGetProductTypes()        |
+
+### **Class DataManager - method getPositions()**
+
+**Criteria for method getPositions():**
+
+- Presence of added elements in users list
+
+
+**Predicates for method getPositions():**
+
+| Criteria                               | Predicate |
+| -------------------------------------- | --------- |
+| Presence of added elements in users list     | Valid     |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+
+
+**Combination of predicates**:
+
+
+| Presence of added elements in users list | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
+| ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| NO                                 | Valid           | DataManager.getInstance().getPositions().size() == 0 --> true | testEmptyGetPositions()    |
+| YES                                     | Valid         | Position pos = new Position(1, "a", 1, null)<br/>DataManager.getInstance().insertPosition(pos)<br/> DataManager.getInstance().getPositions().contains(pos) -> true | testFilledGetPositions()        |
+
+### **Class DataManager - method getOrders()**
+
+**Criteria for method getOrders():**
+
+- Presence of added elements in users list
+
+
+**Predicates for method getOrders():**
+
+| Criteria                               | Predicate |
+| -------------------------------------- | --------- |
+| Presence of added elements in users list     | Valid     |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+
+
+**Combination of predicates**:
+
+
+| Presence of added elements in users list | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
+| ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| NO                                 | Valid           | DataManager.getInstance().getOrders().size() == 0 --> true | testEmptyGetOrders()    |
+| YES                                     | Valid         | Order ord = new Order(1, 1.0, 1, new ProductType(1, "0000000000000", "p1", 1.0, 1, 0.1, "", "1-a-1"), EOrderStatus.ISSUED)<br/> DataManager.getInstance().insertOrder(ord)<br/> DataManager.getInstance().getOrders().contains(ord) -> true | testFilledGetOrders()        |
+
+### **Class DataManager - method getCustomers()**
+
+**Criteria for method getCustomers():**
+
+- Presence of added elements in users list
+
+
+**Predicates for method getCustomers():**
+
+| Criteria                               | Predicate |
+| -------------------------------------- | --------- |
+| Presence of added elements in users list     | Valid     |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+
+
+**Combination of predicates**:
+
+
+| Presence of added elements in users list | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
+| ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| NO                                 | Valid           | DataManager.getInstance().getCustomers().size() == 0 --> true | testEmptyGetCustomers()    |
+| YES                                     | Valid         | Customer c = new Customer(1, "c1", null)<br/>DataManager.getInstance().insertCustomer(c)<br/>DataManager.getInstance().getCustomers().contains(c) -> true | testFilledGetCustomers()        |
+
+
+### **Class DataManager - method getLoyaltyCards()**
+
+**Criteria for method getLoyaltyCards():**
+
+- Presence of added elements in users list
+
+
+**Predicates for method getLoyaltyCards():**
+
+| Criteria                               | Predicate |
+| -------------------------------------- | --------- |
+| Presence of added elements in users list     | Valid     |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+
+
+**Combination of predicates**:
+
+
+| Presence of added elements in users list | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
+| ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| NO                                 | Valid           | DataManager.getInstance().getLoyaltyCards().size() == 0 --> true | testEmptyGetLoyaltyCards()    |
+| YES                                     | Valid         | LoyaltyCard lt = new LoyaltyCard("0001", 1, null)<br/>DataManager.getInstance().insertLoyaltyCard(lt)<br/>DataManager.getInstance().getLoyaltyCards().contains(lt) -> true | testFilledGetLoyaltyCards()        |
+
+
+### **Class DataManager - method getReturns()**
+
+**Criteria for method getReturns():**
+
+- Presence of added elements in users list
+
+
+**Predicates for method getReturns():**
+
+| Criteria                               | Predicate |
+| -------------------------------------- | --------- |
+| Presence of added elements in users list     | Valid     |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+
+
+**Combination of predicates**:
+
+
+| Presence of added elements in users list | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
+| ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| NO                                 | Valid           | DataManager.getInstance().getReturns().size() == 0 --> true | testEmptyGetReturns()    |
+| YES                                     | Valid         | CReturn ret = new CReturn(1, null)<br/>DataManager.getInstance().insertReturn(ret)<br/>DataManager.getInstance().getReturns().contains(ret) -> true | testFilledGetReturns()        |
+
+
+### **Class DataManager - method getDummyCredits()**
+
+**Criteria for method getDummyCredits():**
+
+- Presence of added elements in users list
+
+
+**Predicates for method getDummyCredits():**
+
+| Criteria                               | Predicate |
+| -------------------------------------- | --------- |
+| Presence of added elements in users list     | Valid     |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+
+
+**Combination of predicates**:
+
+
+| Presence of added elements in users list | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
+| ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| NO                                 | Valid           | DataManager.getInstance().getDummyCredits().size() == 0 --> true | testEmptyGetDummyCredits()    |
+| YES                                     | Valid         | DummyCredit dc = new DummyCredit(1, 1.0)<br/>DataManager.getInstance().insertDummyCredit(dc)<br/>DataManager.getInstance().getDummyCredits().contains(dc) -> true | testFilledGetDummyCredits()        |
+
+
+
+### **Class DataManager - method getDummyDebits()**
+
+**Criteria for method getDummyDebits():**
+
+- Presence of added elements in users list
+
+
+**Predicates for method getDummyDebits():**
+
+| Criteria                               | Predicate |
+| -------------------------------------- | --------- |
+| Presence of added elements in users list     | Valid     |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+
+
+**Combination of predicates**:
+
+
+| Presence of added elements in users list | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
+| ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| NO                                 | Valid           | DataManager.getInstance().getDummyDebits().size() == 0 --> true | testEmptyGetDummyDebits()    |
+| YES                                     | Valid         | DummyDebit dd = new DummyDebit(1, -1.0)<br/>DataManager.getInstance().insertDummyDebit(dd)<br/>DataManager.getInstance().getDummyDebits().contains(dd) -> true | testFilledGetDummyDebits()        |
+
+
+### **Class DataManager - method getBalanceTransactions()**
+
+**Criteria for method getBalanceTransactions():**
+
+- Presence of added elements in users list
+
+
+**Predicates for method getBalanceTransactions():**
+
+| Criteria                               | Predicate |
+| -------------------------------------- | --------- |
+| Presence of added elements in users list     | Valid     |
+
+**Boundaries**:
+
+| Criteria | Boundary values |
+| -------- | --------------- |
+
+
+**Combination of predicates**:
+
+
+| Presence of added elements in users list | Valid / Invalid | Description of the test case                                 | JUnit test case                           |
+| ------------------------------------- | -------------------------------------- | ------------------------------------------------------------ | ----------------------------------------- |
+| NO                                 | Valid           | DataManager.getInstance().getBalanceTransactions().size() == 0 --> true | testEmptyGetBalanceTransactions()    |
+| YES                                     | Valid         | CreditTransaction bt1 = new CreditTransaction(1, new Sale(1, 0.1, null))<br/>DataManager.getInstance().insertBalanceTransaction(bt1)<br/> DataManager.getInstance().getBalanceTransactions().contains(bt1) -> true | testFilledGetBalanceTransactions()        |
 
 
 ### **Class *EZShop* - method *isValidBarcode***

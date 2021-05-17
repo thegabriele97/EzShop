@@ -9,6 +9,8 @@ import it.polito.ezshop.data.CreditCardSystem;
 
 public class WBCreditCardSystem {
     
+    //isValidNumber()
+
     @Test
     public void testValidNumberWithNull() {
         assertFalse(CreditCardSystem.getInstance().isValidNumber(null));
@@ -29,14 +31,12 @@ public class WBCreditCardSystem {
         assertTrue(CreditCardSystem.getInstance().isValidNumber("9254347527611304"));
     }
 
+    //isRegistered()
+
     @Test
-    public void testIsRegisteredWithNoValidInput() {
+    public void testIsRegisteredWithNullInput() {
         assertFalse(CreditCardSystem.getInstance().isRegistered(null));
     }
 
-    @Test
-    public void testIsRegisteredWithValidInput() {
-        assertTrue(CreditCardSystem.getInstance().isRegistered("9254347527611304"));
-    }
 
 }

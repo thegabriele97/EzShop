@@ -76,7 +76,7 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 
 	public void setDiscountRate(Double discountRate) {
 		
-		if (discountRate < 0.0 || discountRate > 1.0 || Double.isNaN(discountRate) || Double.isInfinite(discountRate)) {
+		if (discountRate == null || discountRate < 0.0 || discountRate >= 1.0 || Double.isNaN(discountRate) || Double.isInfinite(discountRate)) {
             throw new IllegalArgumentException();  
         }
 
@@ -105,12 +105,16 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 			this.position = null;
 			return;
 		}
+
+		if (!(location.matches("[1-9]+-[a-zA-Z]+-[1-9]+"))) throw new IllegalArgumentException();
 		
 		Optional<Position> pos = DataManager.getInstance()
 			.getPositions()
 			.stream()
 			.filter(ps -> ps.toString().equals(location))
 			.findFirst();
+
+		Position assignTo = pos.orElse(null);
 		
 		if (!(pos.isPresent())) {
 			String[] pieces = location.split("-");
@@ -119,12 +123,11 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 				throw new IllegalArgumentException();
 			}
 
-			Position p = new Position(Integer.valueOf(pieces[0]),pieces[1],Integer.valueOf(pieces[2]), null);
-			DataManager.getInstance().insertPosition(p);
-			this.assingToPosition(p);
-		} else {
-			this.assingToPosition(pos.get());
+			assignTo = new Position(Integer.valueOf(pieces[0]),pieces[1],Integer.valueOf(pieces[2]), null);
+			DataManager.getInstance().insertPosition(assignTo);
 		}
+
+		if (!assingToPosition(assignTo)) throw new IllegalArgumentException();
 		
 		DataManager.getInstance().updateProductType(this);
 	}
@@ -160,7 +163,7 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 	@Override
 	public void setPricePerUnit(Double pricePerUnit) {
 
-		if (pricePerUnit <= 0 || Double.isNaN(pricePerUnit) || Double.isInfinite(pricePerUnit)) {
+		if (pricePerUnit == null || pricePerUnit <= 0 || Double.isNaN(pricePerUnit) || Double.isInfinite(pricePerUnit)) {
             throw new IllegalArgumentException();  
         }
 

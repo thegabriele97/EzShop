@@ -12,7 +12,7 @@ public class UserTest {
         User u = new User(1, "we", "mbare", "Administrator");
         assertEquals("mbare", u.getPassword());
         assertEquals("we", u.getUsername());
-        assertEquals(new Integer(1), u.getId());
+        assertEquals(Integer.valueOf(1), u.getId());
         assertEquals("Administrator", u.getRole());
     }
 

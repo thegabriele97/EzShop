@@ -127,7 +127,9 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 			DataManager.getInstance().insertPosition(assignTo);
 		}
 
-		if (!assingToPosition(assignTo)) throw new IllegalArgumentException();
+		if (assignTo.getAssignedProduct() != this && !assingToPosition(assignTo)) {
+			throw new IllegalArgumentException();
+		}
 		
 		DataManager.getInstance().updateProductType(this);
 	}

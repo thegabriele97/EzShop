@@ -2,7 +2,7 @@ package it.polito.ezshop.data;
 import static java.util.stream.Collectors.*;
 import java.util.List;
 
-class LoginManager {
+public class LoginManager {
     
     private static LoginManager instance;
 
@@ -12,7 +12,7 @@ class LoginManager {
         loggedUser = null;
     }
 
-    static LoginManager getInstance() {
+    public static LoginManager getInstance() {
         
         if (instance == null) {
             instance = new LoginManager();
@@ -21,19 +21,19 @@ class LoginManager {
         return instance;
     }
 
-    boolean isUserLogged() {
+    public boolean isUserLogged() {
         return loggedUser != null;
     }
 
-    boolean isUserLogged(it.polito.ezshop.model.User user) {
+    public boolean isUserLogged(it.polito.ezshop.model.User user) {
         return user != null && isUserLogged() && loggedUser.equals(user);
     }
 
-    it.polito.ezshop.model.User getLoggedUser() {
+    public it.polito.ezshop.model.User getLoggedUser() {
         return loggedUser;
     }
 
-    boolean tryLogin(String username, String password) {
+    public boolean tryLogin(String username, String password) {
         
         List<it.polito.ezshop.model.User> requestedUser = DataManager.getInstance()
             .getUsers()
@@ -47,7 +47,7 @@ class LoginManager {
         return true;
     }
     
-    boolean tryLogout() {
+    public boolean tryLogout() {
 
         if (loggedUser == null) return false;
 

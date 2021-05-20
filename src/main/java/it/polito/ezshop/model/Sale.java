@@ -181,8 +181,15 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
         if (discountRate < 0.0 || discountRate > 1.0 || Double.isNaN(discountRate) || Double.isInfinite(discountRate)) {
             throw new IllegalArgumentException();  
         }
-
-        this.productsDiscountRate.replace(product, discountRate);
+        
+        if(productsDiscountRate.containsKey(product)) {
+        	  this.productsDiscountRate.replace(product, discountRate);
+        }
+        else{
+        	 this.productsDiscountRate.put(product, discountRate);
+        }
+        	
+       
         Update();
     }
 

@@ -64,10 +64,6 @@ public class Position implements Serializable{
 		DataManager.getInstance().updatePosition(this);
 	}
 
-	public String toStringExtended() {
-		return "Position of product"+ product.getId()+"[aisleID=" + getAisleID() + ", rackID=" + getRackID() + ", levelID=" + getLevelID() + "]";
-	}
-	
 	@Override
 	public String toString() {
 		return (getAisleID() + "-" + getRackID() + "-" + getLevelID());	

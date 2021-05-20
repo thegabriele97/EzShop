@@ -3,6 +3,7 @@ package it.polito.ezshop.integrationTests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -62,37 +63,41 @@ public class LoyaltyCardTest {
         assertEquals(lc.getCustomer(), c);
     }
 
-    // TODO: check controls on points
-    /*@Test
-    public void testNegativeLoyaltyCardPoints(){ //ha senso che possa avere punti negativi?
+    @Test
+    public void testNegativeLoyaltyCardPoints(){
         assertThrows(IllegalArgumentException.class, () -> new LoyaltyCard("4583542934", -7, null));
-    }*/
+    }
 
-    // TODO: overflow controls?
-    /*@Test
+    @Test
     public void testOverMaxIntLoyaltyCardPoints(){ 
         LoyaltyCard lc = new LoyaltyCard("4583542934", Integer.MAX_VALUE, null);
-        assertThrows(ArithmeticException.class, () -> lc.addPoints(1)); //Meglio gestire un limite maxpoints
-    }*/
+        assertFalse(lc.addPoints(1));
+    }
 
     @Test
     public void testAddPointsLoyaltyCard(){
         LoyaltyCard lc = new LoyaltyCard("4583542934", 7, null);
-        lc.addPoints(10);
+        assertTrue(lc.addPoints(10));
         assertEquals(lc.getPoints().intValue(), 17);
     }
 
-    /*@Test
-    public void testNegativeAddPointsLoyaltyCard(){
+    @Test
+    public void testNegativeSumAddPointsLoyaltyCard(){
         LoyaltyCard lc = new LoyaltyCard("4583542934", 7, null);
         assertFalse(lc.addPoints(-10));
-    }*/
+    }
 
-    /*@Test
+    @Test
+    public void testPositiveSumAddPointsLoyaltyCard(){
+        LoyaltyCard lc = new LoyaltyCard("4583542934", 7, null);
+        assertTrue(lc.addPoints(-5));
+        assertTrue(lc.addPoints(-2));
+        assertEquals(lc.getPoints().intValue(), 0);
+    }
+
+    @Test
     public void testNullAddPointsLoyaltyCard(){
         LoyaltyCard lc = new LoyaltyCard("4583542934", 7, null);
         assertFalse(lc.addPoints(null));
-    }*/
-
-
+    }
 }

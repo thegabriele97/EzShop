@@ -42,7 +42,8 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setTicketNumber(Integer ticketNumber) {
-        if (ticketNumber < 1) throw new IllegalArgumentException();
+        if (ticketNumber < 1)
+            throw new IllegalArgumentException();
         this.ticketNumber = ticketNumber;
         Update();
     }
@@ -113,7 +114,8 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
     @Override
     public void setEntries(List<TicketEntry> entries) {
 
-        if (entries == null) throw new IllegalArgumentException();
+        if (entries == null)
+            throw new IllegalArgumentException();
 
         entries.stream()
             .collect(Collectors
@@ -156,7 +158,8 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setPrice(double price) {
-        if (price < 0.0) throw new IllegalArgumentException();
+        if (price < 0.0)
+            throw new IllegalArgumentException();
         this.price = price;
         Update();
     }

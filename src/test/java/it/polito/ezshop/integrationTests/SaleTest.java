@@ -31,50 +31,37 @@ public class SaleTest {
         Sale s = new Sale(1, 0.0, null);
         assertEquals(new Integer(1), s.getTicketNumber());
         assertEquals(0.0, s.getDiscountRate(), 0.005);
-
+        assertNull(s.getAttachedLoyaltyCard());
+        assertFalse(s.isCommitted());
+        assertEquals(0.0, s.getPrice(), 0.005);
+        assertEquals(0.0, s.getTotalValue(), 0.005);
     }
 
     @Test
-    public void testGetTicketNumber() {
+    public void testSetInvalidTicketNumber() {
+        Sale s = new Sale(1, 0.0, null);
+        assertThrows(IllegalArgumentException.class, () -> s.setTicketNumber(0));
     }
 
     @Test
-    public void testSetTicketNumber() {
-    }
-
-    @Test
-    public void testGetEntries() {
-    }
-
-    @Test
-    public void testSetEntries() {
-    }
-
-    @Test
-    public void testGetDiscountRate() {
-    }
-
-    @Test
-    public void testSetDiscountRate() {
-    }
-
-    @Test
-    public void testGetPrice() {
+    public void testSetInvalidDiscountRate() {
+        Sale s = new Sale(1, 0.0, null);
+        assertThrows(IllegalArgumentException.class, () -> s.setDiscountRate(1.1));
     }
 
     @Test
     public void testSetPrice() {
-    }
-
-    @Test
-    public void testGetDiscountRateForProductGroup() {
+        Sale s = new Sale(1, 0.0, null);
+        assertThrows(IllegalArgumentException.class, () -> s.setPrice(-0.01));
     }
 
     @Test
     public void testSetAsCommitted() {
+        Sale s = new Sale(1, 0.0, null);
+        assertFalse(s.isCommitted());
+        s.setAsCommitted();
+        assertTrue(s.isCommitted());
     }
 
-    @Test
-    public void testGetTotalValue() {
-    }
+
 }

@@ -9,7 +9,7 @@ public class LoyaltyCard implements Serializable {
 	
 	public LoyaltyCard(String iD, Integer points, Customer customer) {
 		this.setID(iD);
-		this.points = points;
+		this.points = points; //No controlli?
 		this.addCustomer(customer);
 	}
 	
@@ -26,11 +26,11 @@ public class LoyaltyCard implements Serializable {
 		this.ID = iD;
 	}
 
-	public Integer getPoints() {
+	public Integer getPoints() { 
 		return points;
 	}
 
-	public void addPoints(Integer points) {
+	public void addPoints(Integer points) { //No controlli?
 		this.points += points;
 	}
 
@@ -38,7 +38,7 @@ public class LoyaltyCard implements Serializable {
 		return customer;
 	}
 
-	public void addCustomer(Customer customer) {
+	public void addCustomer(Customer customer) { 
 		this.customer = customer;
 	}
 

@@ -110,7 +110,7 @@ public class LoginManagerTest {
     @Test
     public void testLoginManagerIsUserLoggedWithDiffUserAfterLogin() {
         User u1 = new User(1, "ciao", "pwd", "Cashier");
-        User u2 = new User(2, "ciao2", "pwd", "Cashier");
+        User u2 = new User(2, "ciao2", "pwd", "Cashier"); 
         DataManager.getInstance().insertUser(u1);
         DataManager.getInstance().insertUser(u2);
 

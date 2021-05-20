@@ -30,7 +30,7 @@ public class ProductTypeTest {
     @Test
     public void testProductTypeConstructorValid() {
         new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
-    }
+    } 
 
     @Test
     public void testProductTypeGetters() {
@@ -152,7 +152,7 @@ public class ProductTypeTest {
         });
     }
 
-    @Test
+    @Test 
     public void testProductTypeConstructorValidPositionLengthGt1() {
         new ProductType(36, "1231231231232", "test", 1.4, 1, 0.4, "", "123-conga-456");
     }

@@ -44,7 +44,8 @@ public class LoyaltyCard implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Integer.parseInt(this.ID);
+		//return Integer.parseInt(this.ID);
+		return this.ID.hashCode();
 	}
 
 	@Override

@@ -97,7 +97,7 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 		
 		if (loyaltyCard == null) throw new IllegalArgumentException();
 
-		if (points < 0 && loyaltyCard.getPoints() < points) {
+		if (points < 0 && loyaltyCard.getPoints() < Math.abs(points)) {
 			return;
 		}
 

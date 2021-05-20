@@ -3,8 +3,6 @@ package it.polito.ezshop.integrationTests;
 import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.model.Customer;
 import it.polito.ezshop.model.LoyaltyCard;
-import it.polito.ezshop.model.Position;
-import it.polito.ezshop.model.ProductType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

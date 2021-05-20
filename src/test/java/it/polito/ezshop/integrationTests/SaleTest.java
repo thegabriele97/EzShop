@@ -1,7 +1,6 @@
 package it.polito.ezshop.integrationTests;
 
 import it.polito.ezshop.data.DataManager;
-import it.polito.ezshop.model.Customer;
 import it.polito.ezshop.model.LoyaltyCard;
 import it.polito.ezshop.model.Sale;
 import org.junit.After;
@@ -29,7 +28,7 @@ public class SaleTest {
     @Test
     public void testValidSale() {
         Sale s = new Sale(1, 0.0, null);
-        assertEquals(new Integer(1), s.getTicketNumber());
+        assertEquals(Integer.valueOf(1), s.getTicketNumber());
         assertEquals(0.0, s.getDiscountRate(), 0.005);
         assertNull(s.getAttachedLoyaltyCard());
         assertFalse(s.isCommitted());

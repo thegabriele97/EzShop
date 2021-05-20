@@ -4,17 +4,16 @@ import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.data.SaleTransaction;
 import it.polito.ezshop.data.TicketEntry;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polito.ezshop.data.EZShop.*;
 
-public class Sale extends ProductList implements Serializable, SaleTransaction, ICredit {
+public class Sale extends ProductList implements SaleTransaction, ICredit {
 
     private Integer ticketNumber;
-    private LocalDate date;
+    private LocalDate date;  //no get?
     private Double discountRate;
     private LoyaltyCard loyaltyCard;
     private boolean committed;

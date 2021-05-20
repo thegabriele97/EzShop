@@ -2,9 +2,7 @@ package it.polito.ezshop.integrationTests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,17 +55,25 @@ public class LoyaltyCardTest {
     }
 
     @Test
-    public void testNegativeLoyaltyCardPoints(){ //ha senso che possa avere punti negativi?
-        assertThrows(IllegalArgumentException.class, () -> new LoyaltyCard("4583542934", -7, null));
-    }
-
-    @Test
     public void testValidLoyaltyCardCustomer(){
         LoyaltyCard lc = new LoyaltyCard("4583542934", 7, null);
         Customer c = new Customer(1, "we", lc);
         lc.addCustomer(c);
         assertEquals(lc.getCustomer(), c);
     }
+
+    // TODO: check controls on points
+    /*@Test
+    public void testNegativeLoyaltyCardPoints(){ //ha senso che possa avere punti negativi?
+        assertThrows(IllegalArgumentException.class, () -> new LoyaltyCard("4583542934", -7, null));
+    }*/
+
+    // TODO: overflow controls?
+    /*@Test
+    public void testOverMaxIntLoyaltyCardPoints(){ 
+        LoyaltyCard lc = new LoyaltyCard("4583542934", Integer.MAX_VALUE, null);
+        assertThrows(ArithmeticException.class, () -> lc.addPoints(1)); //Meglio gestire un limite maxpoints
+    }*/
 
     @Test
     public void testAddPointsLoyaltyCard(){

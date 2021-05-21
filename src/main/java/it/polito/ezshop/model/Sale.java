@@ -116,17 +116,16 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
         if (entries == null)
             throw new IllegalArgumentException();
 
-/*
         products = entries.stream()
                     .collect(Collectors
                         .toMap(t -> DataManager
-                                        .getInstance()
-                                        .getProductTypes()
-                                        .stream()
-                                        .filter(p -> p.getBarCode().equals(t.getBarCode())),
-                                                t -> t.getAmount()));
-*/
-
+                                .getInstance()
+                                .getProductTypes()
+                                .stream()
+                                .filter(p -> p.getBarCode().equals(t.getBarCode()))
+                                .findFirst()
+                                .get(),
+                            t -> t.getAmount()));
 
     }
 

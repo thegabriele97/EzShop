@@ -24,14 +24,14 @@ Version:
 # Dependency graph 
 
      <report the here the dependency graph of the classes in EzShop, using plantuml>
-     
+
 # Integration approach
 
     <Write here the integration sequence you adopted, in general terms (top down, bottom up, mixed) and as sequence
     (ex: step1: class A, step 2: class A+B, step 3: class A+B+C, etc)> 
     <Some steps may  correspond to unit testing (ex step1 in ex above), presented in other document UnitTestReport.md>
     <One step will  correspond to API testing>
-    
+
 
 
 #  Tests
@@ -42,7 +42,7 @@ Version:
 ## Step 1
 | Classes  | JUnit test cases |
 |--|--|
-|||
+|Position|PositionTest.java|
 
 
 ## Step 2
@@ -71,11 +71,11 @@ Version:
 ## Scenario UCx.y
 
 | Scenario |  name |
-| ------------- |:-------------:| 
+| ------------- |:-------------:|
 |  Precondition     |  |
 |  Post condition     |   |
 | Step#        | Description  |
-|  1     |  ... |  
+|  1     |  ... |
 |  2     |  ... |
 
 
@@ -89,14 +89,14 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 
 
 
-| Scenario ID | Functional Requirements covered | JUnit  Test(s) | 
-| ----------- | ------------------------------- | ----------- | 
-|  ..         | FRx                             |             |             
-|  ..         | FRy                             |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
-| ...         |                                 |             |             
+| Scenario ID | Functional Requirements covered | JUnit  Test(s) |
+| ----------- | ------------------------------- | ----------- |
+|  ..         | FRx                             |             |
+|  ..         | FRy                             |             |
+| ...         |                                 |             |
+| ...         |                                 |             |
+| ...         |                                 |             |
+| ...         |                                 |             |
 
 
 
@@ -111,5 +111,4 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 | Non Functional Requirement | Test name |
 | -------------------------- | --------- |
 |                            |           |
-
 

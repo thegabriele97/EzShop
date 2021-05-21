@@ -30,14 +30,16 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
 
     @Override
     public void setBalanceId(int balanceId){
-        if (balanceId <= 0) throw new IllegalArgumentException();
+        if (balanceId <= 0)
+            throw new IllegalArgumentException();
 
         this.balanceId = balanceId;
         Update();
     }
 
     public void setDescription(String descr){
-        if(descr == null || descr.isEmpty()) throw new IllegalArgumentException();
+        if(descr == null || descr.isEmpty())
+            throw new IllegalArgumentException();
 
         this.description = descr;
         Update();

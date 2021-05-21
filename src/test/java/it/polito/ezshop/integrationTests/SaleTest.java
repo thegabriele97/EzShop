@@ -1,6 +1,7 @@
 package it.polito.ezshop.integrationTests;
 
 import it.polito.ezshop.data.DataManager;
+import it.polito.ezshop.data.TicketEntry;
 import it.polito.ezshop.model.LoyaltyCard;
 import it.polito.ezshop.model.Position;
 import it.polito.ezshop.model.ProductType;
@@ -9,6 +10,8 @@ import it.polito.ezshop.model.CReturn;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -54,6 +57,17 @@ public class SaleTest {
     }
 
     @Test
+    public void testGetEntries() {
+        Sale s = new Sale(1, 0.0, null);
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        s.addProduct(p,2);
+        assertEquals(p.getBarCode(), s.getEntries().stream()
+                                        .findFirst()
+                                        .get()
+                                        .getBarCode());
+    }
+
+    @Test
     public void testSetInvalidDiscountRate() {
         Sale s = new Sale(1, 0.0, null);
         assertThrows(IllegalArgumentException.class, () -> s.setDiscountRate(1.1));
@@ -63,6 +77,14 @@ public class SaleTest {
     public void testSetPrice() {
         Sale s = new Sale(1, 0.0, null);
         assertThrows(IllegalArgumentException.class, () -> s.setPrice(-0.01));
+    }
+
+    @Test
+    public void testGetPriceWith1Loop() {
+        Sale s = new Sale(1, 0.0, null);
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.0, 2, 0.1, "", "1-a-1");
+        s.addProduct(p, 2);
+        assertEquals(1.8, s.getPrice(), 0.005);
     }
 
     @Test

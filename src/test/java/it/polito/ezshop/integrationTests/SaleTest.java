@@ -100,7 +100,7 @@ public class SaleTest {
     	assertThrows(IllegalArgumentException.class, () -> s.addReturnTransaction(null));
     	
     	CReturn Cret = new CReturn(1,s);
-    	s.addReturnTransaction(Cret);
+    	s.addReturnTransaction(Cret);  
     }
     
     @Test 

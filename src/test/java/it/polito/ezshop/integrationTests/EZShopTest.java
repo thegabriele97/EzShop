@@ -2015,4 +2015,86 @@ public class EZShopTest {
         assertEquals(0, ez.computePointsForSale(saleTrans));
     }
 
+    @Test
+    public void testDeleteCustomerWithoutLoggedUser() {
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.deleteCustomer(1));  
+    }
+
+    @Test
+    public void testDeleteCustomerWithRightsAndNullId() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCustomerIdException.class, () -> ez.deleteCustomer(null));  
+    }
+
+    @Test
+    public void testDeleteCustomerWithRightsAndZeroId() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCustomerIdException.class, () -> ez.deleteCustomer(0));  
+    }
+
+    @Test
+    public void testDeleteCustomerWithRightsAndNegativeId() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCustomerIdException.class, () -> ez.deleteCustomer(-1));  
+    }
+
+    @Test
+    public void testDeleteCustomerWithRightsAndNoExistingUser() throws InvalidCustomerIdException, UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.deleteCustomer(1));
+    }
+
+    @Test
+    public void testDeleteCustomerWithRightsAndExistingUser() throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        Integer customerId = ez.defineCustomer("Peppe");
+
+        assertEquals(1, ez.getAllCustomers().stream().filter(c -> c.getId() == customerId).count());
+        assertTrue(ez.deleteCustomer(customerId));
+        assertEquals(0, ez.getAllCustomers().stream().filter(c -> c.getId() == customerId).count());
+    }
+
+    @Test
+    public void testDeleteCustomerWithRightsAndExistingUserMultiple() throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        Integer customerId = ez.defineCustomer("Peppe");
+
+        assertEquals(1, ez.getAllCustomers().stream().filter(c -> c.getId() == customerId).count());
+        assertTrue(ez.deleteCustomer(customerId));
+        assertEquals(0, ez.getAllCustomers().stream().filter(c -> c.getId() == customerId).count());
+
+        assertFalse(ez.deleteCustomer(customerId));
+    }
+
 }

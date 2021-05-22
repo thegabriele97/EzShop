@@ -1298,4 +1298,164 @@ public class EZShopTest {
         assertFalse(ez.updateProduct(36, "test2", "0000000000000", 1.1, ""));
     }
 
+    @Test
+    public void testReturnCashPaymentWithNoLoggedUser() {
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.returnCashPayment(1));
+    }
+
+    @Test
+    public void testReturnCashPaymentWithRightsAndTransIdEqual0() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.returnCashPayment(0));
+    }
+
+    @Test
+    public void testReturnCashPaymentWithRightsAndTransIdNegative() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.returnCashPayment(-1));
+    }
+
+    @Test
+    public void testReturnCashPaymentWithRightsAndNoCompletedTrans() throws InvalidProductIdException, InvalidLocationException, UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidTransactionIdException, InvalidQuantityException, InvalidPaymentException {
+        
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        Integer saleTrans = ez.startSaleTransaction();
+        ez.addProductToSale(saleTrans, "1231231231232", 1);
+        
+        ez.endSaleTransaction(saleTrans);
+        ez.receiveCashPayment(saleTrans, ez.getSaleTransaction(saleTrans).getPrice());
+        
+        Integer returnTrans = ez.startReturnTransaction(saleTrans);
+
+        assertEquals(-1, ez.returnCashPayment(returnTrans), 0.01);
+    }
+
+    @Test
+    public void testReturnCashPaymentWithRightsAndNoExistingTrans() throws InvalidProductIdException, InvalidLocationException, UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidTransactionIdException, InvalidQuantityException, InvalidPaymentException {
+        
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        Integer saleTrans = ez.startSaleTransaction();
+        ez.addProductToSale(saleTrans, "1231231231232", 1);
+        
+        ez.endSaleTransaction(saleTrans);
+        ez.receiveCashPayment(saleTrans, ez.getSaleTransaction(saleTrans).getPrice());
+
+        assertEquals(-1, ez.returnCashPayment(1), 0.01);
+    }
+
+    @Test
+    public void testReturnCashPaymentWithRightsAndValid() throws InvalidProductIdException, InvalidLocationException, UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidTransactionIdException, InvalidQuantityException, InvalidPaymentException, InvalidDiscountRateException {
+        
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        prodId = ez.createProductType("test", "0123456789012", 3.0, "");
+        ez.updatePosition(prodId, "1-a-2");
+        ez.updateQuantity(prodId, 3);
+
+        Integer saleTrans = ez.startSaleTransaction();
+        ez.addProductToSale(saleTrans, "1231231231232", 1);
+        ez.applyDiscountRateToProduct(saleTrans, "1231231231232", 0.5);
+
+        ez.addProductToSale(saleTrans, "0123456789012", 2);
+        ez.applyDiscountRateToProduct(saleTrans, "0123456789012", 0.4);
+
+        ez.endSaleTransaction(saleTrans);
+        ez.receiveCashPayment(saleTrans, ez.getSaleTransaction(saleTrans).getPrice());
+
+        Integer returnId = ez.startReturnTransaction(saleTrans);
+        ez.returnProduct(returnId, "1231231231232", 1);
+        ez.endReturnTransaction(returnId, true);
+
+        assertEquals(1.0, ez.returnCashPayment(returnId), 0.01);
+
+        long cnt = ez.getCreditsAndDebits(null, null)
+            .stream()
+            .filter(c -> c.getMoney() == 1.0)
+            .filter(c -> c.getType() == "DEBIT")
+            .count();
+
+        assertEquals(1, cnt);
+    }
+
+    @Test
+    public void testReturnCashPaymentWithRightsAndValidMultipleProducts() throws InvalidProductIdException, InvalidLocationException, UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidTransactionIdException, InvalidQuantityException, InvalidPaymentException, InvalidDiscountRateException {
+        
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        prodId = ez.createProductType("test", "0123456789012", 3.0, "");
+        ez.updatePosition(prodId, "1-a-2");
+        ez.updateQuantity(prodId, 3);
+
+        Integer saleTrans = ez.startSaleTransaction();
+        ez.addProductToSale(saleTrans, "1231231231232", 1);
+        ez.applyDiscountRateToProduct(saleTrans, "1231231231232", 0.5);
+
+        ez.addProductToSale(saleTrans, "0123456789012", 2);
+        //ez.applyDiscountRateToProduct(saleTrans, "0123456789012", 0.4);
+
+        ez.applyDiscountRateToSale(saleTrans, 0.5);
+        ez.endSaleTransaction(saleTrans);
+        ez.receiveCashPayment(saleTrans, ez.getSaleTransaction(saleTrans).getPrice());
+
+        Integer returnId = ez.startReturnTransaction(saleTrans);
+        ez.returnProduct(returnId, "1231231231232", 1);
+        ez.returnProduct(returnId, "0123456789012", 2);
+        ez.endReturnTransaction(returnId, true);
+
+        assertEquals(3.5, ez.returnCashPayment(returnId), 0.01);
+
+        long cnt = ez.getCreditsAndDebits(null, null)
+            .stream()
+            .filter(c -> c.getMoney() == 3.5)
+            .filter(c -> c.getType() == "DEBIT")
+            .count();
+
+        assertEquals(1, cnt);
+    }
+
 }

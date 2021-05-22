@@ -1366,37 +1366,36 @@ public class EZShop implements EZShopInterface {
     @Override
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
         
-    	  if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
-              throw new UnauthorizedException();
-          }
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
 
-          if (returnId == null || returnId <= 0) {
-              throw new InvalidTransactionIdException();
-          }
-          
-          Optional<CReturn> Creturn = DataManager.getInstance()
-                  .getReturns()
-                  .stream()
-                  .filter(r -> r.getReturnId() == returnId)
-                  .findFirst();
-      	 
-
-          if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
-          if(DataManager.getInstance().updateReturn(Creturn.get())) return -1;
+        if (returnId == null || returnId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
         
-          
-          OptionalInt maxBalId = DataManager.getInstance()
-                  .getBalanceTransactions()
-                  .stream()
-                  .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
-                  .max();
-          int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
-     
-
-          Creturn.get().setBalanceId(newBalId);
+        Optional<CReturn> Creturn = DataManager.getInstance()
+                .getReturns()
+                .stream()
+                .filter(r -> r.getReturnId() == returnId)
+                .findFirst();
         
-          BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
-          if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
+
+        if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
+        
+        OptionalInt maxBalId = DataManager.getInstance()
+                .getBalanceTransactions()
+                .stream()
+                .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+                .max();
+
+        int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
+
+        Creturn.get().setBalanceId(newBalId);
+        DataManager.getInstance().updateReturn(Creturn.get());
+    
+        BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
+        DataManager.getInstance().insertBalanceTransaction(bt);
         	  
     	return Creturn.get().getTotalValue();
     }

@@ -2238,4 +2238,45 @@ public class EZShopTest {
         assertFalse(ez.getProductTypesByDescription("z").stream().anyMatch(p -> p.getId() == prodId1));
     }
 
+    @Test
+    public void testGetAllProductTypesWithoutLoggedUser() {
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.getAllProductTypes());  
+    }
+
+    @Test
+    public void testGetAllProductTypesWithRightsAndNoProducts() throws UnauthorizedException {
+        
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+        
+        assertEquals(0, ez.getAllProductTypes().size());
+    }
+
+    @Test
+    public void testGetAllProductTypesWithRightsAndProducts() throws UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException {
+        
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId0 = ez.createProductType("test ba", "1231231231232", 2.0, "");
+        Integer prodId1 = ez.createProductType("test be", "0123456789012", 3.0, "");
+        
+        LoginManager.getInstance().tryLogout();
+
+        u = new User(2, "ciao2", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao2", "pwd");
+
+        assertEquals(2, ez.getAllProductTypes().size());
+        assertTrue(ez.getAllProductTypes().stream().anyMatch(p -> p.getId() == prodId0));
+        assertTrue(ez.getAllProductTypes().stream().anyMatch(p -> p.getId() == prodId1));
+    }
+
 }

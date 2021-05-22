@@ -2279,4 +2279,21 @@ public class EZShopTest {
         assertTrue(ez.getAllProductTypes().stream().anyMatch(p -> p.getId() == prodId1));
     }
 
+    @Test
+    public void testLogoutWithoutLoggedUser() {
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.logout());
+    }
+
+    @Test
+    public void testLogoutWithLoggedUser() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertTrue(ez.logout());
+    }
+
 }

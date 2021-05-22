@@ -2097,4 +2097,71 @@ public class EZShopTest {
         assertFalse(ez.deleteCustomer(customerId));
     }
 
+    @Test
+    public void testGetCustomerWithoutLoggedUser() {
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.getCustomer(1));  
+    }
+
+    @Test
+    public void testGetCustomerWithRightsAndNullId() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCustomerIdException.class, () -> ez.getCustomer(null));  
+    }
+
+    @Test
+    public void testGetCustomerWithRightsAndZeroId() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCustomerIdException.class, () -> ez.getCustomer(0));  
+    }
+
+    @Test
+    public void testGetCustomerWithRightsAndNegativeId() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCustomerIdException.class, () -> ez.getCustomer(-1));  
+    }
+
+    @Test
+    public void testGetCustomerWithRightsAndExistingCustomer() throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        Integer customerId = ez.defineCustomer("Peppe");
+        ez.defineCustomer("Peppe2");
+
+        assertEquals(customerId, ez.getCustomer(customerId).getId());
+        assertEquals("Peppe", ez.getCustomer(customerId).getCustomerName());
+    }
+
+    @Test
+    public void testGetCustomerWithRightsAndNoExistingCustomer() throws InvalidCustomerIdException, UnauthorizedException, InvalidCustomerNameException {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        Integer customerId = 1;
+
+        assertNull(ez.getCustomer(customerId));
+    }
+
 }

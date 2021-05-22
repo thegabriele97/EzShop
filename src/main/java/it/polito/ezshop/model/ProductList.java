@@ -26,14 +26,14 @@ public abstract class ProductList implements Serializable {
     }
 
     public void addProduct(ProductType product, Integer quantity){
-        if (product == null || quantity < 0) throw new IllegalArgumentException();
-
         addProduct(product, quantity, false);
     }
 
     public void addProduct(ProductType product, Integer quantity, boolean replace){
 
-        if (product == null || quantity < 0) throw new IllegalArgumentException();
+        if (product == null || (products.containsKey(product) && products.get(product) + quantity < 0)) {
+            throw new IllegalArgumentException();
+        }
 
         if (!replace && products.containsKey(product))
             products.replace(product, products.get(product)+quantity);

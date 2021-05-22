@@ -890,4 +890,215 @@ public class EZShopTest {
 
     }
 
+    //updateProduct
+    @Test
+    public void testUpdateProductWithNoLoggedUser(){
+        if (LoginManager.getInstance().isUserLogged()) throw new RuntimeException();
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.updateProduct(36, "test2", "0000000000000", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithCashierRights()  {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.updateProduct(36, "test2", "0000000000000", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithShopManagerRights() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductIdException, InvalidProductCodeException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertTrue( ez.updateProduct(36, "test2", "0000000000000", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithAdministratorRights() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductIdException, InvalidProductCodeException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertTrue(ez.updateProduct(36, "test2", "0000000000000", 1.1, ""));
+    }
+
+
+    @Test
+    public void testUpdateProductWithNullProductId(){
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductIdException.class, () -> ez.updateProduct(null, "test2", "0000000000000", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithInvalidProductId(){
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductIdException.class, () -> ez.updateProduct(0, "test2", "0000000000000", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithNullProductDescription(){
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductDescriptionException.class, () -> ez.updateProduct(36, null, "0000000000000", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithEmptyProductDescription(){
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductDescriptionException.class, () -> ez.updateProduct(36, "", "0000000000000", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithNullProductCode(){
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductCodeException.class, () -> ez.updateProduct(36, "test2", null, 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithEmptyProductCode(){
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductCodeException.class, () -> ez.updateProduct(36, "test2", "", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithNotNumericProductCode(){
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductCodeException.class, () -> ez.updateProduct(36, "test2", "asdfghjklqwerty", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithInvalidProductCode(){
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductCodeException.class, () -> ez.updateProduct(36, "test2", "1111111111111", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithInvalidPricePerUnit(){
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidPricePerUnitException.class, () -> ez.updateProduct(36, "test2", "0000000000000", 0, ""));
+    }
+
+    @Test
+    public void testUpdateNotFoundedProduct() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductIdException, InvalidProductCodeException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.updateProduct(1, "test2", "0000000000000", 1.1, ""));
+    }
+
+    @Test
+    public void testUpdateProductWithAlreadyUsedBarcode() throws UnauthorizedException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductIdException, InvalidProductCodeException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+        ProductType p2 = new ProductType(1, "0000000000000", "test", 1.4, 1, 0.0, "", "2-a-1");
+        DataManager.getInstance().insertProductType(p2);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.updateProduct(36, "test2", "0000000000000", 1.1, ""));
+    }
+
 }

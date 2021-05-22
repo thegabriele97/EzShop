@@ -266,7 +266,6 @@ public class EZShop implements EZShopInterface {
         boolean isNewCodeAlreadyUsed = DataManager.getInstance()
             .getProductTypes()
             .stream()
-            .filter(p -> !p.equals(prod.get()))
             .anyMatch(p -> p.getBarCode().equals(newCode));
             
 

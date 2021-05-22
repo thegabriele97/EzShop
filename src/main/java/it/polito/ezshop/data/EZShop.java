@@ -1238,7 +1238,6 @@ public class EZShop implements EZShopInterface {
             throw new InvalidTransactionIdException();
         }
 
-         
         Optional<CReturn> Creturn = DataManager.getInstance()
                 .getReturns()
                 .stream()
@@ -1246,9 +1245,21 @@ public class EZShop implements EZShopInterface {
                 .findFirst();
     	 
 
-        if (!Creturn.isPresent() || Creturn.get().isCommitted()) return false;
+        if (!Creturn.isPresent()) return false;
 
-        Creturn.get().setAsCommitted(); 
+        if (commit ^ Creturn.get().isCommitted()) {
+            Creturn.get()
+                .getProductsList()
+                .forEach(p -> {
+                    it.polito.ezshop.model.ProductType rightP = (it.polito.ezshop.model.ProductType)p;
+                    
+                    rightP.addQuantityOffset(Creturn.get().getQuantityByProduct(rightP) * (commit ? +1 : -1));
+                    DataManager.getInstance().updateProductType(rightP);
+                });
+        }
+
+        Creturn.get().setAsCommitted(commit); 
+
         return DataManager.getInstance().updateReturn(Creturn.get());
     }
 
@@ -1393,44 +1404,47 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-    	 if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
-             throw new UnauthorizedException();
-         }
+    	 
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
 
-         if (returnId == null || returnId <= 0) {
-             throw new InvalidTransactionIdException();
-         }
-         if (CreditCardSystem.getInstance().isValidNumber(creditCard)) {
-             throw new InvalidCreditCardException();
-         }
-         if(CreditCardSystem.getInstance().isRegistered(creditCard)) return -1;
-         
-         Optional<CReturn> Creturn = DataManager.getInstance()
-                 .getReturns()
-                 .stream()
-                 .filter(r -> r.getReturnId() == returnId)
-                 .findFirst();
-     	 
+        if (returnId == null || returnId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
 
-         if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
-  
-     
-         OptionalInt maxBalId = DataManager.getInstance()
-                 .getBalanceTransactions()
-                 .stream()
-                 .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
-                 .max();
-         int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
-         
-         Creturn.get().setBalanceId(newBalId);
-       
-         BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
-         
-         if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
-         if(!CreditCardSystem.getInstance().updateBalance(creditCard, Creturn.get().getTotalValue())) return -1;
-         
-   
-    	return Creturn.get().getTotalValue();
+        if (!CreditCardSystem.getInstance().isValidNumber(creditCard)) {
+            throw new InvalidCreditCardException();
+        }
+
+        if (!CreditCardSystem.getInstance().isRegistered(creditCard)) return -1;
+        
+        Optional<CReturn> Creturn = DataManager.getInstance()
+                .getReturns()
+                .stream()
+                .filter(r -> r.getReturnId() == returnId)
+                .findFirst();
+        
+
+        if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
+
+    
+        OptionalInt maxBalId = DataManager.getInstance()
+                .getBalanceTransactions()
+                .stream()
+                .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+                .max();
+        int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
+        
+        Creturn.get().setBalanceId(newBalId);
+    
+        BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
+        
+        if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
+        
+        if(!CreditCardSystem.getInstance().updateBalance(creditCard, -Creturn.get().getTotalValue())) return -1;
+        
+        return Creturn.get().getTotalValue();
     }
 
     @Override 

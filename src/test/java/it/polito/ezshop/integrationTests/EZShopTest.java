@@ -2,6 +2,14 @@ package it.polito.ezshop.integrationTests;
 
 import static org.junit.Assert.*;
 
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.Stream;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import static java.util.stream.Collectors.*;
+
 import org.junit.*;
 import it.polito.ezshop.model.*;
 import it.polito.ezshop.data.DataManager;
@@ -12,6 +20,8 @@ import it.polito.ezshop.exceptions.*;
 
 public class EZShopTest {
     
+    private List<String> lines = new ArrayList<>();
+
     @Before
     @After
     public void cleanDatabase() {
@@ -65,6 +75,31 @@ public class EZShopTest {
             DataManager.getInstance().deleteBalanceTransaction(u);
         }
 
+    }
+
+    @Before 
+    public void saveCreditCardsStatus() throws IOException {
+        Stream<String> stream = Files.lines(Paths.get("src/main/java/it/polito/ezshop/utils/CreditCards.txt"));
+        this.lines = stream.collect(toList());
+        stream.close();
+    }
+
+    @After
+    public void restoreCreditCardsStatus() throws IOException {
+        FileWriter writer = new FileWriter("src/main/java/it/polito/ezshop/utils/CreditCards.txt");
+
+        boolean write_carriageret = false;
+        for (String line : lines) {
+            
+            if (write_carriageret) {
+                writer.write("\n");
+            }
+
+            writer.write(line);
+            write_carriageret = true;
+        }
+
+        writer.close();
     }
 
     @Test
@@ -226,6 +261,164 @@ public class EZShopTest {
             .count();
 
         assertEquals(1, cnt);
+    }
+
+    @Test
+    public void testReturnCreditCardPayamentWithNoLoggedUser() {
+
+        if (LoginManager.getInstance().isUserLogged()) throw new RuntimeException();
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.returnCreditCardPayment(1, "abcdef"));
+    }
+
+    @Test
+    public void testReturnCreditCardPayamentWithRightsAndNoValidCreditCard() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCreditCardException.class, () -> ez.returnCreditCardPayment(1, "19"));
+    }
+
+    @Test
+    public void testReturnCreditCardPayamentWithRightsAndEmptyCreditCard() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCreditCardException.class, () -> ez.returnCreditCardPayment(1, ""));
+    }
+
+    @Test
+    public void testReturnCreditCardPayamentWithRightsAndNullCreditCard() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCreditCardException.class, () -> ez.returnCreditCardPayment(1, null));
+    }
+
+    @Test
+    public void testReturnCreditCardPayamentWithRightsAndId0() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.returnCreditCardPayment(0, "18"));
+    }
+
+    @Test
+    public void testReturnCreditCardPayamentWithRightsAndIdNegative() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.returnCreditCardPayment(-1, "18"));
+    }
+
+    @Test
+    public void testReturnCreditCardPayamentWithRightsAndNoRegisteredCard() throws UnauthorizedException, InvalidTransactionIdException, InvalidPaymentException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidQuantityException, InvalidProductIdException, InvalidLocationException, InvalidCreditCardException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        Integer saleTrans = ez.startSaleTransaction();
+        ez.addProductToSale(saleTrans, "1231231231232", 1);
+        
+        ez.endSaleTransaction(saleTrans);
+        ez.receiveCashPayment(saleTrans, ez.getSaleTransaction(saleTrans).getPrice());
+        Integer returnTrans = ez.startReturnTransaction(saleTrans);
+        ez.endReturnTransaction(returnTrans, true);
+
+        assertEquals(-1, ez.returnCreditCardPayment(returnTrans, "18"), 0.01);
+    }
+
+    @Test
+    public void testReturnCreditCardPayamentWithRightsAndNoEndedTransaction() throws UnauthorizedException, InvalidTransactionIdException, InvalidPaymentException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidQuantityException, InvalidProductIdException, InvalidLocationException, InvalidCreditCardException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        Integer saleTrans = ez.startSaleTransaction();
+        ez.addProductToSale(saleTrans, "1231231231232", 1);
+        
+        ez.endSaleTransaction(saleTrans);
+        ez.receiveCashPayment(saleTrans, ez.getSaleTransaction(saleTrans).getPrice());
+        
+        Integer returnTrans = ez.startReturnTransaction(saleTrans);
+
+        assertEquals(-1, ez.returnCreditCardPayment(returnTrans, "9254347527611304"), 0.01);
+    }
+
+    @Test
+    public void testReturnCreditCardPayamentWithRightsAndInvalidTransaction() throws UnauthorizedException, InvalidTransactionIdException, InvalidPaymentException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidQuantityException, InvalidProductIdException, InvalidLocationException, InvalidCreditCardException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertEquals(-1, ez.returnCreditCardPayment(123, "9254347527611304"), 0.01);
+    }
+
+    @Test
+    public void testReturnCreditCardPayamentWithRightsAndEverythingCorrect() throws UnauthorizedException, InvalidTransactionIdException, InvalidPaymentException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidQuantityException, InvalidProductIdException, InvalidLocationException, InvalidCreditCardException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        Integer saleTrans = ez.startSaleTransaction();
+        ez.addProductToSale(saleTrans, "1231231231232", 3);
+        
+        ez.endSaleTransaction(saleTrans);
+        ez.receiveCashPayment(saleTrans, ez.getSaleTransaction(saleTrans).getPrice());
+        
+        Integer returnTrans = ez.startReturnTransaction(saleTrans);
+        ez.returnProduct(returnTrans, "1231231231232", 2);
+        ez.endReturnTransaction(returnTrans, true);
+
+        assertEquals(4.0, ez.returnCreditCardPayment(returnTrans, "9254347527611304"), 0.01);
+
+        long cnt = ez.getCreditsAndDebits(null, null)
+            .stream()
+            .filter(c -> c.getMoney() == 4.0)
+            .filter(c -> c.getType() == "DEBIT")
+            .count();
+
+        assertEquals(1, cnt);
+
     }
 
     @Test 

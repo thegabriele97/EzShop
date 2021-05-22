@@ -1514,7 +1514,7 @@ public class EZShop implements EZShopInterface {
             
         for (int i=0; i < DataManager.getInstance().getBalanceTransactions().size(); i++){
             LocalDate date = DataManager.getInstance().getBalanceTransactions().get(i).getDate();
-            if ((from == null || date.isAfter(from)) && (to == null || date.isBefore(to))){
+            if ((from == null || !date.isBefore(from)) && (to == null || !date.isAfter(to))){
                 returnList.add(DataManager.getInstance().getBalanceTransactions().get(i));
             }
         }

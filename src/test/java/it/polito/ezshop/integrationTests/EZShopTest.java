@@ -3,6 +3,7 @@ package it.polito.ezshop.integrationTests;
 import static org.junit.Assert.*;
 
 import java.nio.file.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Stream;
 import java.io.FileWriter;
@@ -12,6 +13,7 @@ import static java.util.stream.Collectors.*;
 
 import org.junit.*;
 import it.polito.ezshop.model.*;
+import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.EZShopInterface;
@@ -1759,10 +1761,8 @@ public class EZShopTest {
     
     @Test
     public void testDeleteSaleTransactionWithoutUser() {
-       
         EZShopInterface ez = new EZShop();
         assertThrows(UnauthorizedException.class, () -> ez.deleteSaleTransaction(1));  
-         
     }
     
 
@@ -1825,5 +1825,106 @@ public class EZShopTest {
         assertTrue(ez.deleteSaleTransaction(1));
     }
     
-     
+    @Test
+    public void testGetCreditsAndDebitsWithNoLoggedUser() {
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.getCreditsAndDebits(null, null));  
+    }
+
+    @Test
+    public void testGetCreditsAndDebitsWithBothParameters() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        
+        ez.recordBalanceUpdate(100);
+        ez.recordBalanceUpdate(-50);
+
+        BalanceTransaction bt = new CreditTransaction(3, new DummyCredit(3, 4));
+        bt.setDate(LocalDate.now().minusDays(1));
+        DataManager.getInstance().insertDummyCredit((DummyCredit)((CreditTransaction)bt).getRelatedCreditOperation());
+        DataManager.getInstance().insertBalanceTransaction(bt);
+
+        List<BalanceOperation> res = ez.getCreditsAndDebits(LocalDate.now(), LocalDate.now());
+        assertEquals(2, res.size());
+
+        assertEquals(1, (res.stream().filter(b -> b.getType() == "CREDIT" && b.getMoney() == 100).count()));
+        assertEquals(1, (res.stream().filter(b -> b.getType() == "DEBIT" && b.getMoney() == 50).count()));
+    }
+
+    @Test
+    public void testGetCreditsAndDebitsWithFromNull() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        
+        ez.recordBalanceUpdate(100);
+        ez.recordBalanceUpdate(-50);
+
+        BalanceTransaction bt = new CreditTransaction(3, new DummyCredit(3, 4));
+        bt.setDate(LocalDate.now().minusDays(1));
+        DataManager.getInstance().insertDummyCredit((DummyCredit)((CreditTransaction)bt).getRelatedCreditOperation());
+        DataManager.getInstance().insertBalanceTransaction(bt);
+
+        List<BalanceOperation> res = ez.getCreditsAndDebits(null, LocalDate.now());
+        assertEquals(3, res.size());
+
+        assertEquals(1, (res.stream().filter(b -> b.getType() == "CREDIT" && b.getMoney() == 100).count()));
+        assertEquals(1, (res.stream().filter(b -> b.getType() == "DEBIT" && b.getMoney() == 50).count()));
+    }
+
+    @Test
+    public void testGetCreditsAndDebitsWithToNull() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        
+        ez.recordBalanceUpdate(100);
+        ez.recordBalanceUpdate(-50);
+
+        BalanceTransaction bt = new CreditTransaction(3, new DummyCredit(3, 4));
+        bt.setDate(LocalDate.now().minusDays(1));
+        DataManager.getInstance().insertDummyCredit((DummyCredit)((CreditTransaction)bt).getRelatedCreditOperation());
+        DataManager.getInstance().insertBalanceTransaction(bt);
+
+        List<BalanceOperation> res = ez.getCreditsAndDebits(LocalDate.now(), null);
+        assertEquals(2, res.size());
+
+        assertEquals(1, (res.stream().filter(b -> b.getType() == "CREDIT" && b.getMoney() == 100).count()));
+        assertEquals(1, (res.stream().filter(b -> b.getType() == "DEBIT" && b.getMoney() == 50).count()));
+    }
+
+    @Test
+    public void testGetCreditsAndDebitsWithBothNull() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        
+        ez.recordBalanceUpdate(100);
+        ez.recordBalanceUpdate(-50);
+
+        BalanceTransaction bt = new CreditTransaction(3, new DummyCredit(3, 4));
+        bt.setDate(LocalDate.now().minusDays(1));
+        DataManager.getInstance().insertDummyCredit((DummyCredit)((CreditTransaction)bt).getRelatedCreditOperation());
+        DataManager.getInstance().insertBalanceTransaction(bt);
+
+        List<BalanceOperation> res = ez.getCreditsAndDebits(null, null);
+        assertEquals(3, res.size());
+
+        assertEquals(1, (res.stream().filter(b -> b.getType() == "CREDIT" && b.getMoney() == 100).count()));
+        assertEquals(1, (res.stream().filter(b -> b.getType() == "DEBIT" && b.getMoney() == 50).count()));
+    }
+
 }

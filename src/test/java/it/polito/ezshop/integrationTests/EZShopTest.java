@@ -862,7 +862,6 @@ public class EZShopTest {
 
         assertTrue(ez.recordOrderArrival(orderId));
         assertEquals(Integer.valueOf(5), ez.getProductTypeByBarCode("1231231231232").getQuantity());
-
     }
 
     @Test
@@ -887,7 +886,205 @@ public class EZShopTest {
 
         assertFalse(ez.recordOrderArrival(orderId));
         assertEquals(Integer.valueOf(5), ez.getProductTypeByBarCode("1231231231232").getQuantity());
+    }
 
+    @Test
+    public void testapplyDiscountRateToProductWithNoLoggedUser() {
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.applyDiscountRateToProduct(1, "1231231231232", 0.5));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndInvalidDiscountRateLess0() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidDiscountRateException.class, () -> ez.applyDiscountRateToProduct(1, "1231231231232", -0.1));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndInvalidDiscountRateEqual1() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidDiscountRateException.class, () -> ez.applyDiscountRateToProduct(1, "1231231231232", 1.0));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndInvalidDiscountRateGreater1() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidDiscountRateException.class, () -> ez.applyDiscountRateToProduct(1, "1231231231232", 1.1));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndNullProductCode() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductCodeException.class, () -> ez.applyDiscountRateToProduct(1, null, 0.5));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndEmptyProductCode() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductCodeException.class, () -> ez.applyDiscountRateToProduct(1, "", 0.5));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndInvalidProductCode() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductCodeException.class, () -> ez.applyDiscountRateToProduct(1, "1231231231231", 0.5));
+    }
+
+    
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndNullTransactionId() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.applyDiscountRateToProduct(null, "1231231231232", 0.5));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndTransactionIdEqual0() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.applyDiscountRateToProduct(0, "1231231231232", 0.5));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndTransactionIdNegative() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.applyDiscountRateToProduct(-1, "1231231231232", 0.5));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndNotRegisteredTransactionId() throws UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidTransactionIdException, InvalidDiscountRateException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        ez.createProductType("test", "1231231231232", 2.0, "");
+
+        assertFalse(ez.applyDiscountRateToProduct(1, "1231231231232", 0.5));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndValidTransactionInvalidBarcode() throws UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidTransactionIdException, InvalidDiscountRateException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer saleId = ez.startSaleTransaction();
+
+        assertFalse(ez.applyDiscountRateToProduct(saleId, "1231231231232", 0.5));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndValidTransactionButWrongState() throws UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidTransactionIdException, InvalidDiscountRateException, InvalidProductIdException, InvalidLocationException, InvalidQuantityException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 2);
+
+        Integer saleId = ez.startSaleTransaction();
+        ez.addProductToSale(saleId, "1231231231232", 1);
+        ez.endSaleTransaction(saleId);
+
+        assertFalse(ez.applyDiscountRateToProduct(saleId, "1231231231232", 0.5));
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndValidSingleProduct() throws UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidTransactionIdException, InvalidDiscountRateException, InvalidProductIdException, InvalidLocationException, InvalidQuantityException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 2);
+
+        Integer saleId = ez.startSaleTransaction();
+        ez.addProductToSale(saleId, "1231231231232", 1);
+
+        assertTrue(ez.applyDiscountRateToProduct(saleId, "1231231231232", 0.5));
+        assertEquals(1.0, ez.getSaleTransaction(saleId).getPrice(), 0.01);
+    }
+
+    @Test
+    public void testapplyDiscountRateToProductWithRightsAndValidMultipleProduct() throws UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidTransactionIdException, InvalidDiscountRateException, InvalidProductIdException, InvalidLocationException, InvalidQuantityException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 2);
+
+        prodId = ez.createProductType("test", "0123456789012", 3.0, "");
+        ez.updatePosition(prodId, "1-a-2");
+        ez.updateQuantity(prodId, 3);
+
+        Integer saleId = ez.startSaleTransaction();
+        ez.addProductToSale(saleId, "1231231231232", 1);
+        ez.addProductToSale(saleId, "0123456789012", 1);
+
+        assertTrue(ez.applyDiscountRateToProduct(saleId, "1231231231232", 0.5));
+        assertEquals(1.0 + 3.0, ez.getSaleTransaction(saleId).getPrice(), 0.01);
     }
 
     //updateProduct

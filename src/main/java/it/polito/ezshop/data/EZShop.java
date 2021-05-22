@@ -1046,10 +1046,7 @@ public class EZShop implements EZShopInterface {
 
         if (!sale.isPresent()) return -1;
 
-        int points = 0;
-        for (; points < sale.get().getPrice(); points++);
-
-        return points;
+        return (int)(sale.get().getPrice() / 10);
     }
 
     @Override

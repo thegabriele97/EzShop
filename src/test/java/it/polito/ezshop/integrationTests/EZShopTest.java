@@ -1927,4 +1927,92 @@ public class EZShopTest {
         assertEquals(1, (res.stream().filter(b -> b.getType() == "DEBIT" && b.getMoney() == 50).count()));
     }
 
+    @Test
+    public void testComputePointsForSaleWithoutLoggedUser() {
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.computePointsForSale(1));  
+    }
+
+    @Test
+    public void testComputePointsForSaleWithRightsAndNullTransId() {
+        
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.computePointsForSale(null));  
+    }
+
+    @Test
+    public void testComputePointsForSaleWithRightsAndZeroTransId() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.computePointsForSale(0));  
+    }
+
+    @Test
+    public void testComputePointsForSaleWithRightsAndNegativeTransId() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.computePointsForSale(-1));  
+    }
+
+    @Test
+    public void testComputePointsForSaleWithRightsAndSaleNotExisting() throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException, InvalidProductIdException, InvalidLocationException, InvalidTransactionIdException, InvalidQuantityException {
+        
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        assertEquals(-1, ez.computePointsForSale(1));
+    }
+
+    @Test
+    public void testComputePointsForSaleWithRightsAndSaleProducts() throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException, InvalidProductIdException, InvalidLocationException, InvalidTransactionIdException, InvalidQuantityException {
+        
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 22.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        Integer saleTrans = ez.startSaleTransaction();
+        ez.addProductToSale(saleTrans, "1231231231232", 2);
+
+        assertEquals(4, ez.computePointsForSale(saleTrans));
+    }
+
+    @Test
+    public void testComputePointsForSaleWithRightsAndNoProds() throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException, InvalidProductIdException, InvalidLocationException, InvalidTransactionIdException, InvalidQuantityException {
+        
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 22.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        Integer saleTrans = ez.startSaleTransaction();
+
+        assertEquals(0, ez.computePointsForSale(saleTrans));
+    }
+
 }

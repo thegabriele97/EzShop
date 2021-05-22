@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import it.polito.ezshop.data.DataManager;
+import it.polito.ezshop.model.ProductType;
 import it.polito.ezshop.model.CReturn;
 import it.polito.ezshop.model.Sale;
 
@@ -61,6 +62,26 @@ public class CReturnTest {
     public void testInvalidBalanceIdCReturn(){
         CReturn cr = new CReturn(1, new Sale(1, 0.0, null));
         assertThrows(IllegalArgumentException.class, () -> cr.setBalanceId(-3));
+    }
+
+    @Test
+    public void testHashCode(){
+        CReturn cr = new CReturn(1, new Sale(1, 0.0, null));
+        assertEquals(1, cr.hashCode());
+    }
+
+    @Test
+    public void testEquals(){
+        CReturn cr1 = new CReturn(1, new Sale(1, 0.0, null)), cr2 = new CReturn(1, new Sale(1, 0.0, null));
+        assertTrue(cr1.equals(cr2));
+    }
+
+    @Test
+    public void testGetTotalValue(){
+        CReturn cr = new CReturn(1, new Sale(1, 0.0, null));
+        ProductType pt = new ProductType(1, "999999999993", "roba", 2.0, 7, 0.34, "no", null);
+        cr.getSaleTransaction().addProduct(pt, 3);
+        assertEquals(cr.getTotalValue(), 0.0, 0.001);
     }
 
 

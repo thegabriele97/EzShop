@@ -232,5 +232,9 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
         return this.getTicketNumber() == ((Sale)obj).getTicketNumber();
     }
 
+    public LocalDate getDate(){
+        return this.date;
+    }
+
 
 }

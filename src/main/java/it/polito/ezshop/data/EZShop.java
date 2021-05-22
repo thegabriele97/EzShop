@@ -584,7 +584,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
         }
         
-        if (orderId == null || orderId <= 0){
+        if (orderId == null || orderId <= 0) {
             throw new InvalidOrderIdException();
         }
 
@@ -598,15 +598,15 @@ public class EZShop implements EZShopInterface {
             return false;
         }
 
-        if (ord.get().getRelatedProduct().getAssignedPosition() == null){
+        if (ord.get().getRelatedProduct().getAssignedPosition() == null) {
             throw new InvalidLocationException();
         }
 
-        if (!(ord.get().getStatus().equals(EOrderStatus.PAYED.toString()) || ord.get().getStatus().equals(EOrderStatus.COMPLETED.toString()))){
+        if (!(ord.get().getStatus().equals(EOrderStatus.PAYED.toString())) || ord.get().getStatus().equals(EOrderStatus.COMPLETED.toString())) {
             return false;
         }
 
-        if (ord.get().getStatus().equals(EOrderStatus.PAYED.toString())){
+        if (ord.get().getStatus().equals(EOrderStatus.PAYED.toString())) {
             ord.get().setAsCompleted();
             ord.get().getRelatedProduct().addQuantityOffset(ord.get().getQuantity());
             DataManager.getInstance().updateProductType(ord.get().getRelatedProduct());

@@ -749,4 +749,145 @@ public class EZShopTest {
         assertTrue(ez.receiveCreditCardPayment(1, "4485370086510891"));
     }
 
+    @Test
+    public void testRecordOrderArrivalWithNoLoggedUser() {
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.recordOrderArrival(1));
+    }
+
+    @Test
+    public void testRecordOrderArrivalWithNoRights() {
+        
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.recordOrderArrival(1));
+    }
+
+    @Test
+    public void testRecordOrderArrivalWithRightsAndId0() {
+        
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidOrderIdException.class, () -> ez.recordOrderArrival(0));
+    }
+
+    @Test
+    public void testRecordOrderArrivalWithRightsAndIdNegative() {
+        
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidOrderIdException.class, () -> ez.recordOrderArrival(-1));
+    }
+
+    @Test
+    public void testRecordOrderArrivalWithRightsAndIdNull() {
+        
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidOrderIdException.class, () -> ez.recordOrderArrival(null));
+    }
+
+    @Test
+    public void testRecordOrderArrivalWithRightsAndNoProductLocationAssigned() throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException, InvalidQuantityException {
+        
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+
+        ez.createProductType("test", "1231231231232", 2.0, "");
+        Integer orderId = ez.issueOrder("1231231231232", 5, 4.0);
+
+        assertThrows(InvalidLocationException.class, () -> ez.recordOrderArrival(orderId));
+    }
+
+    @Test
+    public void testRecordOrderArrivalWithRightsAndOrderNotExisting() throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException, InvalidQuantityException, InvalidOrderIdException, InvalidLocationException {
+        
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+
+        assertFalse(ez.recordOrderArrival(1));
+    }
+
+    @Test
+    public void testRecordOrderArrivalWithRightsAndInvalidOrderStatus() throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException, InvalidQuantityException, InvalidProductIdException, InvalidLocationException, InvalidOrderIdException {
+        
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+
+        Integer orderId = ez.issueOrder("1231231231232", 5, 4.0);
+
+        assertFalse(ez.recordOrderArrival(orderId));
+    }
+
+    @Test
+    public void testRecordOrderArrivalWithRightsAndRightStatus() throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException, InvalidQuantityException, InvalidProductIdException, InvalidLocationException, InvalidOrderIdException {
+        
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+
+        ez.recordBalanceUpdate(100.0);
+
+        Integer orderId = ez.issueOrder("1231231231232", 5, 4.0);
+        ez.payOrder(orderId);
+
+        assertTrue(ez.recordOrderArrival(orderId));
+        assertEquals(Integer.valueOf(5), ez.getProductTypeByBarCode("1231231231232").getQuantity());
+
+    }
+
+    @Test
+    public void testRecordOrderArrivalWithRightsAndRightStatusMultipleCalls() throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException, InvalidQuantityException, InvalidProductIdException, InvalidLocationException, InvalidOrderIdException {
+        
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 2.0, "");
+        ez.updatePosition(prodId, "1-a-1");
+
+        ez.recordBalanceUpdate(100.0);
+
+        Integer orderId = ez.issueOrder("1231231231232", 5, 4.0);
+        ez.payOrder(orderId);
+
+        assertTrue(ez.recordOrderArrival(orderId));
+        assertEquals(Integer.valueOf(5), ez.getProductTypeByBarCode("1231231231232").getQuantity());
+
+        assertFalse(ez.recordOrderArrival(orderId));
+        assertEquals(Integer.valueOf(5), ez.getProductTypeByBarCode("1231231231232").getQuantity());
+
+    }
+
 }

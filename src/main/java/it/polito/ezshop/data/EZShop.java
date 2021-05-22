@@ -1322,7 +1322,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidTransactionIdException();
         }
 
-        if(creditCard.isEmpty() || creditCard == null || !CreditCardSystem.getInstance().isValidNumber(creditCard)){
+        if(creditCard == null || creditCard.isEmpty() ||  !CreditCardSystem.getInstance().isValidNumber(creditCard)){
             throw new InvalidCreditCardException();
         }
 

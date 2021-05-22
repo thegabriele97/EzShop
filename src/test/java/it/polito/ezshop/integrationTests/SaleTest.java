@@ -59,7 +59,7 @@ public class SaleTest {
     @Test
     public void testGetEntries() {
         Sale s = new Sale(1, 0.0, null);
-        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
         s.addProduct(p,2);
         assertEquals(p.getBarCode(), s.getEntries().stream()
                                         .findFirst()
@@ -84,7 +84,7 @@ public class SaleTest {
         Sale s = new Sale(1, 0.0, null);
         ProductType p = new ProductType(36, "1231231231232", "test", 1.0, 2, 0.1, "", "1-a-1");
         s.addProduct(p, 2);
-        assertEquals(1.8, s.getPrice(), 0.005);
+        assertEquals(2.0, s.getPrice(), 0.005);
     }
 
     @Test

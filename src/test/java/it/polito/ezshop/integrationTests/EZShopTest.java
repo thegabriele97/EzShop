@@ -1458,4 +1458,55 @@ public class EZShopTest {
         assertEquals(1, cnt);
     }
 
+    @Test
+    public void testDefineCustomerWithNoLoggedUser() {
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.defineCustomer("peppe"));
+    }
+
+    @Test
+    public void testDefineCustomerWithRightsAndEmptyArg() {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCustomerNameException.class, () -> ez.defineCustomer(""));
+    }
+    
+    @Test
+    public void testDefineCustomerWithRightsAndNullArg() {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidCustomerNameException.class, () -> ez.defineCustomer(null));
+    }
+
+    @Test
+    public void testDefineCustomerWithRightsAndCorrectInserting() throws InvalidCustomerNameException, UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertNotEquals(Integer.valueOf(-1), ez.defineCustomer("Peppe"));
+    }
+
+    @Test
+    public void testDefineCustomerWithRightsAndDuplicatedCustomer() throws InvalidCustomerNameException, UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertNotEquals(Integer.valueOf(-1), ez.defineCustomer("Peppe"));
+        assertEquals(Integer.valueOf(-1), ez.defineCustomer("Peppe"));
+    }
+
 }

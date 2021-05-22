@@ -16,7 +16,7 @@ public class EZShop implements EZShopInterface {
 
 
     @Override
-    public void reset() {
+    public void reset() { //TODO: does not delete customers and loyaltycards, is it right?
         
         for (it.polito.ezshop.model.User u : DataManager.getInstance().getUsers()) {
             DataManager.getInstance().deleteUser(u);
@@ -1433,7 +1433,7 @@ public class EZShop implements EZShopInterface {
     	return Creturn.get().getTotalValue();
     }
 
-    @Override //baldaz
+    @Override 
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
         
         if (!RightsManager.getInstance().canManageBalanceTransactions(LoginManager.getInstance().getLoggedUser())) {
@@ -1491,7 +1491,7 @@ public class EZShop implements EZShopInterface {
         return false;
     }
 
-    @Override //baldaz
+    @Override
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
 
         if (!RightsManager.getInstance().canManageBalanceTransactions(LoginManager.getInstance().getLoggedUser())) {
@@ -1510,7 +1510,7 @@ public class EZShop implements EZShopInterface {
         return returnList;
     }
 
-    @Override //baldaz
+    @Override
     public double computeBalance() throws UnauthorizedException {
 
         if (!RightsManager.getInstance().canManageBalanceTransactions(LoginManager.getInstance().getLoggedUser())) {

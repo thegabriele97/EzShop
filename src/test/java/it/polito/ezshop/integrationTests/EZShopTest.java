@@ -228,4 +228,48 @@ public class EZShopTest {
         assertEquals(1, cnt);
     }
 
+    @Test 
+    public void testReset(){
+        User u = new User(1, "TenaciousD", "stepnyevadeilfisco", "ShopManager");
+        DummyDebit dd = new DummyDebit(1, 7.0);
+        DebitTransaction dt = new DebitTransaction(1, dd);
+        ProductType pt = new ProductType(1, "999999999993", "robetta", 14.0, 13, 0.1, "niente", null);
+        Position p = new Position(1, "roba", 2, pt);
+        Order o = new Order(1, 6.4, 10, pt, EOrderStatus.ISSUED);
+        Customer c = new Customer(1, "Michele Misseri", null);
+        LoyaltyCard lt = new LoyaltyCard("4547483383", 3, c);
+        Sale s = new Sale(2, 0.2, lt);
+        CReturn cr = new CReturn(1, s);
+        DummyCredit dc = new DummyCredit(2, 11);
+        CreditTransaction ct = new CreditTransaction(2, dc);
+
+        DataManager.getInstance().insertUser(u);
+        DataManager.getInstance().insertDummyDebit(dd);
+        DataManager.getInstance().insertBalanceTransaction(dt);
+        DataManager.getInstance().insertProductType(pt);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertOrder(o);
+        DataManager.getInstance().insertCustomer(c);
+        DataManager.getInstance().insertLoyaltyCard(lt);
+        DataManager.getInstance().insertSale(s);
+        DataManager.getInstance().insertReturn(cr);
+        DataManager.getInstance().insertDummyCredit(dc);
+        DataManager.getInstance().insertBalanceTransaction(ct);
+
+        EZShopInterface ez = new EZShop();
+        ez.reset();
+
+        assertEquals(DataManager.getInstance().getBalanceTransactions().size(), 0);
+        assertEquals(DataManager.getInstance().getUsers().size(), 0);
+        assertEquals(DataManager.getInstance().getDummyDebits().size(), 0);
+        assertEquals(DataManager.getInstance().getProductTypes().size(), 0);
+        assertEquals(DataManager.getInstance().getPositions().size(), 0);
+        assertEquals(DataManager.getInstance().getOrders().size(), 0);
+        //assertEquals(DataManager.getInstance().getCustomers().size(), 0);
+        //assertEquals(DataManager.getInstance().getLoyaltyCards().size(), 0);
+        assertEquals(DataManager.getInstance().getReturns().size(), 0);
+        assertEquals(DataManager.getInstance().getDummyCredits().size(), 0);
+        assertEquals(DataManager.getInstance().getSales().size(), 0);
+    }
+
 }

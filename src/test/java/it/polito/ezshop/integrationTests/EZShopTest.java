@@ -3724,20 +3724,59 @@ public class EZShopTest {
         assertFalse(ez.applyDiscountRateToSale(1, 0.1));
     }
 
-    //TODO: updateUserRight
+    //updateUserRight
 
-    /*@Test
+    @Test
     public void testValidUpdateUserRights() throws InvalidUserIdException, InvalidRoleException, UnauthorizedException{
         User u = new User(1, "ciao", "pwd", "Administrator");
         DataManager.getInstance().insertUser(u);
         LoginManager.getInstance().tryLogin("ciao", "pwd");
 
         User u1 = new User(2, "giorgio", "pwd", "Cashier");
-        DataManager.getInstance().insertUser(u);
+        DataManager.getInstance().insertUser(u1);
 
         EZShopInterface ez = new EZShop();
         assertTrue(ez.updateUserRights(2, "Administrator"));
-    }*/
+    }
+
+    @Test
+    public void testUnauthorizedUpdateUserRights() throws InvalidUserIdException, InvalidRoleException, UnauthorizedException{
+
+        User u1 = new User(2, "giorgio", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u1);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.updateUserRights(2, "Administrator"));
+    }
+
+    @Test
+    public void testWrongParamsUpdateUserRights() throws InvalidUserIdException, InvalidRoleException, UnauthorizedException{
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        User u1 = new User(2, "giorgio", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u1);
+
+        EZShopInterface ez = new EZShop();
+
+        assertThrows(InvalidUserIdException.class, () -> ez.updateUserRights(null, "Administrator"));
+        assertThrows(InvalidUserIdException.class, () -> ez.updateUserRights(-1, "Administrator"));
+
+        assertThrows(InvalidRoleException.class, () -> ez.updateUserRights(2, ""));
+        assertThrows(InvalidRoleException.class, () -> ez.updateUserRights(2, null));
+        assertThrows(InvalidRoleException.class, () -> ez.updateUserRights(2, "asdaf"));
+    }
+
+    @Test
+    public void testMissingUserUpdateUserRights() throws InvalidUserIdException, InvalidRoleException, UnauthorizedException{
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.updateUserRights(2, "Administrator"));
+    }
 
     //deleteReturnTransaction
 

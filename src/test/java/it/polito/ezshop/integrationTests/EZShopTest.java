@@ -4271,4 +4271,207 @@ public class EZShopTest {
         assertEquals(new Integer(1), ez.startSaleTransaction());
     }
 
+    //deleteUser
+    @Test
+    public void testDeleteUserWithNoLoggedUser() {
+
+        if (LoginManager.getInstance().isUserLogged()) throw new RuntimeException();
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.deleteUser(1));
+    }
+
+    @Test
+    public void testDeleteUserWithCashierRights() {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.deleteUser(1));
+    }
+
+    @Test
+    public void testDeleteUserWithShopManagerRights() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.deleteUser(1));
+    }
+
+    @Test
+    public void testDeleteUserWithAdministratorRights() throws InvalidUserIdException, UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertTrue(ez.deleteUser(1));
+    }
+
+    @Test
+    public void testDeleteNonexistentUser() throws InvalidUserIdException, UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.deleteUser(2));
+    }
+
+    //getUser
+    @Test
+    public void testgetUserWithNoLoggedUser() {
+
+        if (LoginManager.getInstance().isUserLogged()) throw new RuntimeException();
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.getUser(1));
+    }
+
+    @Test
+    public void testGetUserWithCashierRights() {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        User u2 = new User(7, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u2);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.getUser(1));
+    }
+
+    @Test
+    public void testGetUserWithShopManagerRights() {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        User u2 = new User(7, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u2);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.getUser(7));
+    }
+
+    @Test
+    public void testGetUserWithAdministratorRights() throws InvalidUserIdException, UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        User u2 = new User(7, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u2);
+
+        EZShopInterface ez = new EZShop();
+        assertEquals(u2, ez.getUser(7));
+    }
+
+    @Test
+    public void testGetUserWithNullUserId() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        User u2 = new User(7, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u2);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidUserIdException.class, () -> ez.getUser(null));
+    }
+
+    @Test
+    public void testGetUserWithInvalidUserId() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        User u2 = new User(7, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u2);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidUserIdException.class, () -> ez.getUser(0));
+    }
+
+    @Test
+    public void testGetNonexistentUser() throws InvalidUserIdException, UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        User u2 = new User(7, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u2);
+
+        EZShopInterface ez = new EZShop();
+        assertNull(ez.getUser(2));
+    }
+
+    //getAllCustomers
+    @Test
+    public void testGetAllCustomersWithNoLoggedUser() {
+
+        if (LoginManager.getInstance().isUserLogged()) throw new RuntimeException();
+
+        Customer c = new Customer(3, "mbare", null);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.getAllCustomers());
+    }
+
+    @Test
+    public void testGetAllCustomersWithCashierRights() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        Customer c = new Customer(3, "mbare", null);
+        DataManager.getInstance().insertCustomer(c);
+
+        EZShopInterface ez = new EZShop();
+        assertEquals(DataManager.getInstance().getCustomers(), ez.getAllCustomers());
+    }
+
+    @Test
+    public void testGetAllCustomersWithShopManagerRights() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        Customer c = new Customer(3, "mbare", null);
+        DataManager.getInstance().insertCustomer(c);
+
+        EZShopInterface ez = new EZShop();
+        assertEquals(DataManager.getInstance().getCustomers(), ez.getAllCustomers());
+    }
+
+    @Test
+    public void testgetAllCustomersWithAdministratorRights() throws UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        Customer c = new Customer(3, "mbare", null);
+        DataManager.getInstance().insertCustomer(c);
+
+        EZShopInterface ez = new EZShop();
+        assertEquals(DataManager.getInstance().getCustomers(), ez.getAllCustomers());
+    }
+
+
 }

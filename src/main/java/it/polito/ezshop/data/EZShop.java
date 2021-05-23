@@ -828,12 +828,8 @@ public class EZShop implements EZShopInterface {
  
         if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10) {
             throw new InvalidCustomerCardException();
-        } else {
-            try {
-                Integer.parseInt(customerCard);
-            } catch (NumberFormatException e) {
-                throw new InvalidCustomerCardException();
-            }
+        } else if (!customerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9')) {
+            throw new InvalidCustomerCardException();
         }
 
         Optional<LoyaltyCard> card = DataManager.getInstance()
@@ -842,7 +838,7 @@ public class EZShop implements EZShopInterface {
             .filter(c -> c.getID().equals(customerCard))
             .findFirst();
 
-        if (!(card.isPresent()) || (pointsToBeAdded < 0 && card.get().getPoints() < pointsToBeAdded)) {
+        if (!card.isPresent() || (pointsToBeAdded < 0 && card.get().getPoints() < -pointsToBeAdded)) {
             return false;
         }
 
@@ -1242,21 +1238,22 @@ public class EZShop implements EZShopInterface {
                 .findFirst();
     	 
 
-        if (!Creturn.isPresent()) return false;
+        if (!Creturn.isPresent() || Creturn.get().isCommitted()) return false;
 
-        if (commit ^ Creturn.get().isCommitted()) {
+        if (commit) {
             Creturn.get()
                 .getProductsList()
                 .forEach(p -> {
                     it.polito.ezshop.model.ProductType rightP = (it.polito.ezshop.model.ProductType)p;
                     
-                    rightP.addQuantityOffset(Creturn.get().getQuantityByProduct(rightP) * (commit ? +1 : -1));
+                    rightP.addQuantityOffset(Creturn.get().getQuantityByProduct(rightP));
                     DataManager.getInstance().updateProductType(rightP);
                 });
+        } else {
+            return DataManager.getInstance().deleteReturn(Creturn.get());
         }
 
-        Creturn.get().setAsCommitted(commit); 
-
+        Creturn.get().setAsCommitted();
         return DataManager.getInstance().updateReturn(Creturn.get());
     }
 

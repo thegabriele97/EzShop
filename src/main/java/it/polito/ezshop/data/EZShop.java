@@ -59,7 +59,7 @@ public class EZShop implements EZShopInterface {
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
         
-        if (!(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
+        if (role == null || role.isEmpty() || !(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
             throw new InvalidRoleException();
         }
 

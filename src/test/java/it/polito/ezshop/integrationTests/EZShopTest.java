@@ -2657,4 +2657,78 @@ public class EZShopTest {
         assertEquals(new Integer(-1), ez.startReturnTransaction(2));
     }
 
+    //createUser
+    @Test
+    public void testCreateUserWithNullUsername(){
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidUsernameException.class, () -> ez.createUser(null, "pwd", "Cashier"));
+    }
+
+    @Test
+    public void testCreateUserWithEmptyUsername(){
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidUsernameException.class, () -> ez.createUser("", "pwd", "Cashier"));
+    }
+
+    @Test
+    public void testCreateUserWithNullPassword(){
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidPasswordException.class, () -> ez.createUser("ciao", null, "Cashier"));
+    }
+
+    @Test
+    public void testCreateUserWithEmptyPassword(){
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidPasswordException.class, () -> ez.createUser("ciao", "", "Cashier"));
+    }
+
+    @Test
+    public void testCreateUserWithNullRole(){
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidRoleException.class, () -> ez.createUser("ciao", "pwd", null));
+    }
+
+    @Test
+    public void testCreateUserWithEmptyRole(){
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidRoleException.class, () -> ez.createUser("ciao", "pwd", ""));
+    }
+
+    @Test
+    public void testCreateUserAsCashier() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+
+        EZShopInterface ez = new EZShop();
+        assertEquals(new Integer(1), ez.createUser("ciao", "pwd", "Cashier"));
+    }
+
+    @Test
+    public void testCreateUserAsShopManager() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+
+        EZShopInterface ez = new EZShop();
+        assertEquals(new Integer(1), ez.createUser("ciao", "pwd", "ShopManager"));
+    }
+
+    @Test
+    public void testCreateUserAsAdministrator() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+
+        EZShopInterface ez = new EZShop();
+        assertEquals(new Integer(1), ez.createUser("ciao", "pwd", "Administrator"));
+    }
+
+    @Test
+    public void testCreateUserWithAlreadyUsedUsername() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+
+        EZShopInterface ez = new EZShop();
+        assertEquals(new Integer(-1), ez.createUser("ciao", "pwd", "Administrator"));
+    }
+
 }

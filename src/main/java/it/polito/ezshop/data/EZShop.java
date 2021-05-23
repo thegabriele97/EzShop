@@ -366,6 +366,8 @@ public class EZShop implements EZShopInterface {
             .filter(p -> p.getId() == productId)
             .findFirst();
 
+        if (!prod.isPresent()) return false;
+
         if (prod.get().getQuantity() + toBeAdded < 0) return false;
 
         if (prod.get().getLocation() == "") return false;

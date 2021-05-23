@@ -2731,4 +2731,143 @@ public class EZShopTest {
         assertEquals(new Integer(-1), ez.createUser("ciao", "pwd", "Administrator"));
     }
 
+    //updateQuantity
+    @Test
+    public void testUpdateQuantityWithNoLoggedUser() {
+
+        if (LoginManager.getInstance().isUserLogged()) throw new RuntimeException();
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.updateQuantity(36, 1));
+    }
+
+    @Test
+    public void testUpdateQuantityWithCashierRights(){
+
+        User u = new User(1, "ciao", "pwd", "Cashier");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.updateQuantity(36, 1));
+    }
+
+    @Test
+    public void testUpdateQuantityWithShopManagerRights() throws UnauthorizedException, InvalidProductIdException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertTrue(ez.updateQuantity(36,  1));
+    }
+
+    @Test
+    public void testUpdateQuantityWithAdministratorRights() throws UnauthorizedException, InvalidProductIdException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertTrue(ez.updateQuantity(36,  1));
+    }
+
+    @Test
+    public void testUpdateQuantityWithNullProductId(){
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductIdException.class, () -> ez.updateQuantity(null, 1));
+    }
+
+    @Test
+    public void testUpdateQuantityWithInvalidProductId(){
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidProductIdException.class, () -> ez.updateQuantity(0, 1));
+    }
+
+    @Test
+    public void testUpdateQuantityOfNonexistentProduct() throws UnauthorizedException, InvalidProductIdException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.updateQuantity(1,  1));
+    }
+
+    @Test
+    public void testUpdateQuantityWithNegativeToBeAdded() throws UnauthorizedException, InvalidProductIdException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertTrue(ez.updateQuantity(36,  -1));
+    }
+
+    @Test
+    public void testUpdateQuantityWithNegativeResultingAmount() throws UnauthorizedException, InvalidProductIdException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.updateQuantity(36,  -4));
+    }
+
+    @Test
+    public void testUpdateQuantityOfProductWithoutLocation() throws UnauthorizedException, InvalidProductIdException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "");
+        DataManager.getInstance().insertProductType(p);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.updateQuantity(36,  1));
+    }
+
 }

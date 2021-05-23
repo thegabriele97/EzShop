@@ -825,7 +825,7 @@ public class EZShop implements EZShopInterface {
         if (!RightsManager.getInstance().canManageCustomers(LoginManager.getInstance().getLoggedUser())) {
             throw new UnauthorizedException();
         }
-
+ 
         if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10) {
             throw new InvalidCustomerCardException();
         } else {

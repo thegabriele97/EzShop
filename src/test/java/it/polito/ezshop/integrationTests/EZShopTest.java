@@ -2499,7 +2499,7 @@ public class EZShopTest {
         ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
         DataManager.getInstance().insertProductType(p);
         s.addProduct(p, 2);
-
+ 
         CReturn cr = new CReturn(1, s);
         DataManager.getInstance().insertReturn(cr);
 
@@ -2927,5 +2927,117 @@ public class EZShopTest {
         EZShopInterface ez = new EZShop();
         assertFalse(ez.updateQuantity(36,  1));
     }
+    
+    @Test
+    public void testModifyPointsOnCardWithoutUser() {
+       
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.modifyPointsOnCard("",1));    
+         
+    }
+    
+  
+    
+    @Test
+    public void testModifyPointsOnCardWithInvalidCard()  {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+       
+        EZShopInterface ez = new EZShop();
+        
+        assertThrows(InvalidCustomerCardException.class, () -> ez.modifyPointsOnCard(null,1));
+        assertThrows(InvalidCustomerCardException.class, () -> ez.modifyPointsOnCard("123",1));
+        assertThrows(InvalidCustomerCardException.class, () -> ez.modifyPointsOnCard("",1));
+
+    }
+
+    @Test
+    public void testModifyPointsOnCardWithCardNotPresent() throws InvalidCustomerCardException, UnauthorizedException  {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+       
+        EZShopInterface ez = new EZShop();
+        /*         Customer c = new Customer(1, "Michele Misseri", null);
+        LoyaltyCard lt = new LoyaltyCard("4547483383", 3, c);*/
+    
+        
+        assertFalse(ez.modifyPointsOnCard("0123456789",10));
+        
+         
+    }
+    
+    @Test
+    public void testModifyPointsOnCard() throws InvalidCustomerCardException, UnauthorizedException  {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+       
+        EZShopInterface ez = new EZShop();
+             
+        //LoyaltyCard lt = new LoyaltyCard("4547483383", 1, null);
+        //DataManager.getInstance().insertLoyaltyCard(lt);
+        
+        String code = ez.createCard();
+        assertEquals("0000000001",code);
+        //Customer c = new Customer(1, "Michele Misseri", lt);
+        //DataManager.getInstance().insertCustomer(c);
+        //c.setCustomerCard("4547483383");
+        
+        //DataManager.getInstance().updateCustomer(c);
+        //lt.addCustomer(c);
+        //DataManager.getInstance().updateLoyaltyCard(lt);
+
+      
+        assertTrue(ez.modifyPointsOnCard(code,3));
+        assertTrue(ez.modifyPointsOnCard(code,-1));
+         
+    }
+    
+    
+    
+    @Test
+    public void testCreateCardWithoutUser() throws UnauthorizedException {
+    	
+    	 EZShopInterface ez = new EZShop();
+         assertThrows(UnauthorizedException.class, () -> ez.createCard());  
+         	
+    }
+    
+  /*  
+    @Test
+    public void testCreateCard() throws UnauthorizedException {
+    	
+    	 User u = new User(1, "ciao", "pwd", "ShopManager");
+         DataManager.getInstance().insertUser(u);
+         LoginManager.getInstance().tryLogin("ciao", "pwd");
+    	
+    	 EZShopInterface ez = new EZShop();
+    	 
+         assertEquals("",ez.createCard());
+         	
+    }
+    */
+    
+    @Test
+    public void testGetAllOrders() throws UnauthorizedException {
+    	
+    	 EZShopInterface ez = new EZShop();
+         assertThrows(UnauthorizedException.class, () -> ez.getAllOrders());
+         
+         User u = new User(1, "ciao", "pwd", "ShopManager");
+         DataManager.getInstance().insertUser(u);
+         LoginManager.getInstance().tryLogin("ciao", "pwd");
+         
+ 
+         
+         	
+    }
+    
+   
 
 }

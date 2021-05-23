@@ -148,15 +148,15 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
+        
+        if (!RightsManager.getInstance().canManageUsers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
 
         if (id == null || id <= 0) throw new InvalidUserIdException();
 
-        if (!(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
+        if (role == null || role.isEmpty() || !(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
             throw new InvalidRoleException();
-        }
-
-        if (!RightsManager.getInstance().canManageUsers(LoginManager.getInstance().getLoggedUser())) {
-            throw new UnauthorizedException();
         }
 
         Optional<it.polito.ezshop.model.User> optUser = DataManager.getInstance()
@@ -166,7 +166,7 @@ public class EZShop implements EZShopInterface {
             .findFirst();
 
         optUser.ifPresent(u -> {
-            u.setId(id);
+            u.setRole(role);
             DataManager.getInstance().updateUser(u);
         });
 
@@ -825,7 +825,7 @@ public class EZShop implements EZShopInterface {
         if (!RightsManager.getInstance().canManageCustomers(LoginManager.getInstance().getLoggedUser())) {
             throw new UnauthorizedException();
         }
-
+ 
         if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10) {
             throw new InvalidCustomerCardException();
         } else if (!customerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9')) {

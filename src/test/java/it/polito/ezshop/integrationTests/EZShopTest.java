@@ -2499,7 +2499,7 @@ public class EZShopTest {
         ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
         DataManager.getInstance().insertProductType(p);
         s.addProduct(p, 2);
-
+ 
         CReturn cr = new CReturn(1, s);
         DataManager.getInstance().insertReturn(cr);
 
@@ -2927,6 +2927,244 @@ public class EZShopTest {
         EZShopInterface ez = new EZShop();
         assertFalse(ez.updateQuantity(36,  1));
     }
+    
+    @Test
+    public void testModifyPointsOnCardWithoutUser() {
+       
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.modifyPointsOnCard("",1));    
+         
+    }
+    
+  
+    
+    @Test
+    public void testModifyPointsOnCardWithInvalidCard()  {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+       
+        EZShopInterface ez = new EZShop();
+        
+        assertThrows(InvalidCustomerCardException.class, () -> ez.modifyPointsOnCard(null,1));
+        assertThrows(InvalidCustomerCardException.class, () -> ez.modifyPointsOnCard("123",1));
+        assertThrows(InvalidCustomerCardException.class, () -> ez.modifyPointsOnCard("",1));
+
+    }
+
+    @Test
+    public void testModifyPointsOnCardWithCardNotPresent() throws InvalidCustomerCardException, UnauthorizedException  {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+       
+        EZShopInterface ez = new EZShop();
+        /*         Customer c = new Customer(1, "Michele Misseri", null);
+        LoyaltyCard lt = new LoyaltyCard("4547483383", 3, c);*/
+    
+        assertFalse(ez.modifyPointsOnCard("0123456789",10));
+        
+    }
+    
+    @Test
+    public void testModifyPointsOnCard() throws InvalidCustomerCardException, UnauthorizedException  {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+       
+        EZShopInterface ez = new EZShop();
+        
+        String code = ez.createCard();
+        assertEquals("0000000001",code);
+      
+        assertTrue(ez.modifyPointsOnCard(code,3));
+        assertFalse(ez.modifyPointsOnCard(code,-10));
+         
+    }
+   
+    @Test
+    public void testCreateCardWithoutUser() throws UnauthorizedException {
+    	
+    	 EZShopInterface ez = new EZShop();
+         assertThrows(UnauthorizedException.class, () -> ez.createCard());    	
+    }
+    
+    
+    @Test
+    public void testGetAllOrders() throws UnauthorizedException {
+    	
+    	 EZShopInterface ez = new EZShop();
+         assertThrows(UnauthorizedException.class, () -> ez.getAllOrders());
+         
+         User u = new User(1, "ciao", "pwd", "ShopManager");
+         DataManager.getInstance().insertUser(u);
+         LoginManager.getInstance().tryLogin("ciao", "pwd");
+         
+        ProductType pt = new ProductType(1, "999999999993", "robetta", 14.0, 13, 0.1, "niente", null);
+		Order o1 = new Order(1, 6.4, 10, pt, EOrderStatus.ISSUED);
+		List<Order> orders = new ArrayList<Order>();
+		orders.add(o1);
+		DataManager.getInstance().insertOrder(o1);
+		 
+		assertEquals(orders.stream().collect(toList()),ez.getAllOrders());
+			
+    }
+    
+    @Test
+    public void testLogin() {
+
+       
+        EZShopInterface ez = new EZShop();
+        
+        assertThrows(InvalidUsernameException.class, () -> ez.login(null,"pwd"));
+        assertThrows(InvalidUsernameException.class, () -> ez.login("","pwd"));
+        assertThrows(InvalidPasswordException.class, () -> ez.login("user",""));
+        assertThrows(InvalidPasswordException.class, () -> ez.login("user",null));
+       
+    }
+    
+    @Test
+    public void testLoginNoUser() throws InvalidUsernameException, InvalidPasswordException {
+  
+        EZShopInterface ez = new EZShop();
+        
+        assertEquals(null,ez.login("user","pwd"));
+       
+    }
+    
+    @Test
+    public void testLoginValidUser() throws InvalidUsernameException, InvalidPasswordException {
+  
+        User u = new User(1, "user", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+
+    	
+        EZShopInterface ez = new EZShop();
+        
+        assertEquals(u,ez.login("user","pwd"));
+       
+    }
+
+    @Test
+    public void testCreateProductTypeCashier() {
+    	
+    	 User u = new User(1, "ciao", "pwd", "Cashier");
+         DataManager.getInstance().insertUser(u);
+         LoginManager.getInstance().tryLogin("ciao", "pwd");
+       
+         //ProductType pt = new ProductType(1, "999999999993", "robetta", 14.0, 13, 0.1, "niente", null);
+        EZShopInterface ez = new EZShop();
+        
+        assertThrows(UnauthorizedException.class, () -> ez.createProductType("test","999999999993",14.0,"nada"));
+  
+    }
+    
+    @Test
+    public void testCreateProductType() {
+    	
+   	 User u = new User(1, "ciao", "pwd", "ShopManager");
+     DataManager.getInstance().insertUser(u);
+     LoginManager.getInstance().tryLogin("ciao", "pwd");
+     
+     EZShopInterface ez = new EZShop();
+     
+     assertThrows(InvalidProductDescriptionException.class, () -> ez.createProductType(null,"999999999993",14.0,"nada"));
+     assertThrows(InvalidProductDescriptionException.class, () -> ez.createProductType("","999999999993",14.0,"nada"));
+     
+     assertThrows(InvalidProductCodeException.class, () -> ez.createProductType("test","",14.0,"niente"));
+     assertThrows(InvalidProductCodeException.class, () -> ez.createProductType("test",null,14.0,"nada"));
+     assertThrows(InvalidProductCodeException.class, () -> ez.createProductType("test","1111",14.0,"nada"));
+     
+     assertThrows(InvalidPricePerUnitException.class, () -> ez.createProductType("test","999999999993",-1.0,"nada"));
+     assertThrows(InvalidPricePerUnitException.class, () -> ez.createProductType("test","999999999993",0.0,"nada"));
+    
+    }
+    
+    @Test
+    public void testCreateProductTypeWithExistingProd() throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
+    	
+   	 User u = new User(1, "ciao", "pwd", "ShopManager");
+     DataManager.getInstance().insertUser(u);
+     LoginManager.getInstance().tryLogin("ciao", "pwd");
+     
+     EZShopInterface ez = new EZShop();
+    
+     ProductType pt = new ProductType(1, "999999999993", "robetta", 14.0, 13, 0.1, "niente", null);
+     DataManager.getInstance().insertProductType(pt);
+     assertEquals(Integer.valueOf(-1), ez.createProductType("robetta","999999999993",14.0,"nada"));
+       
+    }
+    
+    @Test
+    public void testgetProductTypeByBarcodeCashier() {
+    	
+    	 User u = new User(1, "ciao", "pwd", "Cashier");
+         DataManager.getInstance().insertUser(u);
+         LoginManager.getInstance().tryLogin("ciao", "pwd");
+       
+         //ProductType pt = new ProductType(1, "999999999993", "robetta", 14.0, 13, 0.1, "niente", null);
+        EZShopInterface ez = new EZShop();
+        
+        assertThrows(UnauthorizedException.class, () -> ez.getProductTypeByBarCode("999999999993"));
+  
+    }
+    
+    @Test
+    public void testgetProductTypeByBarcode() {
+    	
+    	 User u = new User(1, "ciao", "pwd", "ShopManager");
+         DataManager.getInstance().insertUser(u);
+         LoginManager.getInstance().tryLogin("ciao", "pwd");
+       
+         //ProductType pt = new ProductType(1, "999999999993", "robetta", 14.0, 13, 0.1, "niente", null);
+        EZShopInterface ez = new EZShop();
+        
+        assertThrows(InvalidProductCodeException.class, () -> ez.getProductTypeByBarCode("9999999993"));
+        assertThrows(InvalidProductCodeException.class, () -> ez.getProductTypeByBarCode(""));
+        assertThrows(InvalidProductCodeException.class, () -> ez.getProductTypeByBarCode(null));
+    }
+    
+    @Test
+    public void testEndSaleTransactionWithoutUSer() {
+   
+        EZShopInterface ez = new EZShop();
+        
+        assertThrows(UnauthorizedException.class, () -> ez.endSaleTransaction(1));
+  
+    }
+    
+    @Test
+    public void testEndSaleTransaction() {
+    	
+    	 User u = new User(1, "ciao", "pwd", "ShopManager");
+         DataManager.getInstance().insertUser(u);
+         LoginManager.getInstance().tryLogin("ciao", "pwd");
+       
+         //ProductType pt = new ProductType(1, "999999999993", "robetta", 14.0, 13, 0.1, "niente", null);
+        EZShopInterface ez = new EZShop();
+        
+        assertThrows(InvalidTransactionIdException.class, () -> ez.endSaleTransaction(null));
+        assertThrows(InvalidTransactionIdException.class, () -> ez.endSaleTransaction(-1));
+        assertThrows(InvalidTransactionIdException.class, () -> ez.endSaleTransaction(0));
+    }
+    
+    @Test
+    public void testComputeBalance() {
+        
+        
+        //ProductType pt = new ProductType(1, "999999999993", "robetta", 14.0, 13, 0.1, "niente", null);
+       EZShopInterface ez = new EZShop();
+       
+       assertThrows(UnauthorizedException.class, () -> ez.computeBalance());
+ 
+   }
+    
+    
+    
+   
 
     //modifyCustomer()
     @Test

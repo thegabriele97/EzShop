@@ -828,12 +828,8 @@ public class EZShop implements EZShopInterface {
 
         if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10) {
             throw new InvalidCustomerCardException();
-        } else {
-            try {
-                Integer.parseInt(customerCard);
-            } catch (NumberFormatException e) {
-                throw new InvalidCustomerCardException();
-            }
+        } else if (!customerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9')) {
+            throw new InvalidCustomerCardException();
         }
 
         Optional<LoyaltyCard> card = DataManager.getInstance()
@@ -842,7 +838,7 @@ public class EZShop implements EZShopInterface {
             .filter(c -> c.getID().equals(customerCard))
             .findFirst();
 
-        if (!(card.isPresent()) || (pointsToBeAdded < 0 && card.get().getPoints() < pointsToBeAdded)) {
+        if (!card.isPresent() || (pointsToBeAdded < 0 && card.get().getPoints() < -pointsToBeAdded)) {
             return false;
         }
 

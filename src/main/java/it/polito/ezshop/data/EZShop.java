@@ -1242,21 +1242,22 @@ public class EZShop implements EZShopInterface {
                 .findFirst();
     	 
 
-        if (!Creturn.isPresent()) return false;
+        if (!Creturn.isPresent() || Creturn.get().isCommitted()) return false;
 
-        if (commit ^ Creturn.get().isCommitted()) {
+        if (commit) {
             Creturn.get()
                 .getProductsList()
                 .forEach(p -> {
                     it.polito.ezshop.model.ProductType rightP = (it.polito.ezshop.model.ProductType)p;
                     
-                    rightP.addQuantityOffset(Creturn.get().getQuantityByProduct(rightP) * (commit ? +1 : -1));
+                    rightP.addQuantityOffset(Creturn.get().getQuantityByProduct(rightP));
                     DataManager.getInstance().updateProductType(rightP);
                 });
+        } else {
+            return DataManager.getInstance().deleteReturn(Creturn.get());
         }
 
-        Creturn.get().setAsCommitted(commit); 
-
+        Creturn.get().setAsCommitted();
         return DataManager.getInstance().updateReturn(Creturn.get());
     }
 

@@ -1145,21 +1145,14 @@ public class EZShop implements EZShopInterface {
             throw new InvalidTransactionIdException();
         }
         
-        OptionalInt maxId = DataManager.getInstance()
-                .getReturns()
-                .stream()
-                .mapToInt(CReturn::getReturnId)
-                .max();
-        
         Optional<Sale> sale = DataManager.getInstance()
                 .getSales()
                 .stream()
                 .filter(s -> s.getTicketNumber() == transactionId)
                 .findFirst();
         
-        if (!sale.isPresent()) return -1;
+        if (!sale.isPresent() || !sale.get().isCommitted()) return -1;
 
-        // TODO: check if this check is necessary and if it returns the right value when fails
         boolean isPaid = DataManager.getInstance()
             .getBalanceTransactions()
             .stream()
@@ -1170,6 +1163,12 @@ public class EZShop implements EZShopInterface {
             .count() == 1;
 
         if (!isPaid) return -1;
+
+        OptionalInt maxId = DataManager.getInstance()
+            .getReturns()
+            .stream()
+            .mapToInt(CReturn::getReturnId)
+            .max();
 
         int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
         CReturn newCReturn = new CReturn(newId, sale.get());

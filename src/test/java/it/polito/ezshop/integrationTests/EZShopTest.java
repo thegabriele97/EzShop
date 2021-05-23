@@ -20,8 +20,6 @@ import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.LoginManager;
 import it.polito.ezshop.exceptions.*;
 
-import javax.xml.crypto.Data;
-
 public class EZShopTest {
     
     private List<String> lines = new ArrayList<>();
@@ -2544,7 +2542,7 @@ public class EZShopTest {
         DataManager.getInstance().insertBalanceTransaction(ct);
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(1), ez.startReturnTransaction(1));
+        assertEquals(Integer.valueOf(1), ez.startReturnTransaction(1));
     }
 
     @Test
@@ -2566,7 +2564,7 @@ public class EZShopTest {
         DataManager.getInstance().insertBalanceTransaction(ct);
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(1), ez.startReturnTransaction(1));
+        assertEquals(Integer.valueOf(1), ez.startReturnTransaction(1));
     }
 
     @Test
@@ -2588,7 +2586,7 @@ public class EZShopTest {
         DataManager.getInstance().insertBalanceTransaction(ct);
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(1), ez.startReturnTransaction(1));
+        assertEquals(Integer.valueOf(1), ez.startReturnTransaction(1));
     }
 
     @Test
@@ -2654,7 +2652,67 @@ public class EZShopTest {
         DataManager.getInstance().insertBalanceTransaction(ct);
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(-1), ez.startReturnTransaction(2));
+        assertEquals(Integer.valueOf(-1), ez.startReturnTransaction(2));
+    }
+
+    @Test
+    public void testStartReturnTransactionWithSaleNotCommitted() throws InvalidTransactionIdException, UnauthorizedException, InvalidProductIdException, InvalidLocationException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidQuantityException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 1.4, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 3);
+
+        Integer transId = ez.startSaleTransaction();
+        ez.addProductToSale(transId, "1231231231232", 2);
+
+        assertEquals(Integer.valueOf(-1), ez.startReturnTransaction(transId));
+    }
+
+    @Test
+    public void testStartReturnTransactionWithSaleCommittedNoPaid() throws InvalidTransactionIdException, UnauthorizedException, InvalidProductIdException, InvalidLocationException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidQuantityException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 1.4, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 3);
+
+        Integer transId = ez.startSaleTransaction();
+        ez.addProductToSale(transId, "1231231231232", 2);
+        ez.endSaleTransaction(transId);
+
+        assertEquals(Integer.valueOf(-1), ez.startReturnTransaction(transId));
+    }
+
+    @Test
+    public void testStartReturnTransactionWithSaleCommittedPaid() throws InvalidTransactionIdException, UnauthorizedException, InvalidProductIdException, InvalidLocationException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidQuantityException, InvalidPaymentException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 1.4, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 3);
+
+        Integer transId = ez.startSaleTransaction();
+        ez.addProductToSale(transId, "1231231231232", 2);
+        ez.endSaleTransaction(transId);
+        ez.receiveCashPayment(transId, ez.getSaleTransaction(transId).getPrice());
+
+        assertFalse(ez.startReturnTransaction(transId) <= 0);
     }
 
     //createUser
@@ -2704,21 +2762,21 @@ public class EZShopTest {
     public void testCreateUserAsCashier() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(1), ez.createUser("ciao", "pwd", "Cashier"));
+        assertEquals(Integer.valueOf(1), ez.createUser("ciao", "pwd", "Cashier"));
     }
 
     @Test
     public void testCreateUserAsShopManager() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(1), ez.createUser("ciao", "pwd", "ShopManager"));
+        assertEquals(Integer.valueOf(1), ez.createUser("ciao", "pwd", "ShopManager"));
     }
 
     @Test
     public void testCreateUserAsAdministrator() throws InvalidPasswordException, InvalidRoleException, InvalidUsernameException {
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(1), ez.createUser("ciao", "pwd", "Administrator"));
+        assertEquals(Integer.valueOf(1), ez.createUser("ciao", "pwd", "Administrator"));
     }
 
     @Test
@@ -2728,7 +2786,7 @@ public class EZShopTest {
         DataManager.getInstance().insertUser(u);
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(-1), ez.createUser("ciao", "pwd", "Administrator"));
+        assertEquals(Integer.valueOf(-1), ez.createUser("ciao", "pwd", "Administrator"));
     }
 
     //updateQuantity

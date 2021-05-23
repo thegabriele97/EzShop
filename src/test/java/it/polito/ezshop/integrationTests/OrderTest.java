@@ -53,7 +53,7 @@ public class OrderTest {
         ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
         Order o = new Order(1, 0.6, 8, p, EOrderStatus.ISSUED);
         o.setBalanceId(18);
-        assertEquals(new Integer(18), o.getBalanceId());
+        assertEquals(Integer.valueOf(18), o.getBalanceId());
     }
     
     @Test
@@ -96,7 +96,7 @@ public class OrderTest {
     public void testGettersOfOrder(){
         ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.0, "", "1-a-1");
         Order o = new Order(1, 0.6, 8, p, EOrderStatus.ISSUED);
-        assertEquals(new Integer(1), o.getOrderId());
+        assertEquals(Integer.valueOf(1), o.getOrderId());
         assertEquals(0.6, o.getPricePerUnit(), 0.005);
         assertEquals(8, o.getQuantity());
         assertEquals(p, o.getRelatedProduct());

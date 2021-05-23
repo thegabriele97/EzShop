@@ -10,7 +10,7 @@ public class DebitTransaction extends BalanceTransaction {
 
     public DebitTransaction(int balanceId, IDebit debit){
         super(balanceId, debit.getTotalValue());
-        setRelatedDebitOperation(debit); //TODO: prima era senza set e non faceva controlli sul null, è un problema?
+        setRelatedDebitOperation(debit);
     }
 
     public void setRelatedDebitOperation(IDebit debit){

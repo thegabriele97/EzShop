@@ -1,17 +1,12 @@
 package it.polito.ezshop.integrationTests;
 
 import it.polito.ezshop.data.DataManager;
-import it.polito.ezshop.data.TicketEntry;
 import it.polito.ezshop.model.LoyaltyCard;
 import it.polito.ezshop.model.Position;
 import it.polito.ezshop.model.ProductType;
 import it.polito.ezshop.model.Sale;
 import it.polito.ezshop.model.CReturn;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.ArrayList;
+import org.junit.*;
 
 import static org.junit.Assert.*;
 

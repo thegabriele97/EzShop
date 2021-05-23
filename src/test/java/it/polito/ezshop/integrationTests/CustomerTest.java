@@ -28,7 +28,7 @@ public class CustomerTest {
     @Test
     public void testValidCustomer() {
         Customer c = new Customer(1, "we", null);
-        assertEquals(new Integer(1), c.getId());
+        assertEquals(Integer.valueOf(1), c.getId());
         assertEquals("we", c.getCustomerName());
         assertEquals("", c.getCustomerCard());
 
@@ -78,14 +78,14 @@ public class CustomerTest {
     public void testSetIllegalNegativePoints() {
         Customer c = new Customer(1, "we", new LoyaltyCard("0123456789", 0, null));
         c.setPoints(-1);
-        assertEquals(new Integer(0), c.getPoints());
+        assertEquals(Integer.valueOf(0), c.getPoints());
     }
 
     @Test
     public void testSetPoints() {
         Customer c = new Customer(1, "we", new LoyaltyCard("0123456789", 0, null));
         c.setPoints(1);
-        assertEquals(new Integer(1), c.getPoints());
+        assertEquals(Integer.valueOf(1), c.getPoints());
     }
 
 }

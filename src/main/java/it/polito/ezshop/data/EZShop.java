@@ -670,7 +670,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidCustomerNameException();
         }
 
-        if (!newCustomerCard.isEmpty() && (newCustomerCard.length() != 10 || !newCustomerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9'))) {
+        if (!(newCustomerCard == null) && !newCustomerCard.isEmpty() && (newCustomerCard.length() != 10 || !newCustomerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9'))) {  
              return false;
         }
 
@@ -683,7 +683,7 @@ public class EZShop implements EZShopInterface {
         if (!customer.isPresent()) return false;
 
         if (newCustomerCard !=null) {
-            if (newCustomerCard.isEmpty()) {
+            if (newCustomerCard.isEmpty()) { 
 
                 LoyaltyCard card = customer.get().getLoyaltyCard();
 

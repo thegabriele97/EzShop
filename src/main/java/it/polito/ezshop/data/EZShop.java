@@ -670,7 +670,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidCustomerNameException();
         }
 
-        if (!(newCustomerCard == null) && !newCustomerCard.isEmpty() && (newCustomerCard.length() != 10 || !newCustomerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9'))) {  
+        if (newCustomerCard != null && !newCustomerCard.isEmpty() && (newCustomerCard.length() != 10 || !newCustomerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9'))) {  
              return false;
         }
 

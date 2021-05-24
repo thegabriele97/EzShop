@@ -3337,7 +3337,7 @@ public class EZShopTest {
         assertFalse(ez.modifyCustomer(1, "Gianni Balestra", "9999992392"));
     }
 
-    @Test //TODO: LoyaltyCard parameter to fix in Customer
+    @Test
     public void testNoCardModifyCustomer() throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException{
 
         User u = new User(1, "ciao", "pwd", "Administrator");
@@ -3349,7 +3349,7 @@ public class EZShopTest {
 
         EZShopInterface ez = new EZShop();
         assertTrue(ez.modifyCustomer(1, "Gianni Balestra", null));      
-        //assertTrue(ez.modifyCustomer(1, "Gianni Balestra", ""));   //TODO: updateCustomer crash if empty card
+        assertTrue(ez.modifyCustomer(1, "Gianni Balestra", ""));
 
     }
 

@@ -40,9 +40,12 @@ public class Customer implements Serializable, it.polito.ezshop.data.Customer {
 	public void setCustomerCard(String customerCard) {
 		
 		if (customerCard.isEmpty()) {
-			this.loyaltyCard.addCustomer(null);
-			DataManager.getInstance().updateLoyaltyCard(this.loyaltyCard);
 			
+			if (this.loyaltyCard != null) {
+				this.loyaltyCard.addCustomer(null);
+				DataManager.getInstance().updateLoyaltyCard(this.loyaltyCard);
+			}
+
 			this.loyaltyCard = null;
 			DataManager.getInstance().updateCustomer(this);
 			return;

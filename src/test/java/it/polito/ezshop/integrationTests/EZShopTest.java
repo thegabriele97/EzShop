@@ -4275,7 +4275,7 @@ public class EZShopTest {
     }
 
     @Test
-    public void testStartSaleTransactionWithShopManagerRights() throws UnauthorizedException, InvalidProductIdException {
+    public void testStartSaleTransactionWithShopManagerRights() throws UnauthorizedException {
 
         User u = new User(1, "ciao", "pwd", "ShopManager");
         DataManager.getInstance().insertUser(u);
@@ -4286,7 +4286,7 @@ public class EZShopTest {
     }
 
     @Test
-    public void testStartSaleTransactionWithAdministratorRights() throws UnauthorizedException, InvalidProductIdException {
+    public void testStartSaleTransactionWithAdministratorRights() throws UnauthorizedException {
 
         User u = new User(1, "ciao", "pwd", "Administrator");
         DataManager.getInstance().insertUser(u);

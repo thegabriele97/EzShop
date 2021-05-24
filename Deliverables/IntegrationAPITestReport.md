@@ -180,16 +180,14 @@ We adopted a bottom up approach. Starting from the leaf classes (Unit Testing) w
 
 ## Step 1
 | Classes  | JUnit test cases |
-|--|--|
-|LoyaltyCard|LoyaltyCardTest.java|
-|Customer|CustomerTest.java|
-|Position|PositionTest.java|
-|ProductType|ProductTypeTest.java|
+|---|---|
+| Position | PositionTest.java |
+| Customer | CustomerTest.java |
 
 
 ## Step 2
 | Classes  | JUnit test cases |
-|--|--|
+|---|---|
 |Creturn|CreturnTest.java|
 |Sale|SaleTest.java|
 |Order|OrderTest.java|
@@ -197,7 +195,7 @@ We adopted a bottom up approach. Starting from the leaf classes (Unit Testing) w
 
 ## Step 3
 | Classes  | JUnit test cases |
-|--|--|
+|---|---|
 |DebitTransaction|DebitTransaction.java|
 |CreditTransaction|CreditTransaction.java|
 |RightManager|RightManagerTest.java|
@@ -207,7 +205,7 @@ We adopted a bottom up approach. Starting from the leaf classes (Unit Testing) w
 
 ## Step 4
 | Classes  | JUnit test cases |
-|--|--|
+|---|---|
 |EZShop|EZShopTest.java|
 
 # Coverage of Scenarios and FR
@@ -224,6 +222,14 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 | ..          | FRx                                |                                                                                                                                                                                                                                                                                                                                                |
 | ..          | FRy                                |                                                                                                                                                                                                                                                                                                                                                |
 | ...         |                                    |                                                                                                                                                                                                                                                                                                                                                |
+| 1.2         | FR3.4, FR4.2                       | testUpdatePosition()                                                                                                                                                                                                                                                                                                                                               |
+| 2.3         | FR1.5                              | testValidUpdateUserRights()                                                                                                                                                                                                                                                                                                                                               |
+| 4.1         | FR5.1                              | testDefineCustomerWithRightsAndCorrectInserting()                                                                                                                                                                                                                                                                                                                                               |
+| 5.1         | FR1                                | testLoginValidUser()                                                                                                                                                                                                                                                                                                                                               |
+| 6.3         | FR6.1 , FR6.7, FR6.2, FR4.1, FR6.4, FR6.10, FR7, FR6.8, FR8.2 | testStartSaleTransactionWithCashierRights(), testValidAddProductToSale(), testValidApplyDiscountRateToSale(), testEndSaleTransactionWithMultipleCalls() |
+| 7.1         | FR7.2                              | testReceiveCreditCardPaymentSuccessfully()                                                                                                                                                                                                                                                                                                                                               |
+| 8.1         | FR6.12, FR6.7, FR6.13, FR7.4, FR6.14 | testValidGetSaleTransaction(), testStartReturnTransactionWithCashierRights(), testReturnProductWithCashierRights(), testReturnCreditCardPayamentWithRightsAndEverythingCorrect(), testEndReturnTransactionWithCashierRights()                                                                                                                |
+| 10.2        | FR7.3                                | testReturnCashPaymentWithRightsAndValid()                                                                                                                                                                                                                                                                                                                                               |
 | 2.1         | FR1                                | testCreateUserAsAdministrator()                                                                                                                                                                                                                                                                                                                |
 | 3.2         | FR4.5                              | testPayOrderTotVal(), testPayOrderNotIssued(), testPayOrderWithNotExisitingOrder(), testPayOrderWithNotValidOrderId(), testPayOrderCashier()                                                                                                                                                                                                   |
 | 4.3         | FR5.1                              | testNoCardModifyCustomer()                                                                                                                                                                                                                                                                                                                     |

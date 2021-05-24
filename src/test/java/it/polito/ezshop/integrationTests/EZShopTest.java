@@ -3308,7 +3308,7 @@ public class EZShopTest {
     }
 
     @Test
-    public void testWrongCustomerCardModifyCustomer() throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException{
+    public void testWrongCustomerCardModifyCustomer() throws InvalidCustomerNameException, InvalidCustomerIdException, UnauthorizedException {
         User u = new User(1, "ciao", "pwd", "Administrator");
         DataManager.getInstance().insertUser(u);
         LoginManager.getInstance().tryLogin("ciao", "pwd");
@@ -3321,9 +3321,8 @@ public class EZShopTest {
 
         EZShopInterface ez = new EZShop();
 
-        assertFalse(ez.modifyCustomer(1, "Gianni Balestra", "252"));
-        assertFalse(ez.modifyCustomer(1, "Gianni Balestra", "yzcfjdxjch"));
-        
+        assertThrows(InvalidCustomerCardException.class, () -> ez.modifyCustomer(1, "Gianni Balestra", "252"));
+        assertThrows(InvalidCustomerCardException.class, () -> ez.modifyCustomer(1, "Gianni Balestra", "yzcfjdxjch"));
     }
 
     @Test

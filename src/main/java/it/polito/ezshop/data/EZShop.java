@@ -671,7 +671,7 @@ public class EZShop implements EZShopInterface {
         }
 
         if (newCustomerCard != null && !newCustomerCard.isEmpty() && (newCustomerCard.length() != 10 || !newCustomerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9'))) {  
-             return false;
+            throw new InvalidCustomerCardException();
         }
 
         Optional<it.polito.ezshop.model.Customer> customer = DataManager.getInstance()

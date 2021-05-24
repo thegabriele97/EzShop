@@ -3183,26 +3183,52 @@ public class EZShopTest {
 
     @Test
     public void testEndSaleTransactionWithoutUSer() {
-
         EZShopInterface ez = new EZShop();
-
         assertThrows(UnauthorizedException.class, () -> ez.endSaleTransaction(1));
-
     }
 
     @Test
     public void testEndSaleTransaction() {
 
-    	 User u = new User(1, "ciao", "pwd", "ShopManager");
-         DataManager.getInstance().insertUser(u);
-         LoginManager.getInstance().tryLogin("ciao", "pwd");
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
 
-         //ProductType pt = new ProductType(1, "999999999993", "robetta", 14.0, 13, 0.1, "niente", null);
+        //ProductType pt = new ProductType(1, "999999999993", "robetta", 14.0, 13, 0.1, "niente", null);
         EZShopInterface ez = new EZShop();
 
         assertThrows(InvalidTransactionIdException.class, () -> ez.endSaleTransaction(null));
         assertThrows(InvalidTransactionIdException.class, () -> ez.endSaleTransaction(-1));
         assertThrows(InvalidTransactionIdException.class, () -> ez.endSaleTransaction(0));
+    }
+
+    @Test
+    public void testEndSaleTransactionWithMultipleCalls() throws UnauthorizedException, InvalidTransactionIdException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer transId = ez.startSaleTransaction();
+
+        assertTrue(ez.endSaleTransaction(transId));
+        assertFalse(ez.endSaleTransaction(transId));
+    }
+
+    @Test
+    public void testEndSaleTransactionWithNoValidId() throws UnauthorizedException, InvalidTransactionIdException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer transId = ez.startSaleTransaction();
+
+        assertFalse(ez.endSaleTransaction(transId + 1));
     }
 
     @Test

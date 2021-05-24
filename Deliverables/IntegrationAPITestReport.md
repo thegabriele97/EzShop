@@ -23,7 +23,145 @@ Version:
 
 # Dependency graph 
 
-     <report the here the dependency graph of the classes in EzShop, using plantuml>
+```plantuml
+
+package "it.polito.ezshop.data" as data {
+
+    class "EZShop" as ezshop {
+
+    }
+
+    class LoginManager << (S,#FF7700) Singleton >> {
+        
+    }
+
+    class RightsManager << (S,#FF7700) Singleton >> {
+        
+    }
+
+    class "DataManager" as DataManager << (S,#FF7700) Singleton >> {
+        
+    }
+
+    class CreditCardSystem << (S,#FF7700) Singleton >> {
+       
+    }
+
+    ezshop ..> LoginManager
+    ezshop ..> RightsManager
+    ezshop .right.> DataManager
+    ezshop .left.> CreditCardSystem
+
+    RightsManager .left.> LoginManager
+    LoginManager .up.> DataManager
+    
+
+}
+
+package "it.polito.ezshop.model" as model {
+    
+    class User {
+
+    }
+
+    class ProductType {
+        
+    }
+
+    class Position {
+        
+    }
+
+    abstract ProductList {
+        
+    }
+
+    class Sale {
+        
+    }
+
+    class CReturn {
+        
+    }
+
+    class Order {
+        
+    }
+
+    abstract BalanceTransaction {
+
+    }
+
+    class Customer {
+
+    }
+
+    class LoyaltyCard {
+
+    }
+
+    interface ICredit <<interface>> {
+        
+    }
+
+    interface IDebit <<interface>> {
+        
+    }
+
+    class CreditTransaction {
+        
+    }
+
+    class DebitTransaction {
+        
+    }
+
+    class DummyCredit {
+        
+    }
+
+    class DummyDebit {
+        
+    }
+
+    ProductType <-left-> Position
+    Sale <-right- CReturn
+
+    LoyaltyCard <--> Customer
+
+    Order --> ProductType
+
+    ProductList <|-up- Sale
+    ProductList <|-up- CReturn
+    ProductList --> ProductType
+
+    Sale -up-|> ICredit
+    Order -up-|> IDebit
+    CReturn -up-|> IDebit
+    DummyCredit -left-|> ICredit
+    DummyDebit -left-|> IDebit
+
+    BalanceTransaction <|-- CreditTransaction
+    BalanceTransaction <|-- DebitTransaction
+
+    CreditTransaction --> ICredit
+    DebitTransaction --> IDebit
+
+}
+
+ezshop --> BalanceTransaction
+ezshop --> LoyaltyCard
+ezshop --> Customer
+ezshop --> User
+ezshop --> DummyCredit
+ezshop --> DummyDebit
+ezshop --> Sale
+ezshop --> Order
+ezshop --> CReturn
+ezshop --> Position
+ezshop --> ProductType
+
+```
 
 # Integration approach
 
@@ -32,6 +170,7 @@ Version:
     <Some steps may  correspond to unit testing (ex step1 in ex above), presented in other document UnitTestReport.md>
     <One step will  correspond to API testing>
 
+We adopted a bottom up approach. Starting from the leaf classes (Unit Testing) we started to go up in the dependency graph until EZShop that represents our complete Integration of the developed software.
 
 
 #  Tests
@@ -42,43 +181,34 @@ Version:
 ## Step 1
 | Classes  | JUnit test cases |
 |--|--|
+|LoyaltyCard|LoyaltyCardTest.java|
+|Customer|CustomerTest.java|
 |Position|PositionTest.java|
+|ProductType|ProductTypeTest.java|
 
 
 ## Step 2
 | Classes  | JUnit test cases |
 |--|--|
-|||
+|Creturn|CreturnTest.java|
+|Sale|SaleTest.java|
+|Order|OrderTest.java|
 
 
-## Step n 
+## Step 3
+| Classes  | JUnit test cases |
+|--|--|
+|DebitTransaction|DebitTransaction.java|
+|CreditTransaction|CreditTransaction.java|
+|RightManager|RightManagerTest.java|
+|LoginManager|LoginManagerTest.java|
 
    
 
+## Step 4
 | Classes  | JUnit test cases |
 |--|--|
-|||
-
-
-
-
-# Scenarios
-
-
-<If needed, define here additional scenarios for the application. Scenarios should be named
- referring the UC in the OfficialRequirements that they detail>
-
-## Scenario UCx.y
-
-| Scenario |  name |
-| ------------- |:-------------:|
-|  Precondition     |  |
-|  Post condition     |   |
-| Step#        | Description  |
-|  1     |  ... |
-|  2     |  ... |
-
-
+|EZShop|EZShopTest.java|
 
 # Coverage of Scenarios and FR
 
@@ -99,6 +229,8 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 | 4.3         | FR5.1                              | testNoCardModifyCustomer()                                                                                                                                                                                                                                                                                                                     |
 | 6.1         | FR6.1, FR6.2, FR6.10, FR7.1, FR7.2 | testStartSaleTransactionWithNoLoggedUser(), testStartSaleTransactionWithCashierRights(), testStartSaleTransactionWithShopManagerRights(), testStartSaleTransactionWithAdministratorRights(), testValidAddProductToSale(), testEndSaleTransactionWithMultipleCalls(), testValidReceiveCashPayment(), testReceiveCreditCardPaymentSuccessfully() |
 | 6.5         | FR6.1, FR6.2, FR6.10, FR6.11       | testStartSaleTransactionWithNoLoggedUser(), testStartSaleTransactionWithCashierRights(), testStartSaleTransactionWithShopManagerRights(), testStartSaleTransactionWithAdministratorRights(), testValidAddProductToSale(), testEndSaleTransactionWithMultipleCalls(), testDeleteSaleTransaction()                                               |
+| 7.3         | FR7.2                              | testReceiveCreditCardPaymentWithNotEnoughMoneyOnTheCreditCard()                                                                                                                                                                                                                                                                                |
+| 9.1         | FR8.3                              | testGetCreditsAndDebitsWithBothParameters()                                                                                                                                                                                                                                                                                                    |
 
 
 
@@ -112,5 +244,5 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 
 | Non Functional Requirement | Test name |
 | -------------------------- | --------- |
-|                            |           |
+| NFR5 | BBCreditCardSystemTest.java/* |
 

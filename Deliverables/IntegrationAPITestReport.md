@@ -89,14 +89,16 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 
 
 
-| Scenario ID | Functional Requirements covered | JUnit  Test(s) |
-| ----------- | ------------------------------- | ----------- |
-|  ..         | FRx                             |             |
-|  ..         | FRy                             |             |
-| ...         |                                 |             |
-| ...         |                                 |             |
-| ...         |                                 |             |
-| ...         |                                 |             |
+| Scenario ID | Functional Requirements covered    | JUnit  Test(s)                                                                                                                                                                                                                                                                                                                                 |
+|-------------|------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ..          | FRx                                |                                                                                                                                                                                                                                                                                                                                                |
+| ..          | FRy                                |                                                                                                                                                                                                                                                                                                                                                |
+| ...         |                                    |                                                                                                                                                                                                                                                                                                                                                |
+| 2.1         | FR1                                | testCreateUserAsAdministrator()                                                                                                                                                                                                                                                                                                                |
+| 3.2         | FR4.5                              | testPayOrderTotVal(), testPayOrderNotIssued(), testPayOrderWithNotExisitingOrder(), testPayOrderWithNotValidOrderId(), testPayOrderCashier()                                                                                                                                                                                                   |
+| 4.3         | FR5.1                              | testNoCardModifyCustomer()                                                                                                                                                                                                                                                                                                                     |
+| 6.1         | FR6.1, FR6.2, FR6.10, FR7.1, FR7.2 | testStartSaleTransactionWithNoLoggedUser(), testStartSaleTransactionWithCashierRights(), testStartSaleTransactionWithShopManagerRights(), testStartSaleTransactionWithAdministratorRights(), testValidAddProductToSale(), testEndSaleTransactionWithMultipleCalls(), testValidReceiveCashPayment(), testReceiveCreditCardPaymentSuccessfully() |
+| 6.5         | FR6.1, FR6.2, FR6.10, FR6.11       | testStartSaleTransactionWithNoLoggedUser(), testStartSaleTransactionWithCashierRights(), testStartSaleTransactionWithShopManagerRights(), testStartSaleTransactionWithAdministratorRights(), testValidAddProductToSale(), testEndSaleTransactionWithMultipleCalls(), testDeleteSaleTransaction()                                               |
 
 
 

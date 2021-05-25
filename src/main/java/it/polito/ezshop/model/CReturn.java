@@ -14,7 +14,7 @@ public class CReturn extends ProductList implements IDebit {
         setSaleTransaction(saleTransaction);
         this.committed = false;
 
-        //saleTransaction.addReturnTransaction(this); TODO: is it necessary?
+        saleTransaction.addReturnTransaction(this);
     }
     
     public void setAsCommitted(){

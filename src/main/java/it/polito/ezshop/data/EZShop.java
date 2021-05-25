@@ -1044,7 +1044,7 @@ public class EZShop implements EZShopInterface {
 
         if (!sale.isPresent()) return -1;
 
-        return (int)(sale.get().getPrice() / 10);
+        return (int)(sale.get().getOriginalSalePrice() / 10);
     }
 
     @Override
@@ -1144,7 +1144,7 @@ public class EZShop implements EZShopInterface {
         Optional<Sale> sale = DataManager.getInstance()
                 .getSales()
                 .stream()
-                .filter(s -> s.getTicketNumber() == transactionId)
+                .filter(s -> s.getTicketNumber().equals(transactionId))
                 .findFirst();
         
         if (!sale.isPresent() || !sale.get().isCommitted()) return -1;

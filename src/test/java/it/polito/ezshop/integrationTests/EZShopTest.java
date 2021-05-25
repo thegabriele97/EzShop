@@ -18,6 +18,7 @@ import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.LoginManager;
+import it.polito.ezshop.data.TicketEntry;
 import it.polito.ezshop.exceptions.*;
 
 public class EZShopTest {
@@ -4275,8 +4276,125 @@ public class EZShopTest {
 
         EZShopInterface ez = new EZShop();
         assertTrue(ez.endReturnTransaction(1, false));
-        assertFalse(ez.endReturnTransaction(1, false));
         assertFalse(ez.endReturnTransaction(1, true));
+        assertFalse(ez.endReturnTransaction(1, false));
+    }
+
+    @Test
+    public void testEndedReturnTransactionSaleValues() throws InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException, InvalidQuantityException, InvalidPaymentException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductIdException, InvalidLocationException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 1.4, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        Integer transId = ez.startSaleTransaction();
+        ez.addProductToSale(transId, "1231231231232", 3);
+        
+        ez.endSaleTransaction(transId);
+        ez.receiveCashPayment(transId, ez.getSaleTransaction(transId).getPrice());
+
+        Integer retId = ez.startReturnTransaction(transId);
+        ez.returnProduct(retId, "1231231231232", 1);
+
+        assertEquals(1.4*3, ez.getSaleTransaction(transId).getPrice(), 0.01);
+        assertEquals(1.4*3, ez.computeBalance(), 0.01);
+        
+        assertTrue(ez.endReturnTransaction(1, true));
+        assertEquals(1.4*2, ez.getSaleTransaction(transId).getPrice(), 0.01);
+        assertEquals(1.4*3, ez.computeBalance(), 0.01);
+
+        ez.returnCashPayment(retId);
+        assertEquals(1.4*3 - 1.4*1, ez.computeBalance(), 0.01);
+
+        double value = ez.getCreditsAndDebits(null, null)
+            .stream()
+            .filter(o -> o.getType() == "CREDIT")
+            .mapToDouble(o -> o.getMoney())
+            .sum();
+
+        assertEquals(1.4*3, value, 0.01);
+
+        List<TicketEntry> entries = ez.getSaleTransaction(transId).getEntries();
+
+        assertEquals(1, entries.size());
+
+        long counting = entries.stream()
+            .filter(e -> e.getBarCode() == "1231231231232")
+            .filter(e -> e.getAmount() == 3 - 1)
+            .count();
+
+        assertEquals(1, counting);
+    }
+
+    @Test
+    public void testEndedReturnTransactionSaleValuesMultipleProducts() throws InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException, InvalidQuantityException, InvalidPaymentException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductIdException, InvalidLocationException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 1.4, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 5);
+
+        Integer prodId2 = ez.createProductType("test", "999999999993", 2.4, "");
+        ez.updatePosition(prodId2, "1-a-2");
+        ez.updateQuantity(prodId2, 9);
+
+        Integer transId = ez.startSaleTransaction();
+        ez.addProductToSale(transId, "1231231231232", 3);
+        ez.addProductToSale(transId, "999999999993", 1);
+        
+        ez.endSaleTransaction(transId);
+        ez.receiveCashPayment(transId, ez.getSaleTransaction(transId).getPrice());
+
+        Integer retId = ez.startReturnTransaction(transId);
+        ez.returnProduct(retId, "1231231231232", 1);
+        ez.returnProduct(retId, "999999999993", 1);
+
+        assertEquals(1.4*3 + 2.4*1, ez.getSaleTransaction(transId).getPrice(), 0.01);
+        assertEquals(1.4*3 + 2.4*1, ez.computeBalance(), 0.01);
+        
+        assertTrue(ez.endReturnTransaction(1, true));
+        assertEquals(1.4*2 + 2.4*0, ez.getSaleTransaction(transId).getPrice(), 0.01);
+        assertEquals(1.4*3 + 2.4*1, ez.computeBalance(), 0.01);
+
+        ez.returnCashPayment(retId);
+        assertEquals(1.4*3 + 2.4*1 - 1.4*1 - 2.4*1, ez.computeBalance(), 0.01);
+
+        double value = ez.getCreditsAndDebits(null, null)
+            .stream()
+            .filter(o -> o.getType() == "CREDIT")
+            .mapToDouble(o -> o.getMoney())
+            .sum();
+
+        assertEquals(1.4*3 + 2.4*1, value, 0.01);
+
+        List<TicketEntry> entries = ez.getSaleTransaction(transId).getEntries();
+
+        assertEquals(2, entries.size());
+
+        long counting = entries.stream()
+            .filter(e -> e.getBarCode() == "1231231231232")
+            .filter(e -> e.getAmount() == 3 - 1)
+            .count();
+
+        assertEquals(1, counting);
+
+        counting = entries.stream()
+            .filter(e -> e.getBarCode() == "999999999993")
+            .filter(e -> e.getAmount() == 1 - 1)
+            .count();
+
+        assertEquals(1, counting);
     }
 
     //startSaleTransaction

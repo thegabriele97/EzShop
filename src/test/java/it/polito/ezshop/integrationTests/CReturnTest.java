@@ -81,6 +81,62 @@ public class CReturnTest {
         assertEquals(cr.getTotalValue(), 0.0, 0.001);
     }
 
+    @Test
+    public void testSingleReturnAndRelativeSaleValues() {
+
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+
+        ProductType pt = new ProductType(1, "999999999993", "roba", 2.0, 7, 0.0, "no", null);
+        DataManager.getInstance().insertProductType(pt);
+
+        s.addProduct(pt, 1);
+        s.addProduct(pt, 3);
+        s.addProduct(pt, 1);
+        s.applyDiscountRateToProductGroup(pt, 0.34);
+
+        CReturn cr = new CReturn(1, s);
+        cr.addProduct(pt, 2);
+        cr.setAsCommitted();
+        
+        assertEquals(2 * 2.0 * (1-0.34), cr.getTotalValue(), 0.01);
+        assertEquals(5 * 2.0 * (1-0.34), cr.getSaleTransaction().getOriginalSalePrice(), 0.01);
+        assertEquals(5 * 2.0 * (1-0.34), cr.getSaleTransaction().getTotalValue(), 0.01);
+        assertEquals(3 * 2.0 * (1-0.34), cr.getSaleTransaction().getPrice(), 0.01);
+
+    }
+
+    @Test
+    public void testMultipleReturnAndRelativeSaleValues() {
+
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+
+        ProductType pt = new ProductType(1, "999999999993", "roba", 2.0, 7, 0.0, "no", null);
+        DataManager.getInstance().insertProductType(pt);
+
+        s.addProduct(pt, 1);
+        s.addProduct(pt, 3);
+        s.addProduct(pt, 1);
+        s.applyDiscountRateToProductGroup(pt, 0.34);
+
+        CReturn cr = new CReturn(1, s);
+        cr.addProduct(pt, 2);
+
+        CReturn cr2 = new CReturn(2, s);
+        cr2.addProduct(pt, 1);
+
+        cr.setAsCommitted();
+        cr2.setAsCommitted();
+        
+        assertEquals(2 * 2.0 * (1-0.34), cr.getTotalValue(), 0.01);
+        assertEquals(1 * 2.0 * (1-0.34), cr2.getTotalValue(), 0.01);
+        
+        assertEquals(5 * 2.0 * (1-0.34), cr.getSaleTransaction().getOriginalSalePrice(), 0.01);
+        assertEquals(5 * 2.0 * (1-0.34), cr.getSaleTransaction().getTotalValue(), 0.01);
+        assertEquals(2 * 2.0 * (1-0.34), cr.getSaleTransaction().getPrice(), 0.01);
+
+    }
 
     
 }

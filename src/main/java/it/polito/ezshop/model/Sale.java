@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polito.ezshop.data.EZShop.*;
+import static java.util.stream.Collectors.*;
 
 public class Sale extends ProductList implements SaleTransaction, ICredit {
 
@@ -115,6 +116,15 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
 
         if (entries == null)
             throw new IllegalArgumentException();
+
+        boolean isAnEntryWrong = entries.stream().anyMatch(te -> !DataManager.getInstance()
+            .getProductTypes()
+            .stream()
+            .map(ProductType::getBarCode)
+            .collect(toList())
+            .contains(te.getBarCode()));
+
+        if (isAnEntryWrong) throw new IllegalArgumentException();
 
         products = entries.stream()
                     .collect(Collectors

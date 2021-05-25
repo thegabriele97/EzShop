@@ -849,7 +849,7 @@ public class EZShopTest {
     public void testRecordOrderArrivalWithRightsAndRightStatus() throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException, InvalidQuantityException, InvalidProductIdException, InvalidLocationException, InvalidOrderIdException {
         
         User u = new User(1, "ciao", "pwd", "Administrator");
-        DataManager.getInstance().insertUser(u);
+        DataManager.getInstance().insertUser(u);  
         LoginManager.getInstance().tryLogin("ciao", "pwd");
         
         EZShopInterface ez = new EZShop();

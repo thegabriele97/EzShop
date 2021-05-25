@@ -1591,7 +1591,6 @@ public class EZShopTest {
         EZShopInterface ez = new EZShop();
         assertTrue(ez.updatePosition(36,"1-a-2"));
         
-        Position pos = new Position(1,"a",2,p);
         assertFalse(ez.updatePosition(36,"1-a-2"));
         
         Position pos1 = new Position(1,"a",5,null);
@@ -1713,7 +1712,6 @@ public class EZShopTest {
         LoginManager.getInstance().tryLogin("ciao", "pwd");
        
         EZShopInterface ez = new EZShop();
-        ProductType p = new ProductType(36, "1231231231232", "test", 1.4, 1, 0.4, "", "1-a-1");
         
         assertFalse(ez.deleteProductFromSale(1, "1231231231232", 1));
         
@@ -1821,8 +1819,6 @@ public class EZShopTest {
         
         s.addProduct(p, 2);
         DataManager.getInstance().updateSale(s);
-        
-        CreditTransaction ct = new CreditTransaction(1,s);
         
         assertTrue(ez.deleteSaleTransaction(1));
     }
@@ -4271,7 +4267,7 @@ public class EZShopTest {
         DataManager.getInstance().insertSale(s);
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(2), ez.startSaleTransaction());
+        assertEquals(2, ez.startSaleTransaction().intValue());
     }
 
     @Test
@@ -4282,7 +4278,7 @@ public class EZShopTest {
         LoginManager.getInstance().tryLogin("ciao", "pwd");
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(1), ez.startSaleTransaction());
+        assertEquals(1, ez.startSaleTransaction().intValue());
     }
 
     @Test
@@ -4293,7 +4289,7 @@ public class EZShopTest {
         LoginManager.getInstance().tryLogin("ciao", "pwd");
 
         EZShopInterface ez = new EZShop();
-        assertEquals(new Integer(1), ez.startSaleTransaction());
+        assertEquals(1, ez.startSaleTransaction().intValue());
     }
 
     //deleteUser
@@ -4449,8 +4445,6 @@ public class EZShopTest {
     public void testGetAllCustomersWithNoLoggedUser() {
 
         if (LoginManager.getInstance().isUserLogged()) throw new RuntimeException();
-
-        Customer c = new Customer(3, "mbare", null);
 
         EZShopInterface ez = new EZShop();
         assertThrows(UnauthorizedException.class, () -> ez.getAllCustomers());

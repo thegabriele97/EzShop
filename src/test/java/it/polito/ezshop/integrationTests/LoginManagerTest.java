@@ -28,7 +28,6 @@ public class LoginManagerTest {
 
     }
 
-    //TODO: check this, here we are trying to login with a different user without logout first.
     @Test
     public void testLoginManagerTryLoginWithLoggedUser() {
         User u = new User(1, "ciao", "pwd", "Cashier");

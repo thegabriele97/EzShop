@@ -16,10 +16,18 @@ public class EZShop implements EZShopInterface {
 
 
     @Override
-    public void reset() { //TODO: does not delete customers and loyaltycards, is it right?
-        
+    public void reset() {
+
         for (it.polito.ezshop.model.User u : DataManager.getInstance().getUsers()) {
             DataManager.getInstance().deleteUser(u);
+        }
+
+        for (it.polito.ezshop.model.Customer u : DataManager.getInstance().getCustomers()) {
+            DataManager.getInstance().deleteCustomer(u);
+        }
+
+        for (LoyaltyCard u : DataManager.getInstance().getLoyaltyCards()) {
+            DataManager.getInstance().deleteLoyaltyCard(u);
         }
 
         for (it.polito.ezshop.model.ProductType u : DataManager.getInstance().getProductTypes()) {

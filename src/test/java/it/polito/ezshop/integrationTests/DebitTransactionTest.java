@@ -49,8 +49,7 @@ public class DebitTransactionTest {
 
     @Test
     public void testInvalidDebitTransaction() {
-        //TODO: va in nullpointerexception perchè chiama il metodo super
-        //assertThrows(IllegalArgumentException.class, () -> new DebitTransaction(1, null));
+        assertThrows(IllegalArgumentException.class, () -> new DebitTransaction(1, null));
         assertThrows(IllegalArgumentException.class, () -> new DebitTransaction(-1, new DummyDebit(1, 6.0)));
         assertThrows(IllegalArgumentException.class, () -> new DebitTransaction(1, new DummyDebit(-1, 6.0)));
         assertThrows(IllegalArgumentException.class, () -> new DebitTransaction(1, new DummyDebit(1, -6.0)));

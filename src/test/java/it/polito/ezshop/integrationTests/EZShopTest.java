@@ -2398,6 +2398,39 @@ public class EZShopTest {
     }
 
     @Test
+    public void testReturnProductWithMultipleCalls() throws InvalidQuantityException, InvalidTransactionIdException, UnauthorizedException, InvalidProductCodeException, InvalidProductDescriptionException, InvalidPricePerUnitException, InvalidProductIdException, InvalidLocationException, InvalidPaymentException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+
+        Integer prodId = ez.createProductType("test", "1231231231232", 1.4, "");
+        ez.updatePosition(prodId, "1-a-1");
+        ez.updateQuantity(prodId, 3);
+
+        Integer transId = ez.startSaleTransaction();
+        ez.addProductToSale(transId, "1231231231232", 2);
+        ez.endSaleTransaction(transId);
+
+        assertEquals(Integer.valueOf(1), ez.getProductTypeByBarCode("1231231231232").getQuantity());
+
+        assertEquals(0.0, ez.receiveCashPayment(transId, ez.getSaleTransaction(transId).getPrice()), 0.01);
+
+        Integer retId = ez.startReturnTransaction(transId);
+
+        assertTrue(ez.returnProduct(retId, "1231231231232", 1));
+        assertTrue(ez.returnProduct(retId, "1231231231232", 1));
+        assertFalse(ez.returnProduct(retId, "1231231231232", 1));
+        assertFalse(ez.returnProduct(retId, "1231231231232", 1));
+
+        ez.endReturnTransaction(retId, true);
+
+        assertEquals(Integer.valueOf(3), ez.getProductTypeByBarCode("1231231231232").getQuantity());
+    }
+
+    @Test
     public void testReturnProductWithNullReturnId() {
 
         User u = new User(1, "ciao", "pwd", "Administrator");

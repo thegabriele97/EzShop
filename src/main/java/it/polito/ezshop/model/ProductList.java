@@ -22,7 +22,7 @@ public abstract class ProductList implements Serializable {
     }
 
     public Integer getQuantityByProduct(ProductType product){
-        return products.get(product);
+        return products.containsKey(product) ? products.get(product) : 0;
     }
 
     public void addProduct(ProductType product, Integer quantity){

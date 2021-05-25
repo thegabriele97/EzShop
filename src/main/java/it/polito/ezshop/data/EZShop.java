@@ -1195,29 +1195,28 @@ public class EZShop implements EZShopInterface {
     	 
     	 
         Optional<CReturn> Creturn = DataManager.getInstance()
-                .getReturns()
-                .stream()
-                .filter(r -> r.getReturnId() == returnId)
-                .findFirst();
-    	 
-        Sale sale = Creturn.get().getSaleTransaction();
-    	 
+            .getReturns()
+            .stream()
+            .filter(r -> r.getReturnId() == returnId)
+            .findFirst();    
+                
         Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
-                .getProductTypes()
-                .stream()
-                .filter(p -> p.getBarCode().equals(productCode))
-                .findFirst();
-    	 
-    	 
-        if (!Creturn.isPresent()) return false;
-    	 
-        if (!prod.isPresent() || sale.getQuantityByProduct(prod.get()) < amount) return false;
-    	 
-        if(!sale.getProductsList().contains(prod.get())) return false;
+            .getProductTypes()
+            .stream()
+            .filter(p -> p.getBarCode().equals(productCode))
+            .findFirst();
+                
+                
+        if (!Creturn.isPresent() || !prod.isPresent()) return false;
+        
 
+        Sale sale = Creturn.get().getSaleTransaction();
+        if (!sale.getProductsList().contains(prod.get())) return false;
+        if (sale.getQuantityByProduct(prod.get()) - Creturn.get().getQuantityByProduct(prod.get()) < amount) return false;
 
     	Creturn.get().addProduct(prod.get(), amount);
-    	return DataManager.getInstance().updateReturn(Creturn.get());
+    	
+        return DataManager.getInstance().updateReturn(Creturn.get());
     }
 
     @Override

@@ -1,10 +1,8 @@
 package it.polito.ezshop.model;
 
-import java.io.Serializable;
-
 import static it.polito.ezshop.data.EZShop.*;
 
-public class CReturn extends ProductList implements Serializable, IDebit {
+public class CReturn extends ProductList implements IDebit {
     
     private Integer returnId;
     private Sale saleTransaction;
@@ -16,7 +14,7 @@ public class CReturn extends ProductList implements Serializable, IDebit {
         setSaleTransaction(saleTransaction);
         this.committed = false;
 
-        //saleTransaction.addReturnTransaction(this); TODO: is it necessary?
+        saleTransaction.addReturnTransaction(this);
     }
     
     public void setAsCommitted(){
@@ -28,7 +26,7 @@ public class CReturn extends ProductList implements Serializable, IDebit {
     }
 
     public void setReturnId(Integer returnId){
-        if (returnId < 1) throw new IllegalArgumentException();
+        if (returnId == null || returnId < 1) throw new IllegalArgumentException();
         this.returnId = returnId;
     }
     

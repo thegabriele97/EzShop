@@ -17,9 +17,17 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public void reset() {
-        
+
         for (it.polito.ezshop.model.User u : DataManager.getInstance().getUsers()) {
             DataManager.getInstance().deleteUser(u);
+        }
+
+        for (it.polito.ezshop.model.Customer u : DataManager.getInstance().getCustomers()) {
+            DataManager.getInstance().deleteCustomer(u);
+        }
+
+        for (LoyaltyCard u : DataManager.getInstance().getLoyaltyCards()) {
+            DataManager.getInstance().deleteLoyaltyCard(u);
         }
 
         for (it.polito.ezshop.model.ProductType u : DataManager.getInstance().getProductTypes()) {
@@ -59,7 +67,7 @@ public class EZShop implements EZShopInterface {
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
         
-        if (!(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
+        if (role == null || role.isEmpty() || !(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
             throw new InvalidRoleException();
         }
 
@@ -148,15 +156,15 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
+        
+        if (!RightsManager.getInstance().canManageUsers(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
 
         if (id == null || id <= 0) throw new InvalidUserIdException();
 
-        if (!(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
+        if (role == null || role.isEmpty() || !(role.equals("Administrator") || role.equals("Cashier") || role.equals("ShopManager"))) {
             throw new InvalidRoleException();
-        }
-
-        if (!RightsManager.getInstance().canManageUsers(LoginManager.getInstance().getLoggedUser())) {
-            throw new UnauthorizedException();
         }
 
         Optional<it.polito.ezshop.model.User> optUser = DataManager.getInstance()
@@ -166,7 +174,7 @@ public class EZShop implements EZShopInterface {
             .findFirst();
 
         optUser.ifPresent(u -> {
-            u.setId(id);
+            u.setRole(role);
             DataManager.getInstance().updateUser(u);
         });
 
@@ -266,7 +274,6 @@ public class EZShop implements EZShopInterface {
         boolean isNewCodeAlreadyUsed = DataManager.getInstance()
             .getProductTypes()
             .stream()
-            .filter(p -> !p.equals(prod.get()))
             .anyMatch(p -> p.getBarCode().equals(newCode));
             
 
@@ -366,6 +373,8 @@ public class EZShop implements EZShopInterface {
             .stream()
             .filter(p -> p.getId() == productId)
             .findFirst();
+
+        if (!prod.isPresent()) return false;
 
         if (prod.get().getQuantity() + toBeAdded < 0) return false;
 
@@ -584,7 +593,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
         }
         
-        if (orderId == null || orderId <= 0){
+        if (orderId == null || orderId <= 0) {
             throw new InvalidOrderIdException();
         }
 
@@ -598,15 +607,15 @@ public class EZShop implements EZShopInterface {
             return false;
         }
 
-        if (ord.get().getRelatedProduct().getAssignedPosition() == null){
+        if (ord.get().getRelatedProduct().getAssignedPosition() == null) {
             throw new InvalidLocationException();
         }
 
-        if (!(ord.get().getStatus().equals(EOrderStatus.PAYED.toString()) || ord.get().getStatus().equals(EOrderStatus.COMPLETED.toString()))){
+        if (!(ord.get().getStatus().equals(EOrderStatus.PAYED.toString())) || ord.get().getStatus().equals(EOrderStatus.COMPLETED.toString())) {
             return false;
         }
 
-        if (ord.get().getStatus().equals(EOrderStatus.PAYED.toString())){
+        if (ord.get().getStatus().equals(EOrderStatus.PAYED.toString())) {
             ord.get().setAsCompleted();
             ord.get().getRelatedProduct().addQuantityOffset(ord.get().getQuantity());
             DataManager.getInstance().updateProductType(ord.get().getRelatedProduct());
@@ -669,8 +678,8 @@ public class EZShop implements EZShopInterface {
             throw new InvalidCustomerNameException();
         }
 
-        if (!newCustomerCard.isEmpty() && (newCustomerCard.length() != 10 || !newCustomerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9'))) {
-             return false;
+        if (newCustomerCard != null && !newCustomerCard.isEmpty() && (newCustomerCard.length() != 10 || !newCustomerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9'))) {  
+            throw new InvalidCustomerCardException();
         }
 
         Optional<it.polito.ezshop.model.Customer> customer = DataManager.getInstance()
@@ -682,7 +691,7 @@ public class EZShop implements EZShopInterface {
         if (!customer.isPresent()) return false;
 
         if (newCustomerCard !=null) {
-            if (newCustomerCard.isEmpty()) {
+            if (newCustomerCard.isEmpty()) { 
 
                 LoyaltyCard card = customer.get().getLoyaltyCard();
 
@@ -824,15 +833,11 @@ public class EZShop implements EZShopInterface {
         if (!RightsManager.getInstance().canManageCustomers(LoginManager.getInstance().getLoggedUser())) {
             throw new UnauthorizedException();
         }
-
+ 
         if (customerCard == null || customerCard.isEmpty() || customerCard.length() != 10) {
             throw new InvalidCustomerCardException();
-        } else {
-            try {
-                Integer.parseInt(customerCard);
-            } catch (NumberFormatException e) {
-                throw new InvalidCustomerCardException();
-            }
+        } else if (!customerCard.chars().allMatch(ch -> ch >= '0' && ch <= '9')) {
+            throw new InvalidCustomerCardException();
         }
 
         Optional<LoyaltyCard> card = DataManager.getInstance()
@@ -841,7 +846,7 @@ public class EZShop implements EZShopInterface {
             .filter(c -> c.getID().equals(customerCard))
             .findFirst();
 
-        if (!(card.isPresent()) || (pointsToBeAdded < 0 && card.get().getPoints() < pointsToBeAdded)) {
+        if (!card.isPresent() || (pointsToBeAdded < 0 && card.get().getPoints() < -pointsToBeAdded)) {
             return false;
         }
 
@@ -1047,10 +1052,7 @@ public class EZShop implements EZShopInterface {
 
         if (!sale.isPresent()) return -1;
 
-        int points = 0;
-        for (; points < sale.get().getPrice(); points++);
-
-        return points;
+        return (int)(sale.get().getOriginalSalePrice() / 10);
     }
 
     @Override
@@ -1147,21 +1149,14 @@ public class EZShop implements EZShopInterface {
             throw new InvalidTransactionIdException();
         }
         
-        OptionalInt maxId = DataManager.getInstance()
-                .getReturns()
-                .stream()
-                .mapToInt(CReturn::getReturnId)
-                .max();
-        
         Optional<Sale> sale = DataManager.getInstance()
                 .getSales()
                 .stream()
-                .filter(s -> s.getTicketNumber() == transactionId)
+                .filter(s -> s.getTicketNumber().equals(transactionId))
                 .findFirst();
         
-        if (!sale.isPresent()) return -1;
+        if (!sale.isPresent() || !sale.get().isCommitted()) return -1;
 
-        // TODO: check if this check is necessary and if it returns the right value when fails
         boolean isPaid = DataManager.getInstance()
             .getBalanceTransactions()
             .stream()
@@ -1172,6 +1167,12 @@ public class EZShop implements EZShopInterface {
             .count() == 1;
 
         if (!isPaid) return -1;
+
+        OptionalInt maxId = DataManager.getInstance()
+            .getReturns()
+            .stream()
+            .mapToInt(CReturn::getReturnId)
+            .max();
 
         int newId = !maxId.isPresent() ? 1 : (maxId.getAsInt() + 1);
         CReturn newCReturn = new CReturn(newId, sale.get());
@@ -1202,29 +1203,28 @@ public class EZShop implements EZShopInterface {
     	 
     	 
         Optional<CReturn> Creturn = DataManager.getInstance()
-                .getReturns()
-                .stream()
-                .filter(r -> r.getReturnId() == returnId)
-                .findFirst();
-    	 
-        Sale sale = Creturn.get().getSaleTransaction();
-    	 
+            .getReturns()
+            .stream()
+            .filter(r -> r.getReturnId() == returnId)
+            .findFirst();    
+                
         Optional<it.polito.ezshop.model.ProductType> prod = DataManager.getInstance()
-                .getProductTypes()
-                .stream()
-                .filter(p -> p.getBarCode().equals(productCode))
-                .findFirst();
-    	 
-    	 
-        if (!Creturn.isPresent()) return false;
-    	 
-        if (!prod.isPresent() || sale.getQuantityByProduct(prod.get()) < amount) return false;
-    	 
-        if(!sale.getProductsList().contains(prod.get())) return false;
+            .getProductTypes()
+            .stream()
+            .filter(p -> p.getBarCode().equals(productCode))
+            .findFirst();
+                
+                
+        if (!Creturn.isPresent() || !prod.isPresent()) return false;
+        
 
+        Sale sale = Creturn.get().getSaleTransaction();
+        if (!sale.getProductsList().contains(prod.get())) return false;
+        if (sale.getQuantityByProduct(prod.get()) - Creturn.get().getQuantityByProduct(prod.get()) < amount) return false;
 
     	Creturn.get().addProduct(prod.get(), amount);
-    	return DataManager.getInstance().updateReturn(Creturn.get());
+    	
+        return DataManager.getInstance().updateReturn(Creturn.get());
     }
 
     @Override
@@ -1238,7 +1238,6 @@ public class EZShop implements EZShopInterface {
             throw new InvalidTransactionIdException();
         }
 
-         
         Optional<CReturn> Creturn = DataManager.getInstance()
                 .getReturns()
                 .stream()
@@ -1248,7 +1247,20 @@ public class EZShop implements EZShopInterface {
 
         if (!Creturn.isPresent() || Creturn.get().isCommitted()) return false;
 
-        Creturn.get().setAsCommitted(); 
+        if (commit) {
+            Creturn.get()
+                .getProductsList()
+                .forEach(p -> {
+                    it.polito.ezshop.model.ProductType rightP = (it.polito.ezshop.model.ProductType)p;
+                    
+                    rightP.addQuantityOffset(Creturn.get().getQuantityByProduct(rightP));
+                    DataManager.getInstance().updateProductType(rightP);
+                });
+        } else {
+            return DataManager.getInstance().deleteReturn(Creturn.get());
+        }
+
+        Creturn.get().setAsCommitted();
         return DataManager.getInstance().updateReturn(Creturn.get());
     }
 
@@ -1322,7 +1334,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidTransactionIdException();
         }
 
-        if(creditCard.isEmpty() || creditCard == null || !CreditCardSystem.getInstance().isValidNumber(creditCard)){
+        if(creditCard == null || creditCard.isEmpty() ||  !CreditCardSystem.getInstance().isValidNumber(creditCard)){
             throw new InvalidCreditCardException();
         }
 
@@ -1356,84 +1368,86 @@ public class EZShop implements EZShopInterface {
     @Override
     public double returnCashPayment(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
         
-    	  if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
-              throw new UnauthorizedException();
-          }
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
 
-          if (returnId == null || returnId <= 0) {
-              throw new InvalidTransactionIdException();
-          }
-          
-          Optional<CReturn> Creturn = DataManager.getInstance()
-                  .getReturns()
-                  .stream()
-                  .filter(r -> r.getReturnId() == returnId)
-                  .findFirst();
-      	 
-
-          if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
-          if(DataManager.getInstance().updateReturn(Creturn.get())) return -1;
+        if (returnId == null || returnId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
         
-          
-          OptionalInt maxBalId = DataManager.getInstance()
-                  .getBalanceTransactions()
-                  .stream()
-                  .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
-                  .max();
-          int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
-     
-
-          Creturn.get().setBalanceId(newBalId);
+        Optional<CReturn> Creturn = DataManager.getInstance()
+                .getReturns()
+                .stream()
+                .filter(r -> r.getReturnId() == returnId)
+                .findFirst();
         
-          BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
-          if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
+
+        if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
+        
+        OptionalInt maxBalId = DataManager.getInstance()
+                .getBalanceTransactions()
+                .stream()
+                .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+                .max();
+
+        int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
+
+        Creturn.get().setBalanceId(newBalId);
+        DataManager.getInstance().updateReturn(Creturn.get());
+    
+        BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
+        DataManager.getInstance().insertBalanceTransaction(bt);
         	  
     	return Creturn.get().getTotalValue();
     }
 
     @Override
     public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
-    	 if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
-             throw new UnauthorizedException();
-         }
+    	 
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
 
-         if (returnId == null || returnId <= 0) {
-             throw new InvalidTransactionIdException();
-         }
-         if (CreditCardSystem.getInstance().isValidNumber(creditCard)) {
-             throw new InvalidCreditCardException();
-         }
-         if(CreditCardSystem.getInstance().isRegistered(creditCard)) return -1;
-         
-         Optional<CReturn> Creturn = DataManager.getInstance()
-                 .getReturns()
-                 .stream()
-                 .filter(r -> r.getReturnId() == returnId)
-                 .findFirst();
-     	 
+        if (returnId == null || returnId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
 
-         if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
-  
-     
-         OptionalInt maxBalId = DataManager.getInstance()
-                 .getBalanceTransactions()
-                 .stream()
-                 .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
-                 .max();
-         int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
-         
-         Creturn.get().setBalanceId(newBalId);
-       
-         BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
-         
-         if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
-         if(!CreditCardSystem.getInstance().updateBalance(creditCard, Creturn.get().getTotalValue())) return -1;
-         
-   
-    	return Creturn.get().getTotalValue();
+        if (!CreditCardSystem.getInstance().isValidNumber(creditCard)) {
+            throw new InvalidCreditCardException();
+        }
+
+        if (!CreditCardSystem.getInstance().isRegistered(creditCard)) return -1;
+        
+        Optional<CReturn> Creturn = DataManager.getInstance()
+                .getReturns()
+                .stream()
+                .filter(r -> r.getReturnId() == returnId)
+                .findFirst();
+        
+
+        if (!Creturn.isPresent() || !Creturn.get().isCommitted()) return -1;
+
+    
+        OptionalInt maxBalId = DataManager.getInstance()
+                .getBalanceTransactions()
+                .stream()
+                .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+                .max();
+        int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
+        
+        Creturn.get().setBalanceId(newBalId);
+    
+        BalanceTransaction bt = new DebitTransaction(newBalId,Creturn.get());
+        
+        if(!DataManager.getInstance().insertBalanceTransaction(bt)) return -1;
+        
+        if(!CreditCardSystem.getInstance().updateBalance(creditCard, -Creturn.get().getTotalValue())) return -1;
+        
+        return Creturn.get().getTotalValue();
     }
 
-    @Override //baldaz
+    @Override 
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
         
         if (!RightsManager.getInstance().canManageBalanceTransactions(LoginManager.getInstance().getLoggedUser())) {
@@ -1491,7 +1505,7 @@ public class EZShop implements EZShopInterface {
         return false;
     }
 
-    @Override //baldaz
+    @Override
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
 
         if (!RightsManager.getInstance().canManageBalanceTransactions(LoginManager.getInstance().getLoggedUser())) {
@@ -1502,7 +1516,7 @@ public class EZShop implements EZShopInterface {
             
         for (int i=0; i < DataManager.getInstance().getBalanceTransactions().size(); i++){
             LocalDate date = DataManager.getInstance().getBalanceTransactions().get(i).getDate();
-            if ((from == null || date.isAfter(from)) && (to == null || date.isBefore(to))){
+            if ((from == null || !date.isBefore(from)) && (to == null || !date.isAfter(to))){
                 returnList.add(DataManager.getInstance().getBalanceTransactions().get(i));
             }
         }
@@ -1510,7 +1524,7 @@ public class EZShop implements EZShopInterface {
         return returnList;
     }
 
-    @Override //baldaz
+    @Override
     public double computeBalance() throws UnauthorizedException {
 
         if (!RightsManager.getInstance().canManageBalanceTransactions(LoginManager.getInstance().getLoggedUser())) {

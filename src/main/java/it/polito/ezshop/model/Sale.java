@@ -4,14 +4,14 @@ import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.data.SaleTransaction;
 import it.polito.ezshop.data.TicketEntry;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polito.ezshop.data.EZShop.*;
+import static java.util.stream.Collectors.*;
 
-public class Sale extends ProductList implements Serializable, SaleTransaction, ICredit {
+public class Sale extends ProductList implements SaleTransaction, ICredit {
 
     private Integer ticketNumber;
     private LocalDate date;
@@ -19,18 +19,20 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
     private LoyaltyCard loyaltyCard;
     private boolean committed;
     private Map<ProductType, Double> productsDiscountRate;
-    private List<CReturn> returnTransaction;
+    private Set<CReturn> returnTransactions;
     private double price;
 
     public Sale(Integer ticketNumber, Double discountRate, LoyaltyCard loyaltyCard) {
+        
+        this.committed = false;
+        this.productsDiscountRate = new HashMap<>();
+        this.returnTransactions = new HashSet<>();
+
         this.setTicketNumber(ticketNumber);
         this.setDiscountRate(discountRate);
         this.attachLoyaltyCard(loyaltyCard);
-        this.committed = false;
-        this.productsDiscountRate = new HashMap<>();
-        this.returnTransaction = new ArrayList<>();
-        this.setPrice(0.0);
-
+        
+        this.price = Double.NaN;
         this.date = LocalDate.now();
     }
 
@@ -42,7 +44,9 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setTicketNumber(Integer ticketNumber) {
+        
         if (ticketNumber < 1) throw new IllegalArgumentException();
+
         this.ticketNumber = ticketNumber;
         Update();
     }
@@ -53,9 +57,10 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
             .keySet()
             .stream()
             .map(p -> new TicketEntry(){
+
                 @Override
                 public int getAmount() {
-                    return getQuantityByProduct(p);
+                    return getQuantityByProduct(p) - getReturnedQuantityByProduct((it.polito.ezshop.model.ProductType)p);
                 }
 
                 @Override
@@ -80,10 +85,10 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
                 @Override
                 public void setAmount(int amount) {
+                    
                     if (amount < 0) throw new IllegalArgumentException();
-                    products.replace(p, amount);
-
-                    addProduct(p, amount, true);
+                    
+                    addProduct(p, amount + getReturnedQuantityByProduct((it.polito.ezshop.model.ProductType)p), true);
                 }
 
                 @Override
@@ -113,16 +118,29 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
     @Override
     public void setEntries(List<TicketEntry> entries) {
 
-        if (entries == null) throw new IllegalArgumentException();
+        if (entries == null)
+            throw new IllegalArgumentException();
 
-        entries.stream()
+        boolean isAnEntryWrong = entries.stream().anyMatch(te -> !DataManager.getInstance()
+            .getProductTypes()
+            .stream()
+            .map(ProductType::getBarCode)
+            .collect(toList())
+            .contains(te.getBarCode()));
+
+        if (isAnEntryWrong) throw new IllegalArgumentException();
+
+        products = entries.stream()
             .collect(Collectors
                 .toMap(t -> DataManager
                         .getInstance()
                         .getProductTypes()
                         .stream()
-                        .filter(p -> p.getBarCode().equals(t.getBarCode())), 
-                       t -> t.getAmount()));
+                        .filter(p -> p.getBarCode().equals(t.getBarCode()))
+                        .findFirst()
+                        .get(),
+                    t -> t.getAmount()));
+
     }
 
     @Override
@@ -132,7 +150,8 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
 
     @Override
     public void setDiscountRate(double discountRate) {
-        if (discountRate < 0.0 || discountRate > 1.0 || Double.isNaN(discountRate) || Double.isInfinite(discountRate)) {
+
+        if (discountRate < 0.0 || discountRate >= 1.0 || Double.isNaN(discountRate) || Double.isInfinite(discountRate)) {
             throw new IllegalArgumentException();  
         } 
 
@@ -143,43 +162,66 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
     @Override
     public double getPrice() {
         
-        this.price = 0.0;
+        if (!Double.isNaN(this.price)) return this.price;
+
+        double price = 0.0;
         for (it.polito.ezshop.data.ProductType prod : getProductsList()) {
             it.polito.ezshop.model.ProductType xProd = (it.polito.ezshop.model.ProductType)prod;
 
-            this.price += (xProd.getPricePerUnit() * getQuantityByProduct(xProd))*(1-getDiscountRateForProductGroup(xProd));
+            price += (xProd.getPricePerUnit() * (getQuantityByProduct(xProd) - getReturnedQuantityByProduct(xProd))) * (1 - getDiscountRateForProductGroup(xProd));
         }
 
-        this.price *= (1-getDiscountRate());
-        return getRightDoublePrecision(this.price);
+        price *= (1-getDiscountRate());
+        return getRightDoublePrecision(price);
     }
 
     @Override
     public void setPrice(double price) {
-        if (price < 0.0) throw new IllegalArgumentException();
+        
+        if (price < 0.0)
+            throw new IllegalArgumentException();
+
         this.price = price;
         Update();
+    }
+
+    public double getOriginalSalePrice() {
+        
+        double price = 0.0;
+        for (it.polito.ezshop.data.ProductType prod : getProductsList()) {
+            it.polito.ezshop.model.ProductType xProd = (it.polito.ezshop.model.ProductType)prod;
+
+            price += (xProd.getPricePerUnit() * getQuantityByProduct(xProd))*(1 - getDiscountRateForProductGroup(xProd));
+        }
+
+        price *= 1 - getDiscountRate();
+        return getRightDoublePrecision(price);
     }
 
     public double getDiscountRateForProductGroup(ProductType product){
         return getRightDoublePrecision(productsDiscountRate.containsKey(product) ? productsDiscountRate.get(product) : 0.0);
     }
 
-    public void addReturnTransaction(CReturn returnT){
+    public void addReturnTransaction(CReturn returnT) {
 
-        if (returnT == null) throw new IllegalArgumentException();
+        if (returnT == null || returnTransactions.contains(returnT)) throw new IllegalArgumentException();
 
-        this.returnTransaction.add(returnT);
+        returnTransactions.add(returnT);
         Update();
     }
 
-    public void applyDiscountRateToProductGroup(ProductType product, double discountRate){
+    public void applyDiscountRateToProductGroup(ProductType product, double discountRate) {
 
         if (discountRate < 0.0 || discountRate > 1.0 || Double.isNaN(discountRate) || Double.isInfinite(discountRate)) {
             throw new IllegalArgumentException();  
         }
-
-        this.productsDiscountRate.replace(product, discountRate);
+        
+        if (productsDiscountRate.containsKey(product)) {
+        	  this.productsDiscountRate.replace(product, discountRate);
+        } else {
+        	 this.productsDiscountRate.put(product, discountRate);
+        }
+        
         Update();
     }
 
@@ -203,22 +245,33 @@ public class Sale extends ProductList implements Serializable, SaleTransaction, 
     
     @Override
     public Double getTotalValue() {
-        return this.getPrice();
+        return this.getOriginalSalePrice();
     }
-
-    private void Update() {
-        DataManager.getInstance().updateSale(this);
+    
+    public LocalDate getDate(){
+        return this.date;
     }
-
+    
     @Override
     public int hashCode() {
         return this.getTicketNumber();
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         return this.getTicketNumber() == ((Sale)obj).getTicketNumber();
     }
-
+    
+    private void Update() {
+        DataManager.getInstance().updateSale(this);
+    }
+    
+    private int getReturnedQuantityByProduct(ProductType xProd) {
+        return returnTransactions.stream()
+            .filter(ret -> ret.isCommitted())
+            .filter(ret -> ret.getProductsList().contains(xProd))
+            .mapToInt(ret -> ret.getQuantityByProduct(xProd))
+            .sum();  
+    }
 
 }

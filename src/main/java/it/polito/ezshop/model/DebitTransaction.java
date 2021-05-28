@@ -9,8 +9,12 @@ public class DebitTransaction extends BalanceTransaction {
     private IDebit relatedDebitOperation;
 
     public DebitTransaction(int balanceId, IDebit debit){
-        super(balanceId, debit.getTotalValue());
-        this.relatedDebitOperation = debit;
+        super(balanceId, 0.0);
+
+        if (debit == null) throw new IllegalArgumentException();
+
+        this.setValue(debit.getTotalValue());
+        setRelatedDebitOperation(debit);
     }
 
     public void setRelatedDebitOperation(IDebit debit){

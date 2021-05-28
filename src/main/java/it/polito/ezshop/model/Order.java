@@ -6,7 +6,6 @@ import it.polito.ezshop.data.EZShop;
 
 public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit {
     private Integer orderId;
-    private String supplier;
     private Double pricePerUnit;
     private Integer quantity;
     private ProductType product;
@@ -30,7 +29,8 @@ public class Order implements Serializable, it.polito.ezshop.data.Order, IDebit 
 
     @Override
     public void setBalanceId(Integer balanceId) {
-        if(balanceId < 1) throw new IllegalArgumentException();
+        if(balanceId < 1)
+            throw new IllegalArgumentException();
         this.balanceId = balanceId;
     }
 

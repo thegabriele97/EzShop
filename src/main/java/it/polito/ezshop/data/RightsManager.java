@@ -1,6 +1,6 @@
 package it.polito.ezshop.data;
 
-class RightsManager {
+public class RightsManager {
 
     enum Role { Administrator, Cashier, ShopManager }
 
@@ -10,7 +10,7 @@ class RightsManager {
         
     }
 
-    static RightsManager getInstance() {
+    public static RightsManager getInstance() {
         
         if (instance == null) {
             instance = new RightsManager();
@@ -19,39 +19,39 @@ class RightsManager {
         return instance;
     }
 
-    boolean canManageUsers(it.polito.ezshop.model.User user) {
+    public boolean canManageUsers(it.polito.ezshop.model.User user) {
         return LoginManager.getInstance().isUserLogged(user) && Role.valueOf(user.getRole()) == Role.Administrator;
     }
 
-    boolean canManageProductsCatalogue(it.polito.ezshop.model.User user) {
+    public boolean canManageProductsCatalogue(it.polito.ezshop.model.User user) {
         return LoginManager.getInstance().isUserLogged(user) && Role.valueOf(user.getRole()) != Role.Cashier;
     }
 
-    boolean canListAllProductTypes(it.polito.ezshop.model.User user) {
+    public boolean canListAllProductTypes(it.polito.ezshop.model.User user) {
         return LoginManager.getInstance().isUserLogged(user);
     }
 
-    boolean canManageInventory(it.polito.ezshop.model.User user) {
+    public boolean canManageInventory(it.polito.ezshop.model.User user) {
         return LoginManager.getInstance().isUserLogged(user) && Role.valueOf(user.getRole()) != Role.Cashier;
     }
 
-    boolean canManageCustomers(it.polito.ezshop.model.User user) {
+    public boolean canManageCustomers(it.polito.ezshop.model.User user) {
         return LoginManager.getInstance().isUserLogged(user);
     }
 
-    boolean canManageSaleTransactions(it.polito.ezshop.model.User user) {
+    public boolean canManageSaleTransactions(it.polito.ezshop.model.User user) {
         return LoginManager.getInstance().isUserLogged(user);
     }
 
-    boolean canManagePayments(it.polito.ezshop.model.User user) {
+    public boolean canManagePayments(it.polito.ezshop.model.User user) {
         return LoginManager.getInstance().isUserLogged(user);
     }
 
-    boolean canManageAccounting(it.polito.ezshop.model.User user) {
+    public boolean canManageAccounting(it.polito.ezshop.model.User user) {
         return LoginManager.getInstance().isUserLogged(user) && Role.valueOf(user.getRole()) != Role.Cashier;
     }
 
-    boolean canManageBalanceTransactions(it.polito.ezshop.model.User user) {
+    public boolean canManageBalanceTransactions(it.polito.ezshop.model.User user) {
         return LoginManager.getInstance().isUserLogged(user) && Role.valueOf(user.getRole()) != Role.Cashier;
     }
 

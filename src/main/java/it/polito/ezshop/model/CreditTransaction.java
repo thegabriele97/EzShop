@@ -7,7 +7,11 @@ public class CreditTransaction extends BalanceTransaction {
     private ICredit relatedCreditOperation;
  
     public CreditTransaction(int balanceId, ICredit credit) {
-        super(balanceId, credit.getTotalValue());
+        super(balanceId, 0.0);
+
+        if (credit == null) throw new IllegalArgumentException();
+
+        this.setValue(credit.getTotalValue());
         setRelatedCreditOperation(credit);
     }
 

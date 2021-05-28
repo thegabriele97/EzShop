@@ -12,7 +12,7 @@ public class DummyDebit implements Serializable, IDebit {
 
     public DummyDebit(int id, Double value){
         setValue(value);
-        this.id = id;
+        setId(id);
     }
 
     public void setValue(Double value){
@@ -23,6 +23,11 @@ public class DummyDebit implements Serializable, IDebit {
 
         this.value = value;
         DataManager.getInstance().updateDummyDebit(this);
+    }
+
+    private void setId(int id){
+        if(id <= 0) throw new IllegalArgumentException();
+        this.id = id;
     }
 
     public Double getValue(){

@@ -15,7 +15,7 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
     private LocalDate date;
     private String type; // I hate this  //(me too)
 
-    public BalanceTransaction(int balanceId, double value){
+    public BalanceTransaction(int balanceId, Double value){
         setBalanceId(balanceId);
         setValue(value);
 
@@ -30,14 +30,16 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
 
     @Override
     public void setBalanceId(int balanceId){
-        if (balanceId <= 0) throw new IllegalArgumentException();
+        if (balanceId <= 0)
+            throw new IllegalArgumentException();
 
         this.balanceId = balanceId;
         Update();
     }
 
     public void setDescription(String descr){
-        if(descr == null || descr.isEmpty()) throw new IllegalArgumentException();
+        if(descr == null || descr.isEmpty())
+            throw new IllegalArgumentException();
 
         this.description = descr;
         Update();
@@ -51,10 +53,10 @@ public abstract class BalanceTransaction implements Serializable, BalanceOperati
         return this.value;
     }
 
-    public void setValue(double value){
-        if(value < 0) throw new IllegalArgumentException();
+    public void setValue(Double value){
+        if(value == null || Double.isNaN(value) || Double.isInfinite(value) ||  value < 0) throw new IllegalArgumentException();
 
-        this.value = value;
+        this.value = value.doubleValue();
         Update();
     }
 

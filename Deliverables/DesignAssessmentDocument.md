@@ -35,4 +35,4 @@
 ![](assets/images/Z2.png)
 
 # Summary analysis
-There are no big difference with respect to our original design document. There are just few differences caused by the interfaces provided to match the API. To remove some tangles it would be useful to move these interfaces in a different package.
+There are no big differences with respect to our original design document. There are just few differences caused by the interfaces provided to match the API. To remove some tangles it would be useful to move these interfaces in a different package.

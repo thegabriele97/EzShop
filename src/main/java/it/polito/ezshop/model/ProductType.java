@@ -106,7 +106,7 @@ public class ProductType implements Serializable, it.polito.ezshop.data.ProductT
 			return;
 		}
 
-		if (!(location.matches("[1-9]+-[a-zA-Z]+-[1-9]+"))) throw new IllegalArgumentException();
+		if (!(location.matches("[1-9][0-9]*-[a-zA-Z]+-[1-9][0-9]*"))) throw new IllegalArgumentException();
 		
 		Optional<Position> pos = DataManager.getInstance()
 			.getPositions()

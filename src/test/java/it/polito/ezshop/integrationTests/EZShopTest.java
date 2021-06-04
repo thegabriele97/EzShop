@@ -1060,8 +1060,10 @@ public class EZShopTest {
 
         Integer saleId = ez.startSaleTransaction();
         ez.addProductToSale(saleId, "1231231231232", 1);
-
+        
         assertTrue(ez.applyDiscountRateToProduct(saleId, "1231231231232", 0.5));
+        
+        ez.endSaleTransaction(saleId);
         assertEquals(1.0, ez.getSaleTransaction(saleId).getPrice(), 0.01);
     }
 
@@ -1085,8 +1087,10 @@ public class EZShopTest {
         Integer saleId = ez.startSaleTransaction();
         ez.addProductToSale(saleId, "1231231231232", 1);
         ez.addProductToSale(saleId, "0123456789012", 1);
-
+        
         assertTrue(ez.applyDiscountRateToProduct(saleId, "1231231231232", 0.5));
+        
+        ez.endSaleTransaction(saleId);
         assertEquals(1.0 + 3.0, ez.getSaleTransaction(saleId).getPrice(), 0.01);
     }
 
@@ -4012,6 +4016,7 @@ public class EZShopTest {
         DataManager.getInstance().insertSale(s);
 
         EZShopInterface ez = new EZShop();
+        ez.endSaleTransaction(s.getTicketNumber());
         assertEquals(s, ez.getSaleTransaction(1));
 
     }

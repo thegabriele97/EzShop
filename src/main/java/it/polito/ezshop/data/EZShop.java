@@ -271,15 +271,16 @@ public class EZShop implements EZShopInterface {
             .filter(p -> p.getId() == id)
             .findFirst();
 
+        if (!prod.isPresent()) return false;
+
         boolean isNewCodeAlreadyUsed = DataManager.getInstance()
             .getProductTypes()
             .stream()
+            .filter(p -> !p.equals(prod.get()))
             .anyMatch(p -> p.getBarCode().equals(newCode));
             
 
-        if (isNewCodeAlreadyUsed || !(prod.isPresent())) {
-            return false;
-        }
+        if (isNewCodeAlreadyUsed) return false;
 
         prod.get().setBarCode(newCode);
         prod.get().setProductDescription(newDescription);
@@ -412,7 +413,7 @@ public class EZShop implements EZShopInterface {
             return true;
         }
 
-        if (!(newPos.matches("[1-9]+-[a-zA-Z]+-[1-9]+"))) {
+        if (!(newPos.matches("[1-9][0-9]*-[a-zA-Z]+-[1-9][0-9]*"))) {
             throw new InvalidLocationException();
         }
 
@@ -1133,6 +1134,7 @@ public class EZShop implements EZShopInterface {
             .getSales()
             .stream()
             .filter(s -> s.getTicketNumber() == transactionId)
+            .filter(s -> s.isCommitted())
             .findFirst();
 
         return sale.orElse(null);

@@ -626,6 +626,11 @@ public class EZShop implements EZShopInterface {
     }
 
     @Override
+    public boolean recordOrderArrivalRFID(Integer orderId, String RFIDfrom) throws InvalidOrderIdException, UnauthorizedException, 
+InvalidLocationException, InvalidRFIDException {
+        return false;
+    }
+    @Override
     public List<Order> getAllOrders() throws UnauthorizedException {
         if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
             throw new UnauthorizedException();
@@ -919,6 +924,11 @@ public class EZShop implements EZShopInterface {
     }
 
     @Override
+    public boolean addProductToSaleRFID(Integer transactionId, String RFID) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
+        return false;
+    }
+    
+    @Override
     public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
         
         if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
@@ -959,6 +969,11 @@ public class EZShop implements EZShopInterface {
         prod.get().addQuantityOffset(amount);
 
         return DataManager.getInstance().updateSale(sale.get()) && DataManager.getInstance().updateProductType(prod.get());
+    }
+
+    @Override
+    public boolean deleteProductFromSaleRFID(Integer transactionId, String RFID) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
+        return false;
     }
 
     @Override
@@ -1228,6 +1243,13 @@ public class EZShop implements EZShopInterface {
     	
         return DataManager.getInstance().updateReturn(Creturn.get());
     }
+
+    @Override
+    public boolean returnProductRFID(Integer returnId, String RFID) throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException 
+    {
+        return false;
+    }
+
 
     @Override
     public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException, UnauthorizedException {

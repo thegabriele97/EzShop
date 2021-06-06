@@ -21,6 +21,7 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
     private Map<ProductType, Double> productsDiscountRate;
     private Set<CReturn> returnTransactions;
     private double price;
+    private Set<Product> productRFIDs;
 
     public Sale(Integer ticketNumber, Double discountRate, LoyaltyCard loyaltyCard) {
         
@@ -34,6 +35,7 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
         
         this.price = Double.NaN;
         this.date = LocalDate.now();
+        this.productRFIDs = new HashSet<>();
     }
 
 
@@ -250,6 +252,20 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
     
     public LocalDate getDate(){
         return this.date;
+    }
+
+    public boolean addProductRFID(Product prod) {
+        return this.productRFIDs.add(prod);
+    }
+
+    public boolean deleteProductRFID(Product prod) {
+        return this.productRFIDs.remove(prod);
+    }
+
+    public List<Product> getProducRFIDs() {
+        return this.productRFIDs
+            .stream()
+            .collect(toList());
     }
     
     @Override

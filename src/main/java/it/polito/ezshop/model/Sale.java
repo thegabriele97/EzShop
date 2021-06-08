@@ -62,7 +62,14 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
 
                 @Override
                 public int getAmount() {
-                    return getQuantityByProduct(p) - getReturnedQuantityByProduct((it.polito.ezshop.model.ProductType)p);
+                    int returnedCount = 0;
+
+                    returnedCount = (int)getProducRFIDs().stream()
+                        .filter(prod -> prod.getRelativeProductType().equals(p))
+                        .filter(prod -> isProductRFIDReturned(prod))
+                        .count();
+
+                    return getQuantityByProduct(p) - getReturnedQuantityByProduct((it.polito.ezshop.model.ProductType)p) - returnedCount;
                 }
 
                 @Override
@@ -173,6 +180,14 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
             price += (xProd.getPricePerUnit() * (getQuantityByProduct(xProd) - getReturnedQuantityByProduct(xProd))) * (1 - getDiscountRateForProductGroup(xProd));
         }
 
+        for (Product prod : getProducRFIDs()) {
+            it.polito.ezshop.model.ProductType relProdType = prod.getRelativeProductType();
+            
+            if (!isProductRFIDReturned(prod)) {
+                price += relProdType.getPricePerUnit() * (1- getDiscountRateForProductGroup(relProdType));
+            }
+        }
+
         price *= (1-getDiscountRate());
         return getRightDoublePrecision(price);
     }
@@ -194,6 +209,11 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
             it.polito.ezshop.model.ProductType xProd = (it.polito.ezshop.model.ProductType)prod;
 
             price += (xProd.getPricePerUnit() * getQuantityByProduct(xProd))*(1 - getDiscountRateForProductGroup(xProd));
+        }
+
+        for (Product prod : getProducRFIDs()) {
+            it.polito.ezshop.model.ProductType relProdType = prod.getRelativeProductType();
+            price += relProdType.getPricePerUnit() * (1- getDiscountRateForProductGroup(relProdType));
         }
 
         price *= 1 - getDiscountRate();
@@ -249,6 +269,11 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
     public Double getTotalValue() {
         return this.getOriginalSalePrice();
     }
+
+    @Override
+    public Integer getQuantityByProduct(it.polito.ezshop.data.ProductType product) {
+        return super.getQuantityByProduct(product) + (int)getProducRFIDs().stream().filter(p -> p.getRelativeProductType().equals(product)).count();
+    }
     
     public LocalDate getDate(){
         return this.date;
@@ -283,11 +308,19 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
     }
     
     private int getReturnedQuantityByProduct(ProductType xProd) {
+        
         return returnTransactions.stream()
             .filter(ret -> ret.isCommitted())
             .filter(ret -> ret.getProductsList().contains(xProd))
             .mapToInt(ret -> ret.getQuantityByProduct(xProd))
             .sum();  
+    }
+
+    private boolean isProductRFIDReturned(Product prod) {
+
+        return returnTransactions.stream()
+            .filter(ret -> ret.isCommitted())
+            .anyMatch(ret -> ret.getProducRFIDs().contains(prod));
     }
 
 }

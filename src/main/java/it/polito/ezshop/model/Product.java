@@ -24,7 +24,7 @@ public class Product {
         this.available = val;
     }
 
-    public boolean getAvailable() {
+    public boolean isAvailable() {
         return this.available;
     }
 

@@ -307,7 +307,7 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
         DataManager.getInstance().updateSale(this);
     }
     
-    private int getReturnedQuantityByProduct(ProductType xProd) {
+    public int getReturnedQuantityByProduct(ProductType xProd) {
         
         return returnTransactions.stream()
             .filter(ret -> ret.isCommitted())
@@ -316,7 +316,7 @@ public class Sale extends ProductList implements SaleTransaction, ICredit {
             .sum();  
     }
 
-    private boolean isProductRFIDReturned(Product prod) {
+    public boolean isProductRFIDReturned(Product prod) {
 
         return returnTransactions.stream()
             .filter(ret -> ret.isCommitted())

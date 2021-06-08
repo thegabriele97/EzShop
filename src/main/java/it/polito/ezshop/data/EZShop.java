@@ -650,7 +650,7 @@ public class EZShop implements EZShopInterface {
 
         List<String> allRFIDs = new ArrayList<>();
         for (int i = 0; i < ord.get().getQuantity(); i++) {
-            allRFIDs.add(Long.toString(Long.parseLong(RFIDfrom) + i));
+            allRFIDs.add(String.format("%010d", Long.toString(Long.parseLong(RFIDfrom) + i)));
         }
 
         boolean anyDuplicate = DataManager.getInstance()
@@ -1397,13 +1397,13 @@ public class EZShop implements EZShopInterface {
 
         if (!prod.isPresent() || prod.get().isAvailable()) return false;
         
-        boolean prodAlreadyReturned = DataManager.getInstance()
-            .getReturns()
-            .stream()
-            .anyMatch(ret -> ret.getProducRFIDs().contains(prod.get()));
+        // boolean prodAlreadyReturned = DataManager.getInstance()
+        //     .getReturns()
+        //     .stream()
+        //     .filter(ret -> ret.isCommitted())
+        //     .anyMatch(ret -> ret.getProducRFIDs().contains(prod.get()));
 
-        if (prodAlreadyReturned) return false;
-
+        // if (prodAlreadyReturned) return false;
 
         Optional<CReturn> ret = DataManager.getInstance()
             .getReturns()
@@ -1422,6 +1422,12 @@ public class EZShop implements EZShopInterface {
         return DataManager.getInstance().updateReturn(ret.get());
     }
 
+
+    // Sale1, latte, 10, LatteType.quantity = 0
+    // Ret1, not committed, latte x9
+    // Ret2, not committed, latte x5
+    // ret1.end() -> Sale -> latte 1
+    // ret2.end() -> Sale -> latte -4, LatteType.quantity = 14
 
     @Override
     public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException, UnauthorizedException {
@@ -1444,6 +1450,19 @@ public class EZShop implements EZShopInterface {
         if (!Creturn.isPresent() || Creturn.get().isCommitted()) return false;
 
         if (commit) {
+
+            boolean cannotBeCommitted = Creturn.get()
+                .getProductsList()
+                .stream()
+                .anyMatch(prod -> Creturn.get().getSaleTransaction().getQuantityByProduct(prod) - Creturn.get().getSaleTransaction().getReturnedQuantityByProduct((it.polito.ezshop.model.ProductType)prod) < Creturn.get().getQuantityByProduct(prod));
+
+            cannotBeCommitted |= Creturn.get()
+                .getProducRFIDs()
+                .stream()
+                .anyMatch(p -> !Creturn.get().getSaleTransaction().isProductRFIDReturned(p));
+
+            if (cannotBeCommitted) return false;
+            
             Creturn.get()
                 .getProductsList()
                 .forEach(p -> {
@@ -1452,6 +1471,25 @@ public class EZShop implements EZShopInterface {
                     rightP.addQuantityOffset(Creturn.get().getQuantityByProduct(rightP));
                     DataManager.getInstance().updateProductType(rightP);
                 });
+            
+            // Sale1 ..
+            // Ret1, not committed, latte1, latte2, latte3
+            // Ret2, not committed, latte 2
+
+            //Ret2.commit()
+            //Sale2.sell(latte2)
+            //Ret1.commit() -> latte1, latte3
+
+            Creturn.get()
+                .getProducRFIDs()
+                .stream()
+                //.filter(p -> !Creturn.get().getSaleTransaction().isProductRFIDReturned(p))
+                .forEach(p -> {
+                    p.setAvailable(true);
+                    p.getRelativeProductType().addQuantityOffset(1);
+                    DataManager.getInstance().updateProduct(p);
+                });
+
         } else {
             return DataManager.getInstance().deleteReturn(Creturn.get());
         }

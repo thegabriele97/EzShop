@@ -1,6 +1,8 @@
 package it.polito.ezshop.model;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
     
     private String rfid;
     private ProductType relativeProductType;

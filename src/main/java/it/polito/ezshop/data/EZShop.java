@@ -62,6 +62,10 @@ public class EZShop implements EZShopInterface {
             DataManager.getInstance().deleteBalanceTransaction(u);
         }
 
+        for (Product p : DataManager.getInstance().getProducts()) {
+            DataManager.getInstance().deleteProduct(p);
+        }
+
     }
 
     @Override
@@ -648,9 +652,11 @@ public class EZShop implements EZShopInterface {
             throw new InvalidLocationException();
         }
 
+        if(!isValidRFID(RFIDfrom)) throw new InvalidRFIDException();
+
         List<String> allRFIDs = new ArrayList<>();
         for (int i = 0; i < ord.get().getQuantity(); i++) {
-            allRFIDs.add(String.format("%010d", Long.toString(Long.parseLong(RFIDfrom) + i)));
+            allRFIDs.add(String.format("%010d", Long.parseLong(RFIDfrom) + i));
         }
 
         boolean anyDuplicate = DataManager.getInstance()
@@ -659,9 +665,9 @@ public class EZShop implements EZShopInterface {
             .map(Product::getRFID)
             .anyMatch(rfid -> allRFIDs.contains(rfid));
 
-        if (!isValidRFID(RFIDfrom) || anyDuplicate) throw new InvalidRFIDException();
+        if ( anyDuplicate) throw new InvalidRFIDException();
 
-        if (!(ord.get().getStatus().equals(EOrderStatus.PAYED.toString())) || ord.get().getStatus().equals(EOrderStatus.COMPLETED.toString())) {
+        if (!(ord.get().getStatus().equals(EOrderStatus.PAYED.toString())) || ord.get().getStatus().equals(EOrderStatus.COMPLETED.toString())) { //TODO: what should this if check?
             return false;
         }
 

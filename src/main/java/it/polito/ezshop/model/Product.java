@@ -9,8 +9,8 @@ public class Product implements Serializable {
     private boolean available;
 
     public Product(String rfid, ProductType relProductType) {
-        this.rfid = rfid;
-        this.relativeProductType = relProductType;
+        setRFID(rfid);
+        setRelativeProductType(relProductType);
         this.available = true;
     }
 
@@ -38,6 +38,20 @@ public class Product implements Serializable {
     @Override
     public boolean equals(Object obj) {
         return this.rfid.equals(((Product)obj).rfid);
+    }
+
+    public void setRFID(String rfid){
+        if(rfid == null || rfid.isEmpty()){
+            throw new IllegalArgumentException();
+        }
+        this.rfid = rfid;
+    }
+
+    public void setRelativeProductType(ProductType pt){
+        if(pt == null){
+            throw new IllegalArgumentException();
+        }
+        this.relativeProductType = pt;
     }
 
 }

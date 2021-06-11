@@ -4675,11 +4675,11 @@ public class EZShopTest {
         DataManager.getInstance().insertOrder(o);
 
         EZShopInterface ez = new EZShop();
-        assertTrue(ez.recordOrderArrivalRFID(1, "0000000001"));
+        assertTrue(ez.recordOrderArrivalRFID(1, "000000000001"));
 
         assertEquals(o.getQuantity(), DataManager.getInstance().getProducts().size());
 
-        LongStream.range(Long.parseLong("0000000001"), Long.parseLong("0000000001") + o.getQuantity())
+        LongStream.range(Long.parseLong("000000000001"), Long.parseLong("000000000001") + o.getQuantity())
             .boxed()
             .map(l -> String.format("%012d", l))
             .forEach(rfid -> assertTrue(DataManager.getInstance().getProducts().stream().filter(pr -> pr.getRFID().equals(rfid)).findFirst().isPresent()));
@@ -4702,7 +4702,7 @@ public class EZShopTest {
         DataManager.getInstance().insertOrder(o);
 
         EZShopInterface ez = new EZShop();
-        assertThrows(UnauthorizedException.class,() -> ez.recordOrderArrivalRFID(1, "0000000001"));
+        assertThrows(UnauthorizedException.class,() -> ez.recordOrderArrivalRFID(1, "000000000001"));
     }
 
     @Test
@@ -4780,17 +4780,17 @@ public class EZShopTest {
         DataManager.getInstance().insertOrder(o);
 
         EZShopInterface ez = new EZShop();
-        ez.recordOrderArrivalRFID(1, "0000000001");
+        ez.recordOrderArrivalRFID(1, "000000000001");
         
         o.setAsPayed();
-        assertThrows(InvalidRFIDException.class,()->ez.recordOrderArrivalRFID(1, "0000000001"));
+        assertThrows(InvalidRFIDException.class,()->ez.recordOrderArrivalRFID(1, "000000000001"));
 
         
         o.setAsPayed();
-        ez.recordOrderArrivalRFID(1, "0000000050");
+        ez.recordOrderArrivalRFID(1, "000000000050");
         
         o.setAsPayed();
-        assertThrows(InvalidRFIDException.class,()->ez.recordOrderArrivalRFID(1, "0000000049"));
+        assertThrows(InvalidRFIDException.class,()->ez.recordOrderArrivalRFID(1, "000000000049"));
 
     }
 
@@ -4811,7 +4811,7 @@ public class EZShopTest {
         DataManager.getInstance().insertOrder(o);
 
         EZShopInterface ez = new EZShop();
-        assertFalse(ez.recordOrderArrivalRFID(1, "0000000001"));
+        assertFalse(ez.recordOrderArrivalRFID(1, "000000000001"));
     }
 
     //addProductToSaleRFID()
@@ -4828,7 +4828,7 @@ public class EZShopTest {
         DataManager.getInstance().insertPosition(p);
         DataManager.getInstance().insertProductType(pt);
 
-        Product pr = new Product("0000000001", pt);
+        Product pr = new Product("000000000001", pt);
         DataManager.getInstance().insertProduct(pr);
         
         Sale s = new Sale(1, 0.0, null);
@@ -4836,7 +4836,7 @@ public class EZShopTest {
         DataManager.getInstance().insertSale(s);
 
         EZShopInterface ez = new EZShop();
-        assertTrue(ez.addProductToSaleRFID(1, "0000000001"));
+        assertTrue(ez.addProductToSaleRFID(1, "000000000001"));
     }
 
     @Test
@@ -4938,7 +4938,7 @@ public class EZShopTest {
         DataManager.getInstance().insertPosition(p);
         DataManager.getInstance().insertProductType(pt);
 
-        Product pr = new Product("0000000001", pt);
+        Product pr = new Product("000000000001", pt);
         DataManager.getInstance().insertProduct(pr);
         
         Sale s = new Sale(1, 0.0, null);
@@ -4961,7 +4961,7 @@ public class EZShopTest {
         DataManager.getInstance().insertPosition(p);
         DataManager.getInstance().insertProductType(pt);
 
-        Product pr = new Product("0000000001", pt);
+        Product pr = new Product("000000000001", pt);
         DataManager.getInstance().insertProduct(pr);
         
         Sale s = new Sale(1, 0.0, null);
@@ -4970,8 +4970,8 @@ public class EZShopTest {
 
         EZShopInterface ez = new EZShop();
         
-        assertThrows(InvalidTransactionIdException.class,()->ez.addProductToSaleRFID(-1, "0000000001"));
-        assertThrows(InvalidTransactionIdException.class,()->ez.addProductToSaleRFID(null, "0000000001"));
+        assertThrows(InvalidTransactionIdException.class,()->ez.addProductToSaleRFID(-1, "000000000001"));
+        assertThrows(InvalidTransactionIdException.class,()->ez.addProductToSaleRFID(null, "000000000001"));
 
         assertThrows(InvalidRFIDException.class,()->ez.addProductToSaleRFID(1, "0000a"));
     }
@@ -4993,13 +4993,13 @@ public class EZShopTest {
         DataManager.getInstance().insertSale(s);
 
         EZShopInterface ez = new EZShop();
-        assertFalse(ez.addProductToSaleRFID(1, "0000000001"));
+        assertFalse(ez.addProductToSaleRFID(1, "000000000001"));
 
-        Product pr = new Product("0000000001", pt);
+        Product pr = new Product("000000000001", pt);
         pr.setAvailable(false);
         DataManager.getInstance().insertProduct(pr);
 
-        assertFalse(ez.addProductToSaleRFID(1, "0000000001"));
+        assertFalse(ez.addProductToSaleRFID(1, "000000000001"));
     }
 
     @Test
@@ -5014,11 +5014,11 @@ public class EZShopTest {
         DataManager.getInstance().insertPosition(p);
         DataManager.getInstance().insertProductType(pt);
 
-        Product pr = new Product("0000000001", pt);
+        Product pr = new Product("000000000001", pt);
         DataManager.getInstance().insertProduct(pr);
 
         EZShopInterface ez = new EZShop();
-        assertFalse(ez.addProductToSaleRFID(1, "0000000001"));
+        assertFalse(ez.addProductToSaleRFID(1, "000000000001"));
     }
     
     //deleteProductFromSaleRFID

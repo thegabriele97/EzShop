@@ -665,7 +665,7 @@ public class EZShop implements EZShopInterface {
             .map(Product::getRFID)
             .anyMatch(rfid -> allRFIDs.contains(rfid));
 
-        if ( anyDuplicate) throw new InvalidRFIDException();
+        if (anyDuplicate) throw new InvalidRFIDException();
 
         if (!(ord.get().getStatus().equals(EOrderStatus.PAYED.toString())) || ord.get().getStatus().equals(EOrderStatus.COMPLETED.toString())) { //TODO: what should this if check?
             return false;
@@ -1805,7 +1805,7 @@ public class EZShop implements EZShopInterface {
 
     public static boolean isValidRFID(String RFID) {
 
-        if (RFID == null || RFID.isEmpty() || RFID.length() != 10) return false;
+        if (RFID == null || RFID.isEmpty() || RFID.length() != 12) return false;
 
         if (!RFID.chars().allMatch(ch -> ch >= '0' && ch <= '9')) return false;
 

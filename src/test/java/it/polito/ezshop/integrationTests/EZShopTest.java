@@ -4681,7 +4681,7 @@ public class EZShopTest {
 
         LongStream.range(Long.parseLong("0000000001"), Long.parseLong("0000000001") + o.getQuantity())
             .boxed()
-            .map(l -> String.format("%010d", l))
+            .map(l -> String.format("%012d", l))
             .forEach(rfid -> assertTrue(DataManager.getInstance().getProducts().stream().filter(pr -> pr.getRFID().equals(rfid)).findFirst().isPresent()));
 
     }
@@ -4853,11 +4853,11 @@ public class EZShopTest {
         ez.recordBalanceUpdate(400);
         int orderId = ez.payOrderFor("999999999993", 10, 2.4);
 
-        ez.recordOrderArrivalRFID(orderId, "0000000009");
+        ez.recordOrderArrivalRFID(orderId, "999999999919");
 
         int saleId = ez.startSaleTransaction();
-        assertTrue(ez.addProductToSaleRFID(saleId, "0000000018"));
-        assertFalse(ez.addProductToSaleRFID(saleId, "0000000018"));
+        assertTrue(ez.addProductToSaleRFID(saleId, "999999999928"));
+        assertFalse(ez.addProductToSaleRFID(saleId, "999999999928"));
         
         ez.endSaleTransaction(saleId);
 
@@ -4881,14 +4881,14 @@ public class EZShopTest {
         ez.recordBalanceUpdate(400);
         int orderId = ez.payOrderFor("999999999993", 10, 2.4);
 
-        ez.recordOrderArrivalRFID(orderId, "0000000009");
+        ez.recordOrderArrivalRFID(orderId, "000000000009");
 
         int saleId = ez.startSaleTransaction();
-        assertTrue(ez.addProductToSaleRFID(saleId, "0000000011"));
-        assertTrue(ez.addProductToSaleRFID(saleId, "0000000018"));
-        assertFalse(ez.addProductToSaleRFID(saleId, "0000000018"));
-        assertTrue(ez.deleteProductFromSaleRFID(saleId, "0000000018"));
-        assertFalse(ez.deleteProductFromSaleRFID(saleId, "0000000018"));
+        assertTrue(ez.addProductToSaleRFID(saleId, "000000000011"));
+        assertTrue(ez.addProductToSaleRFID(saleId, "000000000018"));
+        assertFalse(ez.addProductToSaleRFID(saleId, "000000000018"));
+        assertTrue(ez.deleteProductFromSaleRFID(saleId, "000000000018"));
+        assertFalse(ez.deleteProductFromSaleRFID(saleId, "000000000018"));
 
         ez.endSaleTransaction(saleId);
 
@@ -4909,18 +4909,18 @@ public class EZShopTest {
         ez.recordBalanceUpdate(400);
         int orderId = ez.payOrderFor("999999999993", 10, 2.4);
 
-        ez.recordOrderArrivalRFID(orderId, "0000000009");
+        ez.recordOrderArrivalRFID(orderId, "000000000009");
 
         int saleId = ez.startSaleTransaction();
-        assertTrue(ez.addProductToSaleRFID(saleId, "0000000018"));
-        assertFalse(ez.addProductToSaleRFID(saleId, "0000000018"));
+        assertTrue(ez.addProductToSaleRFID(saleId, "000000000018"));
+        assertFalse(ez.addProductToSaleRFID(saleId, "000000000018"));
         
         ez.endSaleTransaction(saleId);
         ez.deleteSaleTransaction(saleId);
 
         saleId = ez.startSaleTransaction();
-        assertTrue(ez.addProductToSaleRFID(saleId, "0000000018"));
-        assertFalse(ez.addProductToSaleRFID(saleId, "0000000018"));
+        assertTrue(ez.addProductToSaleRFID(saleId, "000000000018"));
+        assertFalse(ez.addProductToSaleRFID(saleId, "000000000018"));
         
         ez.endSaleTransaction(saleId);
 

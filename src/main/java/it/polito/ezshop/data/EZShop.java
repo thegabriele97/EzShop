@@ -656,7 +656,7 @@ public class EZShop implements EZShopInterface {
 
         List<String> allRFIDs = new ArrayList<>();
         for (int i = 0; i < ord.get().getQuantity(); i++) {
-            allRFIDs.add(String.format("%010d", Long.parseLong(RFIDfrom) + i));
+            allRFIDs.add(String.format("%012d", Long.parseLong(RFIDfrom) + i));
         }
 
         boolean anyDuplicate = DataManager.getInstance()

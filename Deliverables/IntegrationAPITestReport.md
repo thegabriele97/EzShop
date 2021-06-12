@@ -202,6 +202,8 @@ We adopted a bottom up approach. Starting from the leaf classes (Unit Testing) w
 |---|---|
 | Position | PositionTest.java |
 | Customer | CustomerTest.java |
+| ProductType | ProductType.java |
+| Product | ProductTest.java |
 
 
 ## Step 3

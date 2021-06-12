@@ -135,6 +135,10 @@ package "it.polito.ezshop.model" as model {
         
     }
 
+    class Product {
+        
+    }
+
     ProductType <-left-> Position
     Sale <-right- CReturn
 
@@ -158,6 +162,10 @@ package "it.polito.ezshop.model" as model {
     CreditTransaction --> ICredit
     DebitTransaction --> IDebit
 
+    Product -right-> ProductType
+    Sale --> Product
+    CReturn --> Product
+
 }
 
 ezshop --> BalanceTransaction
@@ -171,6 +179,7 @@ ezshop --> Order
 ezshop --> CReturn
 ezshop --> Position
 ezshop --> ProductType
+ezshop --> Product
 
 ```
 

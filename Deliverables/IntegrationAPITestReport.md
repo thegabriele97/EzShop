@@ -4,7 +4,7 @@ Authors: Baldazzi Alessandro, D'Anzi Francesco, Galota Simone, La Greca Salvator
 
 Date: 25/05/2021
 
-Version: 1.0
+Version: 1.1
 
 # Contents
 

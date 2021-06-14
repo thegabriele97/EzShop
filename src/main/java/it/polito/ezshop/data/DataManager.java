@@ -11,6 +11,7 @@ public class DataManager implements Serializable {
     private Set<BalanceTransaction> balanceTransactions;
     private Set<it.polito.ezshop.model.User> users;
     private Set<it.polito.ezshop.model.ProductType> productTypes;
+    private Set<Product> products;
     private Set<Position> positions;
     private Set<it.polito.ezshop.model.Order> orders;
     private Set<it.polito.ezshop.model.Customer> customers;
@@ -24,6 +25,7 @@ public class DataManager implements Serializable {
     private DataManager() {
         users = new HashSet<>();
         productTypes = new HashSet<>();
+        products = new HashSet<>();
         positions = new HashSet<>();
         orders = new HashSet<>();
         customers = new HashSet<>();
@@ -140,6 +142,11 @@ public class DataManager implements Serializable {
             .collect(toList());
     }
 
+    public List<Product> getProducts() {
+        return products.stream()
+            .collect(toList());
+    }
+
     public List<Position> getPositions() {
         return positions.stream()
             .collect(toList());
@@ -193,6 +200,10 @@ public class DataManager implements Serializable {
         return insertIntoAndSave(productTypes, o);
     }
 
+    public boolean insertProduct(Product o) {
+        return insertIntoAndSave(products, o);
+    }
+
     public boolean insertPosition(Position o) {
         return insertIntoAndSave(positions, o);
     }
@@ -237,6 +248,10 @@ public class DataManager implements Serializable {
         return updateIntoAndSave(productTypes, o);
     }
     
+    public boolean updateProduct(Product o) {
+        return updateIntoAndSave(products, o);
+    }
+
     public boolean updatePosition(Position o) {
         return updateIntoAndSave(positions, o);
     }
@@ -281,6 +296,10 @@ public class DataManager implements Serializable {
         return deleteIntoAndSave(productTypes, o);
     }
     
+    public boolean deleteProduct(Product o) {
+        return deleteIntoAndSave(products, o);
+    }
+
     public boolean deletePosition(Position o) {
         return deleteIntoAndSave(positions, o);
     }

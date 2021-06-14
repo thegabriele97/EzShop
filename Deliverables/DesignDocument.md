@@ -5,7 +5,7 @@ Authors: Baldazzi Alessandro, D'Anzi Francesco, Galota Simone, La Greca Salvator
 
 Date: 29/04/2021
 
-Version: 1.0
+Version: 1.1
 
 
 # Contents
@@ -142,6 +142,7 @@ package "it.polito.ezshop.data" as data {
         ..Getters..
         +getUsers(): List<User>
         +getProductTypes(): List<ProductType>
+        +getProducts(): List<Product>
         +getPositions(): List<Position>
         +getOrders(): List<Order>
         +getCustomers(): List<Customer>
@@ -154,6 +155,7 @@ package "it.polito.ezshop.data" as data {
         ..Data Insert..
         +insertUser(): boolean
         +insertProductType(): boolean
+        +insertProduct(): boolean
         +insertOrder(): boolean
         +insertCustomer(): boolean
         +insertLoyaltyCard(): boolean
@@ -166,6 +168,7 @@ package "it.polito.ezshop.data" as data {
         ..Data Update..
         +updateUser(): boolean
         +updateProductType(): boolean
+        +updateProduct(): boolean
         +updateOrder(): boolean
         +updateCustomer(): boolean
         +updateLoyaltyCard(): boolean
@@ -178,6 +181,7 @@ package "it.polito.ezshop.data" as data {
         ..Data Delete..
         +deleteUser(): boolean
         +deleteProductType(): boolean
+        +deleteProduct(): boolean
         +deleteOrder(): boolean
         +deleteCustomer(): boolean
         +deteleteLoyaltyCard(): boolean
@@ -187,10 +191,6 @@ package "it.polito.ezshop.data" as data {
         +deleteDummyCredit(): boolean
         +deleteDummyDebit(): boolean
         +deleteBalanceOperation(): boolean
-        ..Queries..
-        +getAllCreditTransactions(): List<CreditTransaction>
-        +getAllDebitTransactions(): List<DebitTransaction>
-        +computeBalance(): Double
     }
 
     class CreditCardSystem << (S,#FF7700) Singleton >> {
@@ -266,6 +266,16 @@ package "it.polito.ezshop.model" as model {
         +assignToPosition(): void
     }
 
+    class Product <<persistent>> {
+        -rfid: String
+        -RelativeProductType: ProductType
+        -avaiable: boolean
+        +setAvailable(): void
+        +isAvailable(): boolean
+        +getRelatedProductType(): boolean
+        +getRFID(): String
+    }
+
     class Position <<persistent>> {
         -aisleID: Integer
         -rackID: String
@@ -291,6 +301,7 @@ package "it.polito.ezshop.model" as model {
         -committed: boolean
         -productsDiscountRate: Map<ProductType, double>
         -returnTransaction: List<ReturnTransaction>
+        -productRFIDs: List<Product>
         ~addReturnTransaction(): void
         +applyDiscountRateToSale(): void
         +applyDiscountRateToProductGroup(): void
@@ -299,16 +310,23 @@ package "it.polito.ezshop.model" as model {
         +setAsCommitted(): void
         +getSaleId(): Integer
         +isCommitted(): boolean
+        +addProductRFID(): boolean
+        +deleteProductRFID(): boolean
+        +getProductRFIDs(): List<Product>
     }
 
     class CReturn <<persistent>> {
         -returnId: Intger
         -saleTransaction: Sale
         -committed: boolean
+        -productRFIDs: List<Product>
         +addProduct(): void <<override>>
         +setAsCommitted(): void
         +getReturnid(): Double
         +isCommitted(): boolean
+        +addProductRFID(): boolean
+        +deleteProductRFID(): boolean
+        +getProductRFIDs(): List<Product>
     }
 
     enum EOrderStatus {
@@ -383,8 +401,12 @@ package "it.polito.ezshop.model" as model {
         -value: Double
     }
 
-    ProductType <-left-> Position
+    ProductType <-right-> Position
+    Product -right-> ProductType
     Sale <-right- CReturn
+
+    Sale --> Product
+    CReturn --> Product
 
     LoyaltyCard <--> Customer
     'Sale <-down-> LoyaltyCard

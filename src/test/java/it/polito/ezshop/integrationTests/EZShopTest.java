@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import it.polito.ezshop.data.DataManager;
 import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.LoginManager;
+import it.polito.ezshop.data.RightsManager;
 import it.polito.ezshop.data.TicketEntry;
 import it.polito.ezshop.exceptions.*;
 
@@ -76,6 +78,10 @@ public class EZShopTest {
 
         for (BalanceTransaction u : DataManager.getInstance().getBalanceTransactions()) {
             DataManager.getInstance().deleteBalanceTransaction(u);
+        }
+
+        for (Product p : DataManager.getInstance().getProducts()) {
+            DataManager.getInstance().deleteProduct(p);
         }
 
     }
@@ -751,6 +757,8 @@ public class EZShopTest {
         ez.endSaleTransaction(1);
         assertTrue(ez.receiveCreditCardPayment(1, "4485370086510891"));
     }
+
+    //recordOrderArrival()
 
     @Test
     public void testRecordOrderArrivalWithNoLoggedUser() {
@@ -4648,5 +4656,686 @@ public class EZShopTest {
         assertEquals(DataManager.getInstance().getCustomers(), ez.getAllCustomers());
     }
 
+    //recordOrderArrivalRFID()
+
+    @Test
+    public void testRecordOrderArrivalRFID() throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+        
+
+        Order o = new Order(1, 1.3, 20, pt, EOrderStatus.PAYED);
+        DataManager.getInstance().insertOrder(o);
+
+        EZShopInterface ez = new EZShop();
+        assertTrue(ez.recordOrderArrivalRFID(1, "000000000001"));
+
+        assertEquals(o.getQuantity(), DataManager.getInstance().getProducts().size());
+
+        LongStream.range(Long.parseLong("000000000001"), Long.parseLong("000000000001") + o.getQuantity())
+            .boxed()
+            .map(l -> String.format("%012d", l))
+            .forEach(rfid -> assertTrue(DataManager.getInstance().getProducts().stream().filter(pr -> pr.getRFID().equals(rfid)).findFirst().isPresent()));
+
+    }
+
+    @Test
+    public void testRecordOrderArrivalRFIDNoLoggedUser() throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+        
+
+        Order o = new Order(1, 1.3, 20, pt, EOrderStatus.PAYED);
+        DataManager.getInstance().insertOrder(o);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class,() -> ez.recordOrderArrivalRFID(1, "000000000001"));
+    }
+
+    @Test
+    public void testRecordOrderArrivalRFIDWrongParams() throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+        
+
+        Order o = new Order(1, 1.3, 20, pt, EOrderStatus.PAYED);
+        DataManager.getInstance().insertOrder(o);
+
+        EZShopInterface ez = new EZShop();
+
+        assertThrows(InvalidOrderIdException.class,() -> ez.recordOrderArrivalRFID(-1, "0000000001"));
+        assertThrows(InvalidOrderIdException.class,() -> ez.recordOrderArrivalRFID(null, "0000000001"));
+
+        assertThrows(InvalidRFIDException.class,() -> ez.recordOrderArrivalRFID(1, "a"));
+        assertThrows(InvalidRFIDException.class,() -> ez.recordOrderArrivalRFID(1, "4"));
+    }
+
+    @Test
+    public void testRecordOrderArrivalRFIDNoOrder() throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.recordOrderArrivalRFID(1, "0000000001"));
+    }
+
+    @Test
+    public void testRecordOrderArrivalRFIDNoPosition() throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        DataManager.getInstance().insertProductType(pt);
+        
+
+        Order o = new Order(1, 1.3, 20, pt, EOrderStatus.PAYED);
+        DataManager.getInstance().insertOrder(o);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidLocationException.class ,() -> ez.recordOrderArrivalRFID(1, "0000000001"));
+    }
+
+    @Test
+    public void testRecordOrderArrivalRFIDDuplicate() throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+        
+
+        Order o = new Order(1, 1.3, 20, pt, EOrderStatus.PAYED);
+        DataManager.getInstance().insertOrder(o);
+
+        EZShopInterface ez = new EZShop();
+        ez.recordOrderArrivalRFID(1, "000000000001");
+        
+        o.setAsPayed();
+        assertThrows(InvalidRFIDException.class,()->ez.recordOrderArrivalRFID(1, "000000000001"));
+
+        
+        o.setAsPayed();
+        ez.recordOrderArrivalRFID(1, "000000000050");
+        
+        o.setAsPayed();
+        assertThrows(InvalidRFIDException.class,()->ez.recordOrderArrivalRFID(1, "000000000049"));
+
+    }
+
+    @Test
+    public void testRecordOrderArrivalRFIDNoPAYED() throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+        
+
+        Order o = new Order(1, 1.3, 20, pt, EOrderStatus.ISSUED);
+        DataManager.getInstance().insertOrder(o);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.recordOrderArrivalRFID(1, "000000000001"));
+    }
+
+    //addProductToSaleRFID()
+
+    @Test
+    public void testAddProductToSaleRFID() throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 20, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+        
+        Sale s = new Sale(1, 0.0, null);
+        s.addProduct(pt, 2);
+        DataManager.getInstance().insertSale(s);
+
+        EZShopInterface ez = new EZShop();
+        assertTrue(ez.addProductToSaleRFID(1, "000000000001"));
+    }
+
+    @Test
+    public void testAddProductToSaleRFIDAndCheckTotal() throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidProductIdException, InvalidLocationException, InvalidOrderIdException, InvalidPaymentException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        
+        int prodId = ez.createProductType("description", "999999999993", 2.4, "notes");
+        ez.updatePosition(prodId, "10-abcd-798");
+
+        ez.recordBalanceUpdate(400);
+        int orderId = ez.payOrderFor("999999999993", 10, 2.4);
+
+        ez.recordOrderArrivalRFID(orderId, "999999999919");
+
+        int saleId = ez.startSaleTransaction();
+        assertTrue(ez.addProductToSaleRFID(saleId, "999999999928"));
+        assertFalse(ez.addProductToSaleRFID(saleId, "999999999928"));
+        
+        ez.endSaleTransaction(saleId);
+
+        assertEquals(2.4 * 1, ez.getSaleTransaction(saleId).getPrice(), 0.01);
+
+        ez.receiveCashPayment(saleId, 10.0);
+        assertTrue(ez.getCreditsAndDebits(null, null).stream().anyMatch(cd -> cd.getMoney() == 2.4 * 1));
+    }
+
+    @Test
+    public void testAddProductToSaleRFIDAfterDeleteProdFromSale() throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidProductIdException, InvalidLocationException, InvalidOrderIdException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        
+        int prodId = ez.createProductType("description", "999999999993", 2.4, "notes");
+        ez.updatePosition(prodId, "10-abcd-798");
+
+        ez.recordBalanceUpdate(400);
+        int orderId = ez.payOrderFor("999999999993", 10, 2.4);
+
+        ez.recordOrderArrivalRFID(orderId, "000000000009");
+
+        int saleId = ez.startSaleTransaction();
+        assertTrue(ez.addProductToSaleRFID(saleId, "000000000011"));
+        assertTrue(ez.addProductToSaleRFID(saleId, "000000000018"));
+        assertFalse(ez.addProductToSaleRFID(saleId, "000000000018"));
+        assertTrue(ez.deleteProductFromSaleRFID(saleId, "000000000018"));
+        assertFalse(ez.deleteProductFromSaleRFID(saleId, "000000000018"));
+
+        ez.endSaleTransaction(saleId);
+
+        assertEquals(2.4 * 1, ez.getSaleTransaction(saleId).getPrice(), 0.01);
+    }
+
+    @Test
+    public void testAddProductToSaleRFIDAfterDeleteSale() throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, InvalidProductIdException, InvalidLocationException, InvalidOrderIdException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        EZShopInterface ez = new EZShop();
+        
+        int prodId = ez.createProductType("description", "999999999993", 2.4, "notes");
+        ez.updatePosition(prodId, "10-abcd-798");
+
+        ez.recordBalanceUpdate(400);
+        int orderId = ez.payOrderFor("999999999993", 10, 2.4);
+
+        ez.recordOrderArrivalRFID(orderId, "000000000009");
+
+        int saleId = ez.startSaleTransaction();
+        assertTrue(ez.addProductToSaleRFID(saleId, "000000000018"));
+        assertFalse(ez.addProductToSaleRFID(saleId, "000000000018"));
+        
+        ez.endSaleTransaction(saleId);
+        ez.deleteSaleTransaction(saleId);
+
+        saleId = ez.startSaleTransaction();
+        assertTrue(ez.addProductToSaleRFID(saleId, "000000000018"));
+        assertFalse(ez.addProductToSaleRFID(saleId, "000000000018"));
+        
+        ez.endSaleTransaction(saleId);
+
+        assertEquals(2.4 * 1, ez.getSaleTransaction(saleId).getPrice(), 0.01);
+    }
+
+    @Test
+    public void testAddProductToSaleRFIDNoLoggeduser() throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 20, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+        
+        Sale s = new Sale(1, 0.0, null);
+        s.addProduct(pt, 2);
+        DataManager.getInstance().insertSale(s);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class,()->ez.addProductToSaleRFID(1, "0000000001"));
+    }
+
+    @Test
+    public void testAddProductToSaleRFIDWrongParams() throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 20, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+        
+        Sale s = new Sale(1, 0.0, null);
+        s.addProduct(pt, 2);
+        DataManager.getInstance().insertSale(s);
+
+        EZShopInterface ez = new EZShop();
+        
+        assertThrows(InvalidTransactionIdException.class,()->ez.addProductToSaleRFID(-1, "000000000001"));
+        assertThrows(InvalidTransactionIdException.class,()->ez.addProductToSaleRFID(null, "000000000001"));
+
+        assertThrows(InvalidRFIDException.class,()->ez.addProductToSaleRFID(1, "0000a"));
+    }
+
+    @Test
+    public void testAddProductToSaleRFIDNoProduct() throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 20, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+
+        Sale s = new Sale(1, 0.0, null);
+        s.addProduct(pt, 2);
+        DataManager.getInstance().insertSale(s);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.addProductToSaleRFID(1, "000000000001"));
+
+        Product pr = new Product("000000000001", pt);
+        pr.setAvailable(false);
+        DataManager.getInstance().insertProduct(pr);
+
+        assertFalse(ez.addProductToSaleRFID(1, "000000000001"));
+    }
+
+    @Test
+    public void testAddProductToSaleRFIDNoSale() throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 20, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.addProductToSaleRFID(1, "000000000001"));
+    }
+    
+    //deleteProductFromSaleRFID
+    
+    
+    @Test
+    public void testDeleteProductFromSaleRFIDWithoutUser() {
+    	ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+       
+
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+        
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+       
+        EZShopInterface ez = new EZShop();
+        assertThrows(UnauthorizedException.class, () -> ez.deleteProductFromSaleRFID(1,"000000000001"));    
+         
+    }
+    @Test
+    public void testDeleteProductFromSaleRFIDNotValidTransaction() {
+    	User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+    	
+    	ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+       
+
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+        
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+       
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.deleteProductFromSaleRFID(-1,"000000000001"));
+        assertThrows(InvalidTransactionIdException.class, () -> ez.deleteProductFromSaleRFID(null,"000000000001"));
+        assertThrows(InvalidRFIDException.class, () -> ez.deleteProductFromSaleRFID(1,"000000000"));
+      
+    }
+    
+    @Test
+    public void testDeleteProductFromSaleRFIDNotPresentProduct() throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException, InvalidRFIDException {
+
+        User u = new User(1, "ciao", "pwd", "ShopManager");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+      
+        
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+       
+
+        Sale s = new Sale(1, 0.0, null);
+        s.addProduct(pt, 2);
+        DataManager.getInstance().insertSale(s);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.deleteProductFromSaleRFID(1, "000000000001"));
+
+        Product pr = new Product("000000000001", pt);
+        pr.setAvailable(true);
+        DataManager.getInstance().insertProduct(pr);
+        
+        assertFalse(ez.deleteProductFromSaleRFID(1,"000000000001"));
+        
+    }
+    
+    @Test
+    public void testDeleteProductToSaleRFIDNoSale() throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 20, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt);
+
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.deleteProductFromSaleRFID(1, "000000000001"));
+        
+        Sale s = new Sale(1, 0.0, null);
+        s.addProduct(pt, 2);
+        DataManager.getInstance().insertSale(s);
+        
+        assertFalse(ez.deleteProductFromSaleRFID(1, "000000000001"));
+        
+        
+    }
+    
+    
+    
+    @Test
+    public void testDeleteProductFromSaleRFID() throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException, InvalidTransactionIdException, InvalidQuantityException{
+        User u = new User(1, "ciao", "pwd", "Administrator"); 
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+        
+        EZShopInterface ez = new EZShop();
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt); 
+       
+
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+        ez.addProductToSaleRFID(1, "000000000001");
+        DataManager.getInstance().updateSale(s);
+        
+        ez.startSaleTransaction();
+      
+        assertTrue(ez.deleteProductFromSaleRFID(1, "000000000001"));
+     
+    }
+    
+    @Test
+    public void testReturnProductRFIDWithNoLoggedUser(){
+
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+        
+        EZShopInterface ez = new EZShop();
+
+        ProductType pt = new ProductType(1, "999999999993", "description", 2.4, 2, 0.0, "notes", null);
+        Position p = new Position(1, "rackID", 1, null);
+        pt.assingToPosition(p);
+        DataManager.getInstance().insertPosition(p);
+        DataManager.getInstance().insertProductType(pt); 
+       
+        s.addProduct(pt, 2);
+        s.setAsCommitted();
+        
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+
+        CreditTransaction ct = new CreditTransaction(1, s);
+        DataManager.getInstance().insertBalanceTransaction(ct);
+
+
+        CReturn cr = new CReturn(1, s);
+        DataManager.getInstance().insertReturn(cr);
+
+        assertThrows(UnauthorizedException.class, () -> ez.returnProductRFID(1, "000000000001"));
+    }
+    
+    @Test
+    public void testReturnProductRFIDWithNullReturnId() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+
+        ProductType pt = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(pt);
+        s.addProduct(pt, 2);
+        s.setAsCommitted();
+
+        CreditTransaction ct = new CreditTransaction(1, s);
+        DataManager.getInstance().insertBalanceTransaction(ct);
+        
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+
+
+        CReturn cr = new CReturn(1, s);
+        DataManager.getInstance().insertReturn(cr);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.returnProductRFID(null, "000000000001"));
+    }
+
+    @Test
+    public void testReturnProductRFIDWithInvalidReturnId() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+        
+        
+
+        ProductType pt = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(pt);
+        
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+        
+        s.addProduct(pt, 2);
+        s.setAsCommitted();
+
+        CreditTransaction ct = new CreditTransaction(1, s);
+        DataManager.getInstance().insertBalanceTransaction(ct);
+
+
+        CReturn cr = new CReturn(1, s);
+        DataManager.getInstance().insertReturn(cr);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidTransactionIdException.class, () -> ez.returnProductRFID(-1,"000000000001"));
+    }
+    
+    @Test
+    public void testReturnProductRFIDWithInvalidCode() {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+
+        ProductType pt = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(pt);
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+        
+        s.addProduct(pt, 2);
+        s.setAsCommitted();
+        CreditTransaction ct = new CreditTransaction(1, s);
+        DataManager.getInstance().insertBalanceTransaction(ct);
+
+
+        CReturn cr = new CReturn(1, s);
+        DataManager.getInstance().insertReturn(cr);
+
+        EZShopInterface ez = new EZShop();
+        assertThrows(InvalidRFIDException.class, () -> ez.returnProductRFID(1, "00000000001"));
+    }
+    
+    @Test
+    public void testReturnProductRFIDNoProduct() throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+
+        ProductType pt = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(pt);
+        Product pr = new Product("000000000001", pt);
+        
+        
+        s.addProduct(pt, 2);
+        s.setAsCommitted();
+        CreditTransaction ct = new CreditTransaction(1, s);
+        DataManager.getInstance().insertBalanceTransaction(ct);
+
+
+        CReturn cr = new CReturn(1, s);
+        DataManager.getInstance().insertReturn(cr);
+
+        EZShopInterface ez = new EZShop();
+        assertFalse(ez.returnProductRFID(1, "000000000001"));
+        DataManager.getInstance().insertProduct(pr);
+        assertFalse(ez.returnProductRFID(1, "000000000001"));
+    }
+
+    @Test
+    public void testReturnProductRFID() throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException, InvalidQuantityException {
+
+        User u = new User(1, "ciao", "pwd", "Administrator");
+        DataManager.getInstance().insertUser(u);
+        LoginManager.getInstance().tryLogin("ciao", "pwd");
+
+        Sale s = new Sale(1, 0.0, null);
+        DataManager.getInstance().insertSale(s);
+        
+        EZShopInterface ez = new EZShop();
+
+        ProductType pt = new ProductType(36, "1231231231232", "test", 1.4, 3, 0.0, "", "1-a-1");
+        DataManager.getInstance().insertProductType(pt);
+        Product pr = new Product("000000000001", pt);
+        DataManager.getInstance().insertProduct(pr);
+        
+        
+        s.addProduct(pt, 2);
+        ez.addProductToSaleRFID(1, "000000000001");
+        s.setAsCommitted();
+        CreditTransaction ct = new CreditTransaction(1, s);
+        DataManager.getInstance().insertBalanceTransaction(ct);
+
+
+        CReturn cr = new CReturn(1, s);
+        DataManager.getInstance().insertReturn(cr);
+
+        assertTrue(ez.returnProductRFID(1, "000000000001"));
+    
+    }
 
 }

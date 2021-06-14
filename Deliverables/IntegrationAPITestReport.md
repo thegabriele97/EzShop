@@ -4,7 +4,7 @@ Authors: Baldazzi Alessandro, D'Anzi Francesco, Galota Simone, La Greca Salvator
 
 Date: 25/05/2021
 
-Version: 1.0
+Version: 1.1
 
 # Contents
 
@@ -135,6 +135,10 @@ package "it.polito.ezshop.model" as model {
         
     }
 
+    class Product {
+        
+    }
+
     ProductType <-left-> Position
     Sale <-right- CReturn
 
@@ -158,6 +162,10 @@ package "it.polito.ezshop.model" as model {
     CreditTransaction --> ICredit
     DebitTransaction --> IDebit
 
+    Product -right-> ProductType
+    Sale --> Product
+    CReturn --> Product
+
 }
 
 ezshop --> BalanceTransaction
@@ -171,6 +179,7 @@ ezshop --> Order
 ezshop --> CReturn
 ezshop --> Position
 ezshop --> ProductType
+ezshop --> Product
 
 ```
 
@@ -193,6 +202,8 @@ We adopted a bottom up approach. Starting from the leaf classes (Unit Testing) w
 |---|---|
 | Position | PositionTest.java |
 | Customer | CustomerTest.java |
+| ProductType | ProductType.java |
+| Product | ProductTest.java |
 
 
 ## Step 3

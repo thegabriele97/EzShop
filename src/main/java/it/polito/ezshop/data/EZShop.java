@@ -62,6 +62,10 @@ public class EZShop implements EZShopInterface {
             DataManager.getInstance().deleteBalanceTransaction(u);
         }
 
+        for (Product p : DataManager.getInstance().getProducts()) {
+            DataManager.getInstance().deleteProduct(p);
+        }
+
     }
 
     @Override
@@ -599,10 +603,10 @@ public class EZShop implements EZShopInterface {
         }
 
         Optional<it.polito.ezshop.model.Order> ord = DataManager.getInstance()
-                .getOrders()
-                .stream()
-                .filter(p -> p.getOrderId() == orderId)
-                .findFirst();
+            .getOrders()
+            .stream()
+            .filter(p -> p.getOrderId() == orderId)
+            .findFirst();
 
         if (!(ord.isPresent())){
             return false;
@@ -626,10 +630,59 @@ public class EZShop implements EZShopInterface {
     }
 
     @Override
-    public boolean recordOrderArrivalRFID(Integer orderId, String RFIDfrom) throws InvalidOrderIdException, UnauthorizedException, 
-InvalidLocationException, InvalidRFIDException {
-        return false;
+    public boolean recordOrderArrivalRFID(Integer orderId, String RFIDfrom) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException, InvalidRFIDException {
+        
+        if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (orderId == null || orderId <= 0) {
+            throw new InvalidOrderIdException();
+        }
+
+        Optional<it.polito.ezshop.model.Order> ord = DataManager.getInstance()
+            .getOrders()
+            .stream()
+            .filter(p -> p.getOrderId() == orderId)
+            .findFirst();
+
+        if (!ord.isPresent()) return false;
+
+        if (ord.get().getRelatedProduct().getAssignedPosition() == null) {
+            throw new InvalidLocationException();
+        }
+
+        if(!isValidRFID(RFIDfrom)) throw new InvalidRFIDException();
+
+        List<String> allRFIDs = new ArrayList<>();
+        for (int i = 0; i < ord.get().getQuantity(); i++) {
+            allRFIDs.add(String.format("%012d", Long.parseLong(RFIDfrom) + i));
+        }
+
+        boolean anyDuplicate = DataManager.getInstance()
+            .getProducts()
+            .stream()
+            .map(Product::getRFID)
+            .anyMatch(rfid -> allRFIDs.contains(rfid));
+
+        if (anyDuplicate) throw new InvalidRFIDException();
+
+        if (!(ord.get().getStatus().equals(EOrderStatus.PAYED.toString())) || ord.get().getStatus().equals(EOrderStatus.COMPLETED.toString())) { //TODO: what should this if check?
+            return false;
+        }
+
+        if (ord.get().getStatus().equals(EOrderStatus.PAYED.toString())) {
+        
+            allRFIDs.forEach(rfid -> DataManager.getInstance().insertProduct(new Product(rfid, ord.get().getRelatedProduct())));
+            
+            ord.get().setAsCompleted();
+            ord.get().getRelatedProduct().addQuantityOffset(ord.get().getQuantity());
+            DataManager.getInstance().updateProductType(ord.get().getRelatedProduct());
+        }
+
+        return DataManager.getInstance().updateOrder(ord.get()); 
     }
+
     @Override
     public List<Order> getAllOrders() throws UnauthorizedException {
         if (!RightsManager.getInstance().canManageProductsCatalogue(LoginManager.getInstance().getLoggedUser())) {
@@ -925,7 +978,44 @@ InvalidLocationException, InvalidRFIDException {
 
     @Override
     public boolean addProductToSaleRFID(Integer transactionId, String RFID) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
-        return false;
+        
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (transactionId == null || transactionId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        if (!isValidRFID(RFID)) {
+            throw new InvalidRFIDException();
+        }
+
+        Optional<Product> prod = DataManager.getInstance()
+            .getProducts()
+            .stream()
+            .filter(p -> p.getRFID().equals(RFID))
+            .findFirst();
+
+        if (!prod.isPresent() || !prod.get().isAvailable()) return false;
+
+        Optional<Sale> sale = DataManager.getInstance()
+            .getSales()
+            .stream()
+            .filter(s -> s.getTicketNumber() == transactionId)
+            .findFirst();
+
+        if (!sale.isPresent() || sale.get().isCommitted()) return false;
+
+        sale.get().addProductRFID(prod.get());
+        prod.get().setAvailable(false);
+        prod.get().getRelativeProductType().addQuantityOffset(-1);
+        
+        DataManager.getInstance().updateProductType(prod.get().getRelativeProductType());
+        DataManager.getInstance().updateProduct(prod.get());
+        DataManager.getInstance().updateSale(sale.get());
+
+        return true;
     }
     
     @Override
@@ -973,7 +1063,46 @@ InvalidLocationException, InvalidRFIDException {
 
     @Override
     public boolean deleteProductFromSaleRFID(Integer transactionId, String RFID) throws InvalidTransactionIdException, InvalidRFIDException, InvalidQuantityException, UnauthorizedException{
-        return false;
+        
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (transactionId == null || transactionId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+
+        if (!isValidRFID(RFID)) {
+            throw new InvalidRFIDException();
+        }
+
+        Optional<Product> prod = DataManager.getInstance()
+            .getProducts()
+            .stream()
+            .filter(p -> p.getRFID().equals(RFID))
+            .findFirst();
+
+        if (!prod.isPresent() || prod.get().isAvailable()) return false;
+
+        Optional<Sale> sale = DataManager.getInstance()
+            .getSales()
+            .stream()
+            .filter(s -> s.getTicketNumber() == transactionId)
+            .findFirst();
+
+        if (!sale.isPresent() || sale.get().isCommitted() || !sale.get().getProducRFIDs().contains(prod.get())) {
+            return false;
+        }
+        
+        sale.get().deleteProductRFID(prod.get());
+        prod.get().setAvailable(true);
+        prod.get().getRelativeProductType().addQuantityOffset(+1);
+        
+        DataManager.getInstance().updateProductType(prod.get().getRelativeProductType());
+        DataManager.getInstance().updateProduct(prod.get());
+        DataManager.getInstance().updateSale(sale.get());
+
+        return true;
     }
 
     @Override
@@ -1131,6 +1260,13 @@ InvalidLocationException, InvalidRFIDException {
             DataManager.getInstance().updateProductType(xProd);
         }
 
+        for (Product prod : sale.get().getProducRFIDs()) {
+            prod.getRelativeProductType().addQuantityOffset(1);
+            prod.setAvailable(true);
+
+            DataManager.getInstance().updateProduct(prod);
+        }
+
         return DataManager.getInstance().deleteSale(sale.get());
     }
 
@@ -1245,11 +1381,59 @@ InvalidLocationException, InvalidRFIDException {
     }
 
     @Override
-    public boolean returnProductRFID(Integer returnId, String RFID) throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException 
-    {
-        return false;
+    public boolean returnProductRFID(Integer returnId, String RFID) throws InvalidTransactionIdException, InvalidRFIDException, UnauthorizedException {
+        
+        if (!RightsManager.getInstance().canManageSaleTransactions(LoginManager.getInstance().getLoggedUser())) {
+            throw new UnauthorizedException();
+        }
+
+        if (returnId == null || returnId <= 0) {
+            throw new InvalidTransactionIdException();
+        }
+    	
+        if (!isValidRFID(RFID)) {
+            throw new InvalidRFIDException();
+        }
+        
+        Optional<Product> prod = DataManager.getInstance()
+            .getProducts()
+            .stream()
+            .filter(p -> p.getRFID().equals(RFID))
+            .findFirst();
+
+        if (!prod.isPresent() || prod.get().isAvailable()) return false;
+        
+        // boolean prodAlreadyReturned = DataManager.getInstance()
+        //     .getReturns()
+        //     .stream()
+        //     .filter(ret -> ret.isCommitted())
+        //     .anyMatch(ret -> ret.getProducRFIDs().contains(prod.get()));
+
+        // if (prodAlreadyReturned) return false;
+
+        Optional<CReturn> ret = DataManager.getInstance()
+            .getReturns()
+            .stream()
+            .filter(r -> r.getReturnId() == returnId)
+            .findFirst();
+
+        if (!ret.isPresent() || ret.get().isCommitted() || ret.get().getProducRFIDs().contains(prod.get())) {
+            return false;
+        } else if (!ret.get().getSaleTransaction().getProducRFIDs().contains(prod.get())) {
+            return false;
+        }
+
+        ret.get().addProductRFID(prod.get());
+
+        return DataManager.getInstance().updateReturn(ret.get());
     }
 
+
+    // Sale1, latte, 10, LatteType.quantity = 0
+    // Ret1, not committed, latte x9
+    // Ret2, not committed, latte x5
+    // ret1.end() -> Sale -> latte 1
+    // ret2.end() -> Sale -> latte -4, LatteType.quantity = 14
 
     @Override
     public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException, UnauthorizedException {
@@ -1272,6 +1456,19 @@ InvalidLocationException, InvalidRFIDException {
         if (!Creturn.isPresent() || Creturn.get().isCommitted()) return false;
 
         if (commit) {
+
+            boolean cannotBeCommitted = Creturn.get()
+                .getProductsList()
+                .stream()
+                .anyMatch(prod -> Creturn.get().getSaleTransaction().getQuantityByProduct(prod) - Creturn.get().getSaleTransaction().getReturnedQuantityByProduct((it.polito.ezshop.model.ProductType)prod) < Creturn.get().getQuantityByProduct(prod));
+
+            cannotBeCommitted |= Creturn.get()
+                .getProducRFIDs()
+                .stream()
+                .anyMatch(p -> !Creturn.get().getSaleTransaction().isProductRFIDReturned(p));
+
+            if (cannotBeCommitted) return false;
+            
             Creturn.get()
                 .getProductsList()
                 .forEach(p -> {
@@ -1280,6 +1477,25 @@ InvalidLocationException, InvalidRFIDException {
                     rightP.addQuantityOffset(Creturn.get().getQuantityByProduct(rightP));
                     DataManager.getInstance().updateProductType(rightP);
                 });
+            
+            // Sale1 ..
+            // Ret1, not committed, latte1, latte2, latte3
+            // Ret2, not committed, latte 2
+
+            //Ret2.commit()
+            //Sale2.sell(latte2)
+            //Ret1.commit() -> latte1, latte3
+
+            Creturn.get()
+                .getProducRFIDs()
+                .stream()
+                //.filter(p -> !Creturn.get().getSaleTransaction().isProductRFIDReturned(p))
+                .forEach(p -> {
+                    p.setAvailable(true);
+                    p.getRelativeProductType().addQuantityOffset(1);
+                    DataManager.getInstance().updateProduct(p);
+                });
+
         } else {
             return DataManager.getInstance().deleteReturn(Creturn.get());
         }
@@ -1327,19 +1543,20 @@ InvalidLocationException, InvalidRFIDException {
         }
 
         Optional<Sale> sale = DataManager.getInstance()
-                                .getSales()
-                                .stream()
-                                .filter(r -> r.getTicketNumber() == ticketNumber)
-                                .findFirst();
+            .getSales()
+            .stream()
+            .filter(r -> r.getTicketNumber() == ticketNumber)
+            .findFirst();
 
         if(!sale.isPresent() || !sale.get().isCommitted()) return -1;
         if(sale.get().getTotalValue() > cash) return -1;
 
         OptionalInt maxBalId = DataManager.getInstance()
-                  .getBalanceTransactions()
-                  .stream()
-                  .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
-                  .max();
+            .getBalanceTransactions()
+            .stream()
+            .mapToInt(it.polito.ezshop.model.BalanceTransaction::getBalanceId)
+            .max();
+        
         int newBalId = !maxBalId.isPresent() ? 1 : (maxBalId.getAsInt() + 1);
         
         BalanceTransaction bt = new CreditTransaction(newBalId, sale.get());
@@ -1584,6 +1801,15 @@ InvalidLocationException, InvalidRFIDException {
         }
 
         return (int)(barcode.charAt(barcode.length() - 1) - '0') == (compare_num - sum);
+    }
+
+    public static boolean isValidRFID(String RFID) {
+
+        if (RFID == null || RFID.isEmpty() || RFID.length() != 12) return false;
+
+        if (!RFID.chars().allMatch(ch -> ch >= '0' && ch <= '9')) return false;
+
+        return true;
     }
 
     public static double getRightDoublePrecision(double value) {

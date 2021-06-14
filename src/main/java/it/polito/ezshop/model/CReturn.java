@@ -1,6 +1,9 @@
 package it.polito.ezshop.model;
 
 import static it.polito.ezshop.data.EZShop.*;
+import static java.util.stream.Collectors.*;
+
+import java.util.*;
 
 public class CReturn extends ProductList implements IDebit {
     
@@ -8,11 +11,15 @@ public class CReturn extends ProductList implements IDebit {
     private Sale saleTransaction;
     private boolean committed;
     private Integer balanceId;
+    private Set<Product> productRFIDs;
+
     
     public CReturn(Integer returnId, Sale saleTransaction) {
         setReturnId(returnId);
         setSaleTransaction(saleTransaction);
+        
         this.committed = false;
+        this.productRFIDs = new HashSet<>();
 
         saleTransaction.addReturnTransaction(this);
     }
@@ -50,6 +57,20 @@ public class CReturn extends ProductList implements IDebit {
     public void setBalanceId(Integer balanceId) {
         if (balanceId < 1) throw new IllegalArgumentException();
         this.balanceId = balanceId;
+    }
+
+    public boolean addProductRFID(Product prod) {
+        return this.productRFIDs.add(prod);
+    }
+
+    public boolean deleteProductRFID(Product prod) {
+        return this.productRFIDs.remove(prod);
+    }
+
+    public List<Product> getProducRFIDs() {
+        return this.productRFIDs
+            .stream()
+            .collect(toList());
     }
 
     @Override
